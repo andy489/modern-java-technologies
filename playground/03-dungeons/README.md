@@ -1,120 +1,147 @@
-## Dungeons
+# Dungeons
 
-Трябва да направите проста 2D конзолна игра, в която ще има герои, врагове, съкровища и магии. Вашият герой ще има възможност да се бие със зли противници, да събира съкровища и да си проправя път през коварни подземия.
+Build a simple 2D console game featuring heroes, enemies, treasures, and spells. Your hero explores dungeons, fights enemies, collects powerful items, and finds the exit.
 
-### Героите и Враговете трябва да имплементират интерфейса `Actor`
+---
 
-#### Герой (`Hero`)
+## Heroes and Enemies — the `Actor` interface
 
-Героят трябва да има следните публични методи:
+Both `Hero` and `Enemy` must implement the `Actor` interface.
 
-* конструктор, който прима следните аргументи - `String name, int health, int mana`
-* `String getName()` - връща името на героя
-* `int getHealth()` - връща останалата кръв на героя
-* `int getMana()` - връща останалата мана на героя
-* `boolean isAlive()` - връща true, ако кръвта на героя е повече от 0
-* `takeHealing(healingPoints)` - ако героят е жив, добавя `healingPoints` към кръвта му, но не повече от началната му кръв. Ако героят не е жив, не прави нищо
-* `takeDamage(damagePoints)` - отнема кръв на героя (кръвта не може да бъде по-малко от 0)
-* `takeMana(manaPoints)` - добавя `manaPoints` към маната на героя, но не повече от началната
-* `equip(weapon)` - въоръжава героя с това оръжие (заменя го, ако героят има друго). Ако текущото оръжие на героя е по-силно, методът не прави нищо. Първоначално всеки герой е без оръжие.
-* `Weapon getWeapon()` - връща оръжието на героя
-* `learn(spell)` - героят научава магията (заменя текущата, ако тази е по силна). Първоначално всеки герой няма магия
-* `Spell getSpell()` - връща магията
-* `int attack()` - връща атакуващите точки героя - по-силното от оръжието и магията (за да се използва магия, героят трябва да има поне толкова мана, колкото струва магията. При използване на магия, от маната се отнемат толкова точки, колкото струва магията). Възможно е в даден момент героят да има само оръжие или само магия
+### `Hero`
 
-#### Враг (`Enemy`)
+| Member | Description |
+|---|---|
+| `Hero(String name, int health, int mana)` | Constructor |
+| `String getName()` | Returns the hero's name |
+| `int getHealth()` | Returns the hero's current health |
+| `int getMana()` | Returns the hero's current mana |
+| `boolean isAlive()` | Returns `true` if health > 0 |
+| `takeHealing(int healingPoints)` | Adds `healingPoints` to health (capped at max health). Does nothing if the hero is dead |
+| `takeDamage(int damagePoints)` | Reduces health by `damagePoints` (minimum 0) |
+| `takeMana(int manaPoints)` | Adds `manaPoints` to mana (capped at max mana) |
+| `equip(Weapon weapon)` | Equips the hero with this weapon, replacing the current one only if the new weapon is stronger. Heroes start unarmed |
+| `Weapon getWeapon()` | Returns the hero's current weapon |
+| `learn(Spell spell)` | The hero learns this spell, replacing the current one only if the new spell is stronger. Heroes start with no spell |
+| `Spell getSpell()` | Returns the hero's current spell |
+| `int attack()` | Returns the hero's attack power — the stronger of weapon damage and spell damage. To use a spell, the hero must have at least as much mana as its cost; mana is consumed on use. The hero may have only a weapon, only a spell, or both |
 
-Врагът трябва да има следните публични методи:
+### `Enemy`
 
-* конструктор, който прима следните аргументи - `String name, int health, int mana, Weapon weapon, Spell spell`
-* `String getName()` - връща името на врага
-* `int getHealth()` - връща останалата кръв на врага
-* `int getMana()` - връща останалата мана на врага
-* `boolean isAlive()` - връща true, ако кръвта на врага е повече от 0
-* `Weapon getWeapon()` - връща оръжието на врага
-* `Spell getSpell()` - връща магията на врага
-* `takeDamage(damagePoints)` - отнема кръв на врага (кръвта не може да бъде по-малко от 0)
-* `int attack()` - връща атакуващите точки врага - по-силното от оръжието и магията (за да се използва магия, врагът трябва да има поне толкова мана, колкото струва магията. При използване на магия, от маната се отнемат толкова точки, колкото струва магията). Възможно е в даден момент врагът да има само оръжие или само магия
+| Member | Description |
+|---|---|
+| `Enemy(String name, int health, int mana, Weapon weapon, Spell spell)` | Constructor |
+| `String getName()` | Returns the enemy's name |
+| `int getHealth()` | Returns the enemy's current health |
+| `int getMana()` | Returns the enemy's current mana |
+| `boolean isAlive()` | Returns `true` if health > 0 |
+| `Weapon getWeapon()` | Returns the enemy's weapon |
+| `Spell getSpell()` | Returns the enemy's spell |
+| `takeDamage(int damagePoints)` | Reduces health by `damagePoints` (minimum 0) |
+| `int attack()` | Returns the enemy's attack power — same logic as `Hero.attack()` |
 
-### Всички артефакти (Оръжие, Магия, Отвара за кръв и Отвара за мана) трябва да имплементират интерфейса `Treasure`
+---
 
-#### Оръжие (`Weapon`)
+## Treasures — the `Treasure` interface
 
-Оръжието трябва да има следните публични методи:
+All artefacts (`Weapon`, `Spell`, `HealthPotion`, `ManaPotion`) must implement `Treasure`.
 
-* конструктор, който прима следните аргументи - `String name, int damage`
-* `String getName()` - връща името на оръжието
-* `int getDamage()` - връща атаката на оръжието
-* `String collect(Hero)` - въоръжава героя с това оръжие (ако то е по-силно от текущото) и връща `String`, съдържащ "Weapon found! Damage points: X", където X е атаката на оръжието
+### `Weapon`
 
-#### Магия (`Spell`)
+| Member | Description |
+|---|---|
+| `Weapon(String name, int damage)` | Constructor |
+| `String getName()` | Returns the weapon's name |
+| `int getDamage()` | Returns the weapon's damage |
+| `String collect(Hero hero)` | Equips the hero if this weapon is stronger, returns `"Weapon found! Damage points: X"` |
 
-Магията трябва да има следните публични методи:
+### `Spell`
 
-* конструктор, който прима следните аргументи - `String name, int damage, int manaCost`
-* `String getName()` - връща името на магията
-* `int getDamage()` - връща атаката на магията
-* `int getManaCost()` - връща цената (в мана) на магията
-* `String collect(Hero)` - героят научава магията (ако тя е по-силна) и връща `String`, съдържащ "Spell found! Damage points: X, Mana cost: Y", където X е атаката на магията, а Y е цената на магията
+| Member | Description |
+|---|---|
+| `Spell(String name, int damage, int manaCost)` | Constructor |
+| `String getName()` | Returns the spell's name |
+| `int getDamage()` | Returns the spell's damage |
+| `int getManaCost()` | Returns the mana cost |
+| `String collect(Hero hero)` | The hero learns the spell if it is stronger, returns `"Spell found! Damage points: X, Mana cost: Y"` |
 
-#### Отвара за кръв (`HealthPotion`)
+### `HealthPotion`
 
-* конструктор, който прима следните аргументи - `int healingPoints`
-* `int heal()` - връща точките кръв, които отварата добавя
-* `String collect(Hero)` - към точките кръв се добавят тези от колбата с отварата (кръвта на героя не може да стане повече от началната; ако героят е с 0 кръв, колбата не прави нищо) и връща `String`, съдържащ "Health potion found! X health points added to your hero!", където X са точките кръв, които съдържа отварата (може да се различават от реално добавените към кръвта на героя)
+| Member | Description |
+|---|---|
+| `HealthPotion(int healingPoints)` | Constructor |
+| `int heal()` | Returns the health points this potion restores |
+| `String collect(Hero hero)` | Restores health (capped at max; does nothing if hero is dead), returns `"Health potion found! X health points added to your hero!"` where X is the potion's value |
 
-#### Отвара за мана (`ManaPotion`)
+### `ManaPotion`
 
-* конструктор, който прима следните аргументи - `int manaPoints`
-* `int heal()` - връща точките мана, които отварата добавя
-* `String collect(Hero)` - към точките мана се добавят тези от колбата с мана (маната на героя не може да стане повече от началната) и връща `String`, съдържащ "Mana potion found! X mana points added to your hero!", където X са точките мана, които съдържа отварата (може да се различават от реално добавените към маната на героя)
+| Member | Description |
+|---|---|
+| `ManaPotion(int manaPoints)` | Constructor |
+| `int heal()` | Returns the mana points this potion restores |
+| `String collect(Hero hero)` | Restores mana (capped at max), returns `"Mana potion found! X mana points added to your hero!"` where X is the potion's value |
 
-### Подземията и съкровищата
+---
 
-Ще ни е нужно подземие, където нашият герой ще се бие с врагове, ще намира могъщи оръжия, магии и отвари.
+## The Dungeon
 
-Подземието ще бъде 2D карта, която изглежда по следния начин:
+The dungeon is a 2D map that looks like this:
 
-  S . ## . . . . . T <br/>
-  \#T## . . ### .<br/>
-  \# . ###E###E <br/>
-  \# . E . . . ### . <br/>
-  \###T#####G
+```
+S . ## . . . . . T
+#T## . . ### .
+# . ###E###E
+# . E . . . ### .
+###T#####G
+```
 
-където:
+Cell legend:
 
-  * S - Стартовата позиция, от която тръгва нашият герой.
-  * H - Текущата позицията на героя.
-  * \# - Препятствие, през което нашият герой не може да минава.
-  * T - Съкровище.
-  * . - Пътят, през който нашият герой трябва да излезе от подземието.
-  * Е - Врагът.
-  * G - Изходът от подземието.
+| Symbol | Meaning |
+|---|---|
+| `S` | Starting position |
+| `H` | Hero's current position |
+| `#` | Obstacle (impassable) |
+| `T` | Treasure |
+| `.` | Open path |
+| `E` | Enemy |
+| `G` | Exit |
 
-#### Създайте Enum `Direction`, който пази посоките на движение за героя(`LEFT, UP, DOWN, RIGHT`).
+### `Direction` enum
 
-#### Ще трябва да имплементирате и логиката на играта, като за целта ще трябва да реализирате `GameEngine` класа.
+Create an enum `Direction` with values: `LEFT`, `UP`, `DOWN`, `RIGHT`.
 
-`GameEngine` класът трябва да има следните публични методи:
+### `GameEngine`
 
-* конструктор, който прима следните аргументи - `char[][] map, Hero hero, Enemy[] enemies, Treasure[] treasures`
-* `char[][] getMap()` - връща текущото състояние на картата
-* `Hero getHero()` - връща героя.
-* `Position getHeroPosition()` - връща текущата позиция на героя
-* `String makeMove(Direction direction)` - където `direction` е посоката на движение на героя.
-  - ако при извикването на метода клетката е свободна - героят се отмества на тази клетка и се връща съобщението "You moved successfully to the next position."
-  - след преместване на героя на следващата позиция, позицията на която героят е бил се заменя с "."
-  - ако при извикването на метода клетката е с препятствие - героят запазва старата си позиция и се връща съобщението "Wrong move. There is an obstacle and you cannot bypass it."
-  - ако при извикването на метода клетката е със съкровище - съкровището се премахва от картата, първото невзето съкровище от масива със съкровища бива взето от героя, героят премества позицията си на мястото на позицията на съкровището и се връща съобщението от съответното съкровище.
-  - ако при извикването на метода клетката е с враг, започва битка между героя и първия непобеден враг от масива с врагове. Логиката зад битката е следната - първо атакува героят, като от точките живот на врага се отнемат точките на атака на героя; След това атакува врагът (ако още е жив) - от точките живот на героя се отнемат атакуващите точки на врага. Действието се повтаря докато точките живот на героя или врага станат 0. При победа на героя, той заема (маркира със символа си) клетката на врага, а предишната му позиция се замества с '.' и се връща "Enemy died.", а при загуба "Hero is dead! Game over!"
-  - ако при извикването на метода клетката е изхода на подземието, играта приключва и се връща съобщението "You have successfully passed through the dungeon. Congrats!"
-  - ако при извикването на метода командата не е от валидните, да се върне съобщението "Unknown command entered."
+| Member | Description |
+|---|---|
+| `GameEngine(char[][] map, Hero hero, Enemy[] enemies, Treasure[] treasures)` | Constructor |
+| `char[][] getMap()` | Returns the current state of the map |
+| `Hero getHero()` | Returns the hero |
+| `Position getHeroPosition()` | Returns the hero's current position |
+| `String makeMove(Direction direction)` | Moves the hero in the given direction — see move logic below |
 
-#### Забележки по реализацията
+#### Move logic
 
-* Интерфейсът `Actor` и класовете `Enemy`, `Hero` и `Position` трябва да са в пакет `bg.sofia.uni.fmi.mjt.dungeon.actor`
-* Интерфейсът `Treasure` и класовете `HealthPotion`, `ManaPotion`, `Spell` и `Weapon` трябва да са в пакет `bg.sofia.uni.fmi.mjt.dungeon.treasure`
-* Класът `GameEngine` и Enum-ът `Direction` трябва да се намират в пакет `bg.sofia.uni.fmi.mjt.dungeon`
-* Добра практика за чист код и добър ООП дизайн е една функция да не променя състоянието на обекти, получила от външния свят.
+| Situation | Outcome |
+|---|---|
+| Target cell is open | Hero moves. Previous cell becomes `'.'`. Returns `"You moved successfully to the next position."` |
+| Target cell is an obstacle | Hero stays put. Returns `"Wrong move. There is an obstacle and you cannot bypass it."` |
+| Target cell is a treasure | Treasure is removed from map. First uncollected treasure from the array is collected by the hero. Hero moves. Returns the treasure's `collect()` message |
+| Target cell is an enemy | A battle begins with the first undefeated enemy from the array. Hero attacks first; if the enemy survives, it attacks back. Repeat until one side reaches 0 health. On hero victory: hero takes the enemy's cell, previous cell becomes `'.'`, returns `"Enemy died."`. On hero defeat: returns `"Hero is dead! Game over!"` |
+| Target cell is the exit | Game ends. Returns `"You have successfully passed through the dungeon. Congrats!"` |
+| Unknown command | Returns `"Unknown command entered."` |
 
-За всички допълнителни интерфейси и класове (т.е. неспоменати изрично в условието), които бихте добавили, пакетът е по ваша преценка.
+---
+
+## Package Structure
+
+| Class / Interface | Package |
+|---|---|
+| `Actor`, `Enemy`, `Hero`, `Position` | `bg.sofia.uni.fmi.mjt.dungeon.actor` |
+| `Treasure`, `HealthPotion`, `ManaPotion`, `Spell`, `Weapon` | `bg.sofia.uni.fmi.mjt.dungeon.treasure` |
+| `GameEngine`, `Direction` | `bg.sofia.uni.fmi.mjt.dungeon` |
+
+Any additional interfaces or classes you introduce may go in the package of your choice.
+
+> **Clean code note:** A good practice is for a method not to mutate objects it received from the outside world.

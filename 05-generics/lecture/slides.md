@@ -1,6 +1,6 @@
 # Generics
 
-10.11.2021
+2021-11-10
 
 <p align="center">
   <img width="25%" src="images/05.0-java-generics.jpg" alt="Java Generics" />
@@ -8,63 +8,64 @@
 
 ---
 
-### Предната лекция говорихме за:
+### Last time we covered:
 
-- Качествен (Clean) Code
-- Колекции (Collections)
+- Clean Code
+- Collections
 
 ---
 
-### Днес продължаваме с:
+### Today we continue with:
 
 - Generics
 
 ---
 
-### Нуждата от Generics
+### The Need for Generics
 
-- Generic типовете ни позволяват да създадем обща имплементация на клас или метод, която работи с различни типове данни
-    - това позволява преизползване на кода
+- Generic types allow us to write a single implementation of a class or method that works with different data types
+    - this enables code reuse and type safety at compile time
 
 ---
 
-### Нуждата от Generics
+### The Need for Generics
 
 ```java
 List list = new LinkedList();
-list.add(new Integer(1));
-Integer i = list.iterator().next(); // няма да се компилира
+list.add(Integer.valueOf(1));
+Integer i = list.iterator().next(); // will not compile — no type info
 ```
 
 ---
 
-### Нуждата от Generics
+### The Need for Generics
 
 ```java
 List list = new LinkedList();
-list.add(new Integer(1)); 
+list.add(Integer.valueOf(1));
 Integer i = (Integer) list.iterator().next(); // explicit type cast
 ```
 
 <br>
-- трябва експлицитно да кастваме, което е досадно
-- има вероятност да сгрешим в предположението си за типа и cast-ът да "гръмне" с `ClassCastException` по време на изпълнение
+
+- we must cast explicitly, which is tedious
+- we might guess the type incorrectly, causing a `ClassCastException` at runtime
 
 ---
 
-### Нуждата от Generics
+### The Need for Generics
 
-- би било много по-удобно
-    - програмистът да може изрази намерението си да ползва определен тип и
-    - компилаторът да може да гарантира коректността на програмата за този тип
+- It would be far better if:
+    - the programmer could express the intended type, and
+    - the compiler could guarantee type correctness
 
 ---
 
-### Нуждата от Generics
+### The Need for Generics
 
 ```java
 List list = new LinkedList();
-list.add(new Integer(1)); 
+list.add(Integer.valueOf(1));
 Integer i = (Integer) list.iterator().next(); // explicit type cast
 ```
 
@@ -82,18 +83,18 @@ Integer i = list.iterator().next(); // no explicit cast needed
 
 ```java
 List<E>
-// Чете се "списък от E"
+// Read as "a list of E"
 ```
 
 <br>
 
-Клас или интерфейс, в декларацията на който има един или повече параметри за тип, се нарича *generic* клас/интерфейс.
+A class or interface whose declaration has one or more type parameters is called a *generic* class or interface.
 
 ---
 
-### Пример: не-generic кутия
+### Example: Non-generic Box
 
-Съдържа какъв да е обект
+Holds any object
 
 ```java
 public class Box {
@@ -111,7 +112,7 @@ public class Box {
 
 ---
 
-### Пример: generic кутия
+### Example: Generic Box
 
 ```java
 public class Box<T> {
@@ -125,48 +126,47 @@ public class Box<T> {
         this.value = value;
     }
 }
-
 ```
 
 ---
 
-### Създаване на инстанции
+### Creating Instances
 
 ```java
-// The long way
+// The long way (explicit type argument)
 Box<Integer> integerBox = new Box<Integer>();
 ```
 
 <br>
 
 ```java
-// Diamond operator
+// Diamond operator (compiler infers type argument)
 Box<Integer> integerBox = new Box<>();
 ```
 
 ---
 
-### Конвенция за именуване на параметрите за тип
+### Type Parameter Naming Convention
 
 - E - Element
 - T - Type
 - K - Key
 - V - Value
 - N - Number
-- S, U, V etc. - 2-ри, 3-ти, 4-ти тип
+- S, U, V etc. - 2nd, 3rd, 4th type
 
 ---
 
-### Generic методи
+### Generic Methods
 
-- Могат да ползват типовите параметри на класа/метода
-- Могат да добавят нови параметри за тип, недекларирани от класа
-- Новите параметри за тип са видими единствено за метода, който ги декларира
-- Generic методите могат да са статични, нестатични или конструктори
+- Can use the type parameters of the enclosing class or method
+- Can introduce new type parameters not declared by the class
+- New type parameters are visible only within the method that declares them
+- Generic methods can be static, non-static, or constructors
 
 ---
 
-### Generic методи – примери
+### Generic Methods – Examples
 
 ```java
 public class Pair<K, V> {
@@ -191,7 +191,7 @@ public class Pair<K, V> {
 
 ---
 
-### Generic методи – примери
+### Generic Methods – Examples
 
 ```java
 public class Util {
@@ -207,66 +207,66 @@ public class Util {
 
 ---
 
-### Generic методи - извикване
+### Generic Methods – Invocation
 
 ```java
 Pair<Integer, String> p1 = new Pair<>(1, "apple");
 Pair<Integer, String> p2 = new Pair<>(2, "pear");
 
-// Full syntax
+// Full syntax (explicit type witness)
 boolean areEqual = Util.<Integer, String>areEqual(p1, p2);
 
-// Short syntax
+// Short syntax (type inference)
 areEqual = Util.areEqual(p1, p2);
 ```
 
 ---
 
-### Ковариантност, контравариантност и инвариантност
+### Covariance, Contravariance, and Invariance
 
-- *Вариантност* (*Variance*) е понятие, свързано с това, как наследяването между по-сложните типове е свързано с наследяването между техните компоненти
-- Лесна за запомняне (и изключително неформална) дефиниция на ковариантност и контравариантност е:
-    - *Ковариантност*: приемат се типове-наследници (subtypes)
-    - *Контравариантност*: приемат се типове-родители (supertypes)
+- *Variance* describes how subtyping between complex types relates to subtyping between their components
+- An informal but memorable definition:
+    - *Covariance*: subtypes are accepted
+    - *Contravariance*: supertypes are accepted
 
 ---
 
-### Ковариантност, контравариантност и инвариантност
+### Covariance, Contravariance, and Invariance
 
-- Например, в Java масивите за ковариантни. Това има две следствия:
-    - `T[]` може да съдържа елементи от тип `T` и негови наследници
-    - `S[]` е наследник на `T[]`, ако `S` е наследник на `T`
+- In Java, arrays are covariant. This has two consequences:
+    - `T[]` can hold elements of type `T` and its subtypes
+    - `S[]` is a subtype of `T[]` when `S` is a subtype of `T`
 
 <br>
 
 ```java
 Integer[] intArr = new Integer[5];
-Number[] numArr = intArr; // OК
+Number[] numArr = intArr; // OK — covariance
 
-numArr[0] = 1.23; // Not OK: will compile but will throw an ArrayStoreException at runtime
+numArr[0] = 1.23; // Not OK: compiles but throws ArrayStoreException at runtime
 ```
 
 ---
 
-### Generic типове и наследяване
+### Generic Types and Inheritance
 
 - `Integer` is-a `Object`
 - `Integer` is-a `Number`
 - `Double` is-a `Number`
-- Обаче `Box<Integer>` is-not-а `Box<Number>`. Техният общ родител е `Object`
-- Казваме, че параметризираният тип е *инвариантен*
-    - Какъв би бил проблемът, ако не беше?
+- However, `Box<Integer>` is-not-a `Box<Number>`. Their common parent is `Object`
+- A parameterized type is therefore *invariant*
+    - What would go wrong if it were not?
 
 ---
 
-### Generic типове и наследяване
+### Generic Types and Inheritance
 
-- Подтип на generic клас или интерфейс получаваме чрез разширяване или имплементиране
-- Ако аргументът за тип е еднакъв, то *is-a* релацията е в сила
+- A subtype of a generic class or interface is obtained by extending or implementing it
+- When the type argument is the same, the *is-a* relationship holds
 
 ---
 
-### Пример от Collections framework-a
+### Example from the Collections Framework
 
 <p align="center">
   <img width="35%" src="images/05.1-collections-subtypes.png" alt="Collection subtypes" />
@@ -274,9 +274,9 @@ numArr[0] = 1.23; // Not OK: will compile but will throw an ArrayStoreException 
 
 ---
 
-### Ограничени (bounded/restricted) generic типове
+### Bounded Generic Types
 
-Може да се специфицира, че generic тип е съвместим само с даден тип или негови наследници/имплементации (upper bound).
+You can restrict a type parameter to be compatible only with a given type or its subtypes/implementations (upper bound).
 
 <br>
 
@@ -285,22 +285,19 @@ public <T extends Number> List<T> fromArrayToList(T[] a) {
     // [...]
 }
 
-// Ако типовете са повече от един, те се разделят с &, като в този случай
-// най-много един може да бъде клас (останалите трябва да са интерфейси)
-// и ако има клас, той трябва да стои първи в списъка.
-// Обърнете внимание, че въпреки че Comparable е интерфейс, а не клас,
-// ключовата дума е пак extends.
-public <T extends Number & Comparable> List<T> anotherMethod(T[] a) {
+// Multiple bounds use &; at most one can be a class (must come first),
+// the rest must be interfaces. Note: extends is used even for interfaces.
+public <T extends Number & Comparable<T>> List<T> anotherMethod(T[] a) {
     // [...]
 }
 ```
 
 ---
 
-### Проблемът с липсата на общ родител
+### The Problem: No Common Parent
 
-Представете си, че ви трябва метод, който извежда всички елементи на дадена колекция.
-Ето как може да се направи без generics:
+Suppose you need a method that prints all elements of a collection.
+Without generics:
 
 <br>
 
@@ -314,9 +311,9 @@ private void printCollection(Collection c) {
 
 ---
 
-### Проблемът с липсата на общ родител
+### The Problem: No Common Parent
 
-Наивно може да предположим, че с generics може да го реализираме така:
+A naive generic version might look like this:
 
 <br>
 
@@ -327,28 +324,28 @@ void printCollection(Collection<Object> c) {
     }
 }
 
-// Проблемът е, че тази реализация всъщност е по-малко полезна от предната.
-// Докато версията без generics може да се извиква с произволна колекция,
-// тази версия може да приема само Collection<Object>, който тип, както
-// видяхме вече, не е родител на Collection<Т> за никое T,
-// т.е. не може да викнем метода с Collection<Integer> да речем.
+// This is actually less useful than the raw version.
+// While the raw version accepts any collection,
+// this one only accepts Collection<Object>.
+// As we have seen, Collection<Object> is NOT a supertype
+// of Collection<T> for any T, so calling it with a
+// Collection<Integer> would not compile.
 ```
 
 ---
 
-### Решението: wildcards
+### The Solution: Wildcards
 
-- Имат ли всички видове `Collection<T>` общ родител, различен от `java.lang.Object`?
-- Отговорът е положителен
-  - типът се записва `Collection<?>` и се чете "колекция от неизвестен тип". Такъв тип се нарича *wildcard* тип
-- Чрез wildcards става възможно generic типовете да поддържат ковариантност и контравариантност
+- Do all `Collection<T>` variants share a common parent other than `java.lang.Object`?
+- Yes — it is written `Collection<?>` and read "collection of unknown type". This is called a *wildcard* type
+- Wildcards allow generic types to support covariance and contravariance
 
 ---
 
-### Решението: wildcards
+### The Solution: Wildcards
 
 ```java
-// този метод може да се извика с аргумент - произволна колекция
+// This method can be called with any collection
 void printCollection(Collection<?> c) {
     for (Object e : c) {
         System.out.println(e);
@@ -358,23 +355,23 @@ void printCollection(Collection<?> c) {
 
 ---
 
-### Generic типове с wildcards
+### Generic Types with Wildcards
 
-- `?` – означава неизвестен тип
-- Може да се използва за тип на:
-  - параметър на метод
-  - член-данна на клас
-  - локална променлива
-  - тип на връщаната стойност
-- Не може да се използва за аргумент за тип при извикване на:
-  - generic метод
-  - създаването на инстанция на generic клас
+- `?` – represents an unknown type
+- Can be used as the type of:
+  - a method parameter
+  - a class field
+  - a local variable
+  - a return type
+- Cannot be used as a type argument when:
+  - calling a generic method
+  - creating an instance of a generic class
 
 ---
 
-### Wildcards, ограничени отгоре
+### Upper-Bounded Wildcards
 
-Искаме да създадем метод, който намира сумата на елементите в списък от `Integer`, `Double`, `Float`, `Number`
+We want to write a method that sums elements in a list of `Integer`, `Double`, `Float`, or `Number`:
 
 <br>
 
@@ -390,10 +387,10 @@ public static double sumOfList(List<? extends Number> list) {
 
 ---
 
-### Wildcards, ограничени отдолу
+### Lower-Bounded Wildcards
 
-Искаме да създадем метод, който да добавя `Integer` обекти към списък.
-Искаме методът да работи с колекции от `Integer`, `Number`, `Object`
+We want a method that adds `Integer` objects to a list.
+The method should work with collections of `Integer`, `Number`, or `Object`:
 
 <br>
 
@@ -407,53 +404,53 @@ public static void addNumbers(List<? super Integer> list) {
 
 ---
 
-### Неограничени wildcards
+### Unbounded Wildcards
 
-- Списък елементи от неизвестен тип - `List<?>`
-- `List<?>` е еквивалентно на `List<? extends Object>`
-- Използва се, когато:
-  - Функционалността, която пишем, може да се имплементира единствено със знанието за методите в `java.lang.Object`
-  - Не се интересуваме от типа на елементите в списъка, а се интересуваме от характеристики на самия списък – например размер на списъка
+- A list of elements of unknown type — `List<?>`
+- `List<?>` is equivalent to `List<? extends Object>`
+- Use when:
+  - the implementation only needs methods from `java.lang.Object`
+  - you care only about list properties (e.g. size), not the element type
 
 ---
 
 ### The Get & Put Principle
 
-- Използвай `extends` wildcard, когато само ще get-ваш стойности от структура
-- Използвай `super` wildcard, когато само ще put-ваш стойности в структура
-- Не използвай wildcard, когато ще правиш и двете
+- Use `extends` wildcard when you will only **get** values from a structure (covariant / read-only)
+- Use `super` wildcard when you will only **put** values into a structure (contravariant / write-only)
+- Use no wildcard when you will do both
 
 <br>
 
-С други думи, ковариантните типове са read-only, а контравариантните типове са write-only.
+In other words: covariant types are read-only, contravariant types are write-only.
 
 ---
 
-### Generics
+### Generics vs C++ Templates
 
-- Подвеждащо приличат на шаблоните в C++, но се различават от тях:
-    - синтактично: при влагане, в Java не е нужно да се разделят съседните `>>` с интервал
+- Generics superficially resemble C++ templates, but differ in key ways:
+    - *Syntactically*: in Java, adjacent `>>` need no space
 
     ```c++
-    // C++: space between the two >> was mandatory until C++11
+    // C++: space between the two >> was mandatory before C++11
     list<list<string> > list;
 
-    // Java: spaces between < and List and between the two >> are optional
+    // Java: spaces around < > are optional
     List<List<String>> list;
     ```
 
-    - семантично: в Java се реализират чрез изтриване (*erasure*) на типовата информация, а не чрез създаване на отделна версия на класа за всяка употреба на шаблона с конкретен тип (*expansion*) като в C++
+    - *Semantically*: Java uses **erasure** — type information is discarded at runtime. C++ uses **expansion** — a separate class version is generated per concrete type argument.
 
 ---
 
-### Изтриване на информацията за типовите аргументи
+### Type Erasure
 
-- Java компилаторът изтрива информацията за типовите аргументи и тази информация не е налична по време на изпълнение
-- Всички типови параметри в generic класове и интерфейси се заместват...
+- The Java compiler erases all type argument information; it is not available at runtime
+- All type parameters in generic classes and interfaces are replaced…
 
 ---
 
-### Ако са неограничени или ограничени отдолу – заместват се с `java.lang.Object`:
+### Erasure of Unbounded or Lower-Bounded Type Parameters → `java.lang.Object`
 
 ```java
 public class Box<T> {
@@ -462,7 +459,7 @@ public class Box<T> {
     public void setValue(T value) { this.value = value; }
 }
 
-
+// After erasure:
 public class Box {
     private Object value;
     public Object getValue() { return value; }
@@ -472,7 +469,7 @@ public class Box {
 
 ---
 
-### Ако са ограничени отгоре – заместват се с техния ограничителен тип
+### Erasure of Upper-Bounded Type Parameters → the Bound Type
 
 ```java
 class Shape { /* ... */ }
@@ -485,13 +482,13 @@ class Rectangle extends Shape { /* ... */ }
 ```java
 public static <T extends Shape> void draw(T shape) { /* ... */ }
 
-
+// After erasure:
 public static void draw(Shape shape) { /* ... */ }
 ```
 
 ---
 
-### Сурови типове (Raw types)
+### Raw Types
 
 ```java
 Box rawBox = new Box();
@@ -499,34 +496,34 @@ Box rawBox = new Box();
 
 <br>
 
-Представляват името на generic клас или интерфейс без аргументите за тип.
-Raw type на `Box<T>` е `Box`.
-Отнемат възможността на компилатора да открива грешки. Оставени са в езика по backward compatibility причини. Избягвайте ги
+A raw type is the name of a generic class or interface without any type arguments.
+The raw type of `Box<T>` is `Box`.
+Raw types remove the compiler's ability to detect type errors. They exist for backward compatibility — avoid them.
 
 ---
 
-### Сурови типове (Raw types)
+### Raw Types
 
-Може безопасно да се присвои инстанция на параметризиран тип на суровия му тип.
-Обратното присвояване се компилира с предупреждение
+A parameterized type can be safely assigned to its raw type.
+The reverse compiles with an unchecked warning:
 
 <br>
 
 ```java
 Box<String> stringBox = new Box<>();
-Box rawBox = stringBox;
+Box rawBox = stringBox; // OK
 
-// rawBox is a raw type of Box<T>
-Box rawBox = new Box();
+Box rawBox2 = new Box(); // raw type
 
 // warning: unchecked conversion
-Box<Integer> intBox = rawBox;
+Box<Integer> intBox = rawBox2;
 ```
+
 ---
 
-### Сурови типове (Raw types)
+### Raw Types
 
-Също се генерира предупреждение, ако се опитаме да изпълним generic метод през инстанция на суров тип:
+Calling a generic method through a raw type reference also produces an unchecked warning:
 
 <br>
 
@@ -539,7 +536,7 @@ rawBox.setValue(8); // warning: unchecked invocation to setValue(T)
 
 ---
 
-### Raw types и съвместимост на типовете
+### Raw Types and Type Compatibility
 
 ```java
 List raw;
@@ -549,38 +546,37 @@ List raw;
 List<Object> objects;
 List<String> strings = new ArrayList<>();
 
-raw = strings; // it's OK: List-of-Strings is-a List
+raw = strings;     // OK: List-of-Strings is-a List
 objects = strings; // will not compile: incompatible types
 ```
 
 ---
 
-### Предпочитай `List` вместо масив
+### Prefer `List` Over Arrays
 
 ```java
 // Fails at runtime
 Object[] array = new Long[1];
-array[0] = "I don't fit in"; // Throws ArrayStoreException
+array[0] = "I don't fit in"; // throws ArrayStoreException
 
-// Won't compile
-List<Object> list = new ArrayList<Long>(); // Incompatible types
+// Won't compile — caught at compile time
+List<Object> list = new ArrayList<Long>(); // incompatible types
 list.add("I don't fit in");
 ```
 
 ---
 
-### Ограничения при generic класове и интерфейси
+### Restrictions on Generic Classes and Interfaces
 
-Не могат да се създават инстанции от типов параметър.
-Не могат да се декларират статични полета на клас от типа на типов параметър
+Cannot instantiate a type parameter directly.
+Cannot declare a static field of a type parameter type:
 
 <br>
 
 ```java
 public static <E> void append(List<E> list) {
-    E elem = new E(); // compile-time error: type parameter E
-                      // cannot be instantiated directly
-    list.add(elem); 
+    E elem = new E(); // compile-time error
+    list.add(elem);
 }
 
 public class MobileDevice<T> {
@@ -590,10 +586,10 @@ public class MobileDevice<T> {
 
 ---
 
-### Ограничения при generic класове и интерфейси
+### Restrictions on Generic Classes and Interfaces
 
-Не може да се правят конвертирания между типове (casts).
-Не може да се прилага `instanceof` операторът с generic типове
+Cannot cast to a parameterized type.
+Cannot use `instanceof` with generic types at runtime:
 
 <br>
 
@@ -607,9 +603,9 @@ public static <E> void rtti(List<E> list) {
 
 ---
 
-### Ограничения при generic класове и интерфейси
+### Restrictions on Generic Classes and Interfaces
 
-Не може да се създават масиви от параметризиран тип
+Cannot create arrays of parameterized types:
 
 <br>
 
@@ -617,22 +613,19 @@ public static <E> void rtti(List<E> list) {
 // compile-time error
 List<Integer>[] arrayOfLists = new List<Integer>[2];
 
-// compiler error, but pretend it's allowed
+// pretend this is allowed:
 Object[] stringLists = new List<String>[10];
+stringLists[0] = new ArrayList<String>(); // OK
 
-// OK
-stringLists[0] = new ArrayList<String>();
-
-// An ArrayStoreException should be thrown,
-// but the runtime can't detect it
+// ArrayStoreException should be thrown, but runtime cannot detect it
 stringLists[1] = new ArrayList<Integer>();
 ```
 
 ---
 
-### Ограничения при generic класове и интерфейси
+### Restrictions on Generic Classes and Interfaces
 
-Не може да се дефинират два метода с формални параметри, които след изтриване на типовите параметри имат еднакви сигнатури
+Cannot define two overloaded methods whose signatures become identical after type erasure:
 
 <br>
 
@@ -648,7 +641,7 @@ public class Example {
 
 ---
 
-### Литература
+### Further Reading
 
 <p align="center">
   <img width="55%" src="images/05.2-o-reilly-generics-and-collections.png" alt="Recommended Literature" />

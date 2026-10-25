@@ -1,24 +1,24 @@
-# Многонишково програмиране с Java (част II)
+# Multithreading with Java (Part II)
 
-22.12.2021
-
----
-
-### Предната лекция говорихме за:
-
-- Concurrent и паралелно изпълнение на програми
-- Многонишково програмиране (Multithreading)
-    - Нишки и техния жизнен цикъл
-    - Атомарни типове данни
-    - Комуникация и синхронизиране между нишки
+2021-12-22
 
 ---
 
-### Днес ще разгледаме:
+### Last Lecture Recap
+
+- Concurrent and parallel program execution
+- Multithreading
+    - Threads and their lifecycle
+    - Atomic data types
+    - Inter-thread communication and synchronisation
+
+---
+
+### Today's Topics
 
 - Thread pools / Executors API
-- Concurrent колекции
-- Мрежово програмиране
+- Concurrent collections
+- Network programming
 
 ---
 
@@ -44,7 +44,7 @@ public interface Callable<V> {
 
 ---
 
-### Future<V>
+### Future\<V\>
 
 ```java
 // java.util.concurrent
@@ -67,14 +67,14 @@ public interface Future<V> {
 
 ---
 
-### Преизползване на нишки
+### Thread Reuse
 
 ---
 
-### Thread pool (Executor)
+### Thread Pool (Executor)
 
-- Kонцепция в многонишковото програмиране, при която "рециклираме" нишките след края на тяхното изпълнение, с цел оптимизация.
-- Отделните `Runnable` или `Callable` обекти се третират като "задачи" и се трупат в опашка, и когато има свободни нишки в pool-а, те изпълняват задачите, на базата на зададени правила.
+- A concurrency concept where threads are recycled after execution to avoid the overhead of creating new ones for every task.
+- Individual `Runnable` or `Callable` objects are treated as *tasks* and queued; when a thread becomes available it picks up the next task according to pool configuration.
 
 <p align="center">
   <img width="50%" src="https://github.com/andy489/Java/blob/main/09-threads/lecture/images/09.7-thread-pool.png" alt="thread pool" />
@@ -85,19 +85,17 @@ public interface Future<V> {
 ### Executors API
 
 ```java
-// централен интерфейс
+// central interface
 java.util.concurrent.Executor
 
 void execute(Runnable command)
 
-// добавя възможност и за изпълнение на Callable обекти,
-// които, за разлика от Runnable, могат да върнат резултат
+// extends Executor to also support Callable tasks that can return a result
 java.util.concurrent.ExecutorService
 
 <T> Future<T> submit(Callable<T> task)
 
-// задачите могат да се пускат след опредено закъснение
-// или периодично на зададен интервал
+// tasks can be scheduled with a delay or at a fixed rate
 java.util.concurrent.ScheduledExecutorService
 
 ScheduledFuture<?> schedule(Runnable r, long delay, TimeUnit tu)
@@ -107,45 +105,39 @@ ScheduledFuture<?> scheduleWithFixedDelay(Runnable r, long initialDelay, long de
 
 ---
 
-### Създаване на Executor
+### Creating an Executor
 
 ```java
-// предоставя статични factory методи за създаването на pools от нишки
+// factory class for creating thread pools
 java.util.concurrent.Executors
 
-// pool-ът ще се състои само от една нишка, следователно
-// задачите ще се изпълняват последователно
+// single-threaded pool: tasks run sequentially
 static ExecutorService newSingleThreadExecutor()
 
-// създава pool, който ще се състои от фиксиран брой нишки.
-// Ако в опашката има повече задачи, отколкото налични нишки,
-// задачите не се обработват, докато не се освободи нишка
+// fixed number of threads: excess tasks wait in queue until a thread is free
 static ExecutorService newFixedThreadPool(int n)
 
-// създава pool от нишки, който ще преизползва нишките,
-// ако има налични, в противен случай ще направи нова.
-// Нишките, които не се използвани през последната минута,
-// ще бъдат премахнати
+// reuses available threads, creates new ones when needed;
+// threads idle for more than one minute are removed
 static ExecutorService newCachedThreadPool()
 
-// pool, който изпълнява задачи периодично или със закъснение
+// pool for delayed or periodic task execution
 static ScheduledExecutorService newScheduledThreadPool(int size)
 ```
 
 ---
 
-### Спиране на Thread pool
+### Stopping a Thread Pool
 
-Executor обект винаги трябва да бъде експлицитно спрян с метода `shutdown()`
+An `Executor` must always be explicitly stopped with `shutdown()`.
 
 ---
 
-### Thread-safe колекции: Синхронизирани колекции
+### Thread-Safe Collections: Synchronised Collections
 
-- Collections API предоставя имплементации на няколко синхронизирани колекции като `
-Vector` и `Hashtable`
-- `java.util.Collections` предоставя factory метод, с който можем да създадем synchronized колекция от съществуваща обикновена колекция
-- Синхронизираните колекции обаче не са достатъчно бързи при много едновременни ползватели и не предоставят възможност за атомарни операции
+- The Collections API provides synchronised implementations such as `Vector` and `Hashtable`.
+- `java.util.Collections` offers factory methods to wrap any collection in a synchronised wrapper.
+- Synchronised collections are too slow for high-concurrency scenarios and do not support atomic compound operations.
 
 <br>
 
@@ -155,46 +147,46 @@ static <T> Collection<T> synchronizedCollection(Collection<T> c)
 
 ---
 
-### Thread-safe колекции: Concurrent колекции
+### Thread-Safe Collections: Concurrent Collections
 
-- намират се в пакета `java.util.concurrent`
-- създадени са специално за работа в concurrent среда
-- добавят възможности за
-    - Lock-free паралелен достъп
-    - Fail-safe итератори
-    - Атомарни операции (например, `putIfAbsent()`)
+- Located in the `java.util.concurrent` package.
+- Designed specifically for concurrent access.
+- Key features:
+    - Lock-free parallel reads
+    - Fail-safe iterators
+    - Atomic operations (e.g. `putIfAbsent()`)
 
 ---
 
 ### `CopyOnWriteArrayList`
 
-- Алтернатива на синхронизираните имплементации на `ArrayList`
-- Позволява lock-free паралелно четене
-- "Fail-safe snapshot" итератор
-- Всяка модификация предизвиква копиране на масива
-- Атомарни операции: `boolean addIfAbsent(E e);`
-- Използването на тази структура е подходящо, само когато броят на четенията от масива значително надвишава броя на модификациите. В противен случай, структурата е изключително неефективна
+- A thread-safe alternative to synchronised `ArrayList` implementations.
+- Lock-free parallel reads.
+- Fail-safe snapshot iterator.
+- Every mutation triggers a full copy of the underlying array.
+- Atomic operation: `boolean addIfAbsent(E e)`.
+- Best suited when reads vastly outnumber writes; otherwise it is highly inefficient.
 
 ---
 
 ### `ConcurrentHashMap`
 
-- Алтернатива на синхронизираните версии на `java.util.HashMap`
-- Паралелен lock-free достъп за четене
-- Паралелен (но лимитиран) достъп за писане 
-- Fail-safe и "Weakly consistent" итератор
-- Атомарни операции: `V putIfAbsent(K key, V value)`
-- Най-популярната колекция от `java.util.concurrent` библиотеката, почти винаги е подходяща да се използва за замяната на старите синхронизирани варианти на `HashMap`
+- A thread-safe alternative to synchronised `HashMap` variants.
+- Lock-free parallel reads.
+- Parallel (but segmented/limited) writes.
+- Fail-safe, weakly-consistent iterator.
+- Atomic operation: `V putIfAbsent(K key, V value)`.
+- The most widely used class in `java.util.concurrent`; almost always the right replacement for legacy synchronised map wrappers.
 
 ---
 
 ### `BlockingQueue`
 
-Имплементация на блокираща опашка ("Producer-Consumer" опашка).
-Блокира, когато:
-- опашката е празна и някой се опитва да чете от нея. При първи запис, бива нотифицирана
-- oпашката е пълна и някой се опитва да пише в нея. При първо четене, бива нотифицирана
-- `ArrayBlockingQueue` – основна имплементация. Опашката пази елементите си в масив, който не може да променя размера си.
+A blocking queue implementation (Producer-Consumer queue).
+It blocks when:
+- The queue is **empty** and a consumer tries to read — unblocks on first write.
+- The queue is **full** and a producer tries to write — unblocks on first read.
+- `ArrayBlockingQueue` is the primary implementation, backed by a fixed-capacity array.
 
 <br>
 
@@ -204,15 +196,15 @@ BlockingQueue<String> queue = new ArrayBlockingQueue<>(4);
 
 ---
 
-### Multi-threading теми извън обхвата на курса
+### Multithreading Topics Beyond This Course
 
-- Visibility & stale data. Volatile variables. Nonatomic 64-bit operations
-- Explicit locks
-- Synchronizers: Semaphores, Latches, Barriers, Exchangers
+- Visibility & stale data. Volatile variables. Non-atomic 64-bit operations.
+- Explicit locks.
+- Synchronisers: Semaphores, Latches, Barriers, Exchangers.
 
 ---
 
-### Полезни четива
+### Further Reading
 
 <p align="center">
   <img width="50%" src="images/09.6-java-concurrency-in-practice.jpg" alt="Java Concurrency in Practice" />
@@ -220,7 +212,7 @@ BlockingQueue<String> queue = new ArrayBlockingQueue<>(4);
 
 ---
 
-### Теория vs. практика
+### Theory vs. Practice
 
 <p align="center">
   <img width="80%" src="https://github.com/andy489/Java/blob/main/09-threads/lecture/images/09.8-dog-meme.png" alt="dogs meme" />
@@ -228,9 +220,9 @@ BlockingQueue<String> queue = new ArrayBlockingQueue<>(4);
 
 ---
 
-# Мрежово програмиране с Java
+# Network Programming with Java
 
-22.12.2021
+2021-12-22
 
 <p align="center">
   <img width="70%" src="images/10.0-networking.jpg" alt="Networking" />
@@ -238,21 +230,20 @@ BlockingQueue<String> queue = new ArrayBlockingQueue<>(4);
 
 ---
 
-### Теми, които ще разгледаме
+### Topics
 
-- Мрежови модели: клиент-сървър, peer-to-peer
-- Мрежови протоколи
-    - IP, UDP, TCP
-- Мрежова комуникация в Java
-    - blocking
-    - non-blocking
+- Network models: client-server, peer-to-peer
+- Network protocols: IP, UDP, TCP
+- Network communication in Java
+    - Blocking I/O (`java.net`)
+    - Non-blocking I/O (`java.nio`)
 - Network scalability
 
 ---
 
-### Модел Клиент-Сървър
+### Client-Server Model
 
-Клиент-сървър е разпределен изчислителен модел, при който част от задачите се разпределят между доставчиците на ресурси или услуги, наречени сървъри и консуматорите на услуги, наречени клиенти.
+Client-server is a distributed computing model where responsibilities are split between resource/service providers (servers) and service consumers (clients).
 
 <br>
 
@@ -262,9 +253,9 @@ BlockingQueue<String> queue = new ArrayBlockingQueue<>(4);
 
 ---
 
-### Модел Peer-to-peer
+### Peer-to-Peer Model
 
-Peer-to-peer е разпределен архитектурен модел на приложение, при който задачите се разпределят по еднакъв начин между всички участници (peer, node). Всеки участник е едновременно и клиент, и сървър.
+Peer-to-peer is a distributed application architecture where every participant (peer, node) acts as both client and server simultaneously, sharing tasks equally.
 
 <p align="center">
   <img width="70%" src="images/10.5-peer-to-peer.png" alt="Peer-to-Peer" />
@@ -272,57 +263,61 @@ Peer-to-peer е разпределен архитектурен модел на 
 
 ---
 
-### Видове клиенти
+### Types of Clients
 
-- Според наличната функционалност в клиента:
-    - Rich клиенти
-    - Thin клиенти
-- Според семантиката (протокола):
-    - Web клиенти – Браузъри (Chrome, Firefox, IE).
-    - Mail клиенти – POP/SMTP клиенти (MS Outlook, Lotus notes).
-    - FTP клиенти – Total Commander, Filezilla, WinSCP.
+- By available functionality:
+    - Rich clients
+    - Thin clients
+- By protocol:
+    - Web clients — browsers (Chrome, Firefox)
+    - Mail clients — POP/SMTP (MS Outlook, Thunderbird)
+    - FTP clients — FileZilla, WinSCP
     - ...
 
 ---
 
-### Видове сървъри
+### Types of Servers
 
-- Файл сървър (Windows, Samba, UNIX NFS, OpenAFS)
-- DB сървър (MySQL, PostgreSQL, Oracle, MS SQL Server, Mongo DB)
-- Mail сървър (MS Exchange, GMail)
-- Name сървър (DNS)
-- FTP сървър (ftpd, IIS)
-- Print сървър
-- Game сървър
-- Web сървър (Apache, GWS, MS IIS, nginx)
-- Application сървър (Tomcat, TomEE, GlassFish, JBoss)
+- File server (Windows, Samba, UNIX NFS, OpenAFS)
+- DB server (MySQL, PostgreSQL, Oracle, MS SQL Server, MongoDB)
+- Mail server (MS Exchange, Gmail)
+- Name server (DNS)
+- FTP server (ftpd, IIS)
+- Print server
+- Game server
+- Web server (Apache, nginx, MS IIS)
+- Application server (Tomcat, TomEE, GlassFish, WildFly)
 - ...
 
 ---
 
-### Предимства и недостатъци на Клиент-Сървър
+### Client-Server: Advantages and Disadvantages
 
-- Висока сигурност: контролът за достъп до данните се осъществява на едно място: сървъра
-- Консистентност на данните: всички клиенти в даден момент достъпват едни и същи данни
-- Промени в данните се разпространяват много бързо в мрежата: при първото извикване от клиент към сървъра
-- Single Point Of Failure (SPOF): ако сървърът е down, никой в мрежата не може да комуникира
-- Увеличаването на броя на клиентите води до намаляване на производителността
-- 70-95% от времето, през което работи, сървърът е idle
-
----
-
-### Предимства и недостатъци на Peer-to-Peer
-
-- Няма SPOF
-- Няма намаляване на производителността при увеличаване на броя на клиентите
-- Проблеми със сигурността: има копия на даните из цялата мрежа
-- Риск от умишлена промяна (подмяна) на съдържанието и различни версии на данните в различни възли на мрежата
-- Липса на контрол върху съдържанието и възможност за загуба на съдържание
-- Труден процес на поддръжка
+- **Advantages**
+    - High security: access control is enforced in one place (the server).
+    - Data consistency: all clients see the same data at any point in time.
+    - Changes propagate quickly — on the very next client request.
+- **Disadvantages**
+    - Single Point of Failure (SPOF): if the server is down, no one can communicate.
+    - Performance degrades as the number of clients grows.
+    - The server is idle 70–95% of the time.
 
 ---
 
-### Open Systems Interconnection (OSI) модел
+### Peer-to-Peer: Advantages and Disadvantages
+
+- **Advantages**
+    - No SPOF.
+    - Performance does not degrade as the number of participants grows.
+- **Disadvantages**
+    - Security concerns: data copies are distributed across the network.
+    - Risk of intentional content modification and version divergence across nodes.
+    - No centralised content control; content can be lost.
+    - Maintenance is complex.
+
+---
+
+### Open Systems Interconnection (OSI) Model
 
 <p align="center">
   <img width="100%" src="images/10.1-osi-model.png" alt="OSI Model" />
@@ -330,92 +325,91 @@ Peer-to-peer е разпределен архитектурен модел на 
 
 ---
 
-### OSI модел: мрежови протоколи
+### OSI Model: Network Protocols
 
 <table style="font-size:0.7em; line-height=0.3em;">
   <tr>
-    <th style="font-weight: bold; padding-right: 12px; font-weight: bold;">#</th>
-    <th style="font-weight: bold;">Слой</th>
-    <th style="font-weight: bold;">Описание</th>
-    <th style="font-weight: bold;">Протоколи</th>
+    <th style="font-weight: bold; padding-right: 12px;">#</th>
+    <th style="font-weight: bold;">Layer</th>
+    <th style="font-weight: bold;">Description</th>
+    <th style="font-weight: bold;">Protocols</th>
   </tr>
   <tr>
     <td>7</td>
     <td>Application</td>
-    <td>Позволява на потребителските приложения да заявяват услуги или информация, а на сървър приложенията — да се регистрират и предоставят услуги в мрежата.</td>
+    <td>Allows user applications to request services and server applications to register and provide services on the network.</td>
     <td>DNS, FTP, HTTP, NFS, NTP, DHCP, SMTP, Telnet</td>
   </tr>
   <tr>
     <td>6</td>
     <td>Presentation</td>
-    <td>Конвертиране, компресиране и криптиране на данни.</td>
+    <td>Data conversion, compression, and encryption.</td>
     <td>TLS/SSL</td>
   </tr>
   <tr>
     <td>5</td>
     <td>Session</td>
-    <td>Създаването, поддържането и терминирането на сесии. Сигурност. Логически портове.</td>
+    <td>Session creation, maintenance, and termination. Security. Logical ports.</td>
     <td>Sockets</td>
   </tr>
   <tr>
     <td>4</td>
     <td>Transport</td>
-    <td>Грижи се за целостта на съобщенията, за пристигането им в точна последователност, потвърждаване за пристигане, проверка за загуби и дублиращи се съобщения.</td>
+    <td>Ensures message integrity, correct sequencing, delivery acknowledgement, and detection of lost or duplicate messages.</td>
     <td>TCP, UDP</td>
   </tr>
   <tr>
     <td>3</td>
     <td>Network</td>
-    <td>Управлява пакетите в мрежата. Рутиране. Фрагментация на данните. Логически адреси.</td>
+    <td>Manages packets in the network: routing, fragmentation, and logical addressing.</td>
     <td>IPv4, IPv6, IPX, ICMP</td>
   </tr>
   <tr>
     <td>2</td>
     <td>Data Link</td>
-    <td>Предаване на фреймове от един възел на друг. Управление на последователността на фреймовете. Потвърждения. Проверка за грешки. MAC.</td>
+    <td>Frame transmission between nodes. Frame sequencing. Acknowledgements. Error detection. MAC addressing.</td>
     <td>ATM, X.25, DSL, IEEE 802.11</td>
   </tr>
   <tr>
     <td>1</td>
     <td>Physical</td>
-    <td>Отговаря за предаването и приемането на неструктурирани потоци от данни по физическия носител. Кодиране/декодиране на данните. Свързване на физическия носител.</td>
+    <td>Transmits and receives raw bit streams over the physical medium. Encoding/decoding. Physical connector management.</td>
     <td>IEEE 802.11, IEEE 1394, Bluetooth</td>
   </tr>
 </table>
 
+---
+
+### java.net | Introduction
+
+The `java.net` package provides classes that operate at various OSI layers.
+
+- Network and data-link layer
+    - `NetworkInterface` — access to the machine's network adapters
+    - `InetAddress` — IP addresses
+- Transport layer
+    - TCP — `Socket` and `ServerSocket`
+    - UDP — `DatagramPacket`, `DatagramSocket`, and `MulticastSocket`
+- Application layer
+    - `URL` and `URLConnection` — access to HTTP and FTP resources
+    - (since Java 11) `java.net.http` — convenient HTTP client API
 
 ---
 
-### java.net | Въведение
+### java.net | Network Adapters
 
-Пакетът `java.net` предоставя класове, които използват и работят на различни нива от OSI модела.
-
-- Мрежов и data link слой
-    - класът `NetworkInterface` предоставя достъп до мрежовите адаптери на компютъра
-    - IP адреси - класът `InetAddress`
-- Транспортен слой
-    - TCP - класове `Socket` и `ServerSocket`
-    - UDP - класове `DatagramPacket`, `DatagramSocket` и `MulticastSocket`
-- Приложен слой
-    - класовете `URL` и `URLConnection` за достъпването на HTTP и FTP ресурси
-    - (от Java 11) класовете от пакета `java.net.http` за по-удобна работа с HTTP
+- A network adapter connects a computer system to a network.
+- Adapters can be physical or virtual (software). Examples of virtual adapters: the *loopback* interface and interfaces created by virtual machines.
+- A system can have multiple physical and/or virtual network adapters.
+- Java provides access to all network adapters through `java.net.NetworkInterface`.
 
 ---
 
-### java.net | Мрежови адаптери
+### IP Address
 
-- Мрежовият адаптер осъществява връзката между компютърна система и мрежа
-- Мрежовите адаптери могат да бъдат физически или виртуални (софтуерни). Примери за виртуални са *loopback* интерфейсът и интерфейсите, създадени от виртуалните машини
-- Една система може да има повече от един физически и/или виртуален мрежови адаптер
-- Java предоставя достъп до всички мрежови адаптери чрез класа `java.net.NetworkInterface`
-
----
-
-### IP адрес
-
-- Всеки компютър, свързан към мрежа, се идентифицира с логически адрес
-- Най-разпространените протоколи за логически адреси в мрежата са IP (Internet Protocol) версия 4 и IP версия 6
-- Адресите в IPv4 представляват 32-битови числа, а в IPv6 - 128-битови
+- Every computer connected to a network is identified by a logical address.
+- The most common logical address protocols are IPv4 and IPv6.
+- IPv4 addresses are 32-bit numbers; IPv6 addresses are 128-bit numbers.
 
 <br>
 
@@ -425,109 +419,105 @@ Peer-to-peer е разпределен архитектурен модел на 
 
 ---
 
-### Портове
+### Ports
 
-- В общия случай, компютърът има една физическа връзка към мрежата. По тази връзка се изпращат и получават данни от/за всички приложения. Портовете се използват, за да се знае кои данни за кое приложение са
-- Предадените данни по мрежата винаги съдържат в себе си информация за компютъра и порта, към които са насочени
-- Портовете се идентифицират с 16-битово число, което се използва от UDP и TCP протоколите, за да идентифицират за кое приложение са предназначени данните
-- Портовете могат да бъдат от номер 0 до номер 65 535
-- Портове с номера от 0 до 1023 са известни като *well-known ports*. За да се използват тези портове от вашето приложение, то трябва да се изпълнява с администраторски права
+- A computer typically has a single physical connection to the network, shared by all applications. Ports allow the OS to demultiplex incoming data to the correct application.
+- Every transmitted network packet contains the destination IP address and port number.
+- Ports are identified by a 16-bit number used by TCP and UDP to route data to the right application.
+- Port numbers range from 0 to 65 535.
+- Ports 0–1023 are *well-known ports*; using them requires administrator privileges.
 
 ---
 
-### Адресиране в мрежата | `java.net.InetAddress`
+### Addressing in the Network | `java.net.InetAddress`
 
-- Инстанции се създават чрез статични методи на класа
-- С `NetworkInterface`, може да вземете списък с всички мрежови адаптери или точно определен
+- Instances are created via static factory methods of the class.
+- Use `NetworkInterface` to enumerate all network adapters or retrieve a specific one.
 
 ```java
-// създава инстанция по hostname или по текстово представяне на IP адрес
-InetAddress address = InetAddress.getByName​("www.google.com");
+// Create an instance by hostname or textual IP address
+InetAddress address = InetAddress.getByName("www.google.com");
 System.out.println(address.getHostAddress()); // 172.217.169.164
 
-InetAddress address = InetAddress.getByName("62.44.101.138");
-System.out.println(address.getHostName()); // www.fmi.uni-sofia.bg
-System.out.println(address.isReachable(5_000)); // true
+InetAddress address2 = InetAddress.getByName("62.44.101.138");
+System.out.println(address2.getHostName());     // www.fmi.uni-sofia.bg
+System.out.println(address2.isReachable(5_000)); // true
+
 InetAddress localhost = InetAddress.getLocalHost();
 
-Collections.list(NetworkInterface.getNetworkInterfaces())
-           .stream()
-           .forEach(n -> {
-                System.out.println("Disp. name: " + n.getDisplayName());
-                System.out.println("Name: " + n.getName());
-           });
+NetworkInterface.networkInterfaces()
+    .forEach(n -> {
+        System.out.println("Display name: " + n.getDisplayName());
+        System.out.println("Name: " + n.getName());
+    });
 ```
 
 ---
 
-### Сокети (sockets)
+### Sockets
 
-- UDP и TCP се имплементират чрез *сокети* (*sockets*)
-- Сокетите представляват крайните точки на двупосочна мрежова връзка (connection) между две приложения
-- Всеки сокет се идентифицира чрез комбинация от IP адрес и номер на порт
-
----
-
-### UDP протокол
-
-- позволява на приложенията да пращат съобщения, наречени *datagrams*, чрез прост, connection-less модел на комуникация
-- няма *handshake* между двете страни на комуникацията, в следствие на което няма гаранция за доставка на съобщенията и за запазване на реда им
+- UDP and TCP are implemented via *sockets*.
+- A socket is one endpoint of a two-way network connection between two applications.
+- Each socket is identified by a combination of IP address and port number.
 
 ---
 
-### UDP протокол
+### UDP Protocol
 
-- Datagram се представя от класа `java.net.DatagramPacket`
-- `DatagramSocket` представлява connection-less сокет за пращане и получаване на datagram пакети чрез методите си `send` и `receive`
-
----
-
-### TCP протокол
-
-- Надгражда IP протокола, затова също се нарича TCP/IP ("TCP over IP")
-- Предава данните по надежден начин, т.е. с проверка за грешки, с гаранция за доставка и със запазване на реда на пакетите
+- Allows applications to send messages called *datagrams* via a simple, connection-less communication model.
+- There is no handshake between the two communicating parties, so there is no guarantee of delivery or message ordering.
 
 ---
 
-### TCP протокол
+### UDP Protocol
 
-- Имплементира се със сокети - класовете `ServerSocket` и `Socket`, позволяващи пращането и получаването на съобщения между две приложения: сървър и клиент
+- A datagram is represented by `java.net.DatagramPacket`.
+- `DatagramSocket` is a connection-less socket for sending and receiving datagram packets via its `send` and `receive` methods.
+
+---
+
+### TCP Protocol
+
+- Builds on top of the IP protocol (hence also called TCP/IP, "TCP over IP").
+- Transmits data reliably: with error checking, guaranteed delivery, and preserved packet ordering.
+
+---
+
+### TCP Protocol
+
+- Implemented with sockets — `ServerSocket` and `Socket` — which allow a server and client to exchange messages.
 
 ---
 
 ### TCP vs. UDP
 
-| Характеристика               | TCP                  | UDP                       |
-|:-----------------------------|:---------------------|:--------------------------|
-| Connection                   | connection-based     | connection-less           |
-| Надеждност                   | висока               | ниска                     |
-| Ред на пакетите              | гарантиран           | не гарантиран             |
-| Скорост на доставка          | по-ниска от UDP      | по-висока от TCP          |
-| Проверка за грешки           | да, с възстановяване | да, но без възстановяване |
-| Потвърджаване при получаване | да                   | не                        |
+| Characteristic               | TCP                          | UDP                           |
+|:-----------------------------|:-----------------------------|:------------------------------|
+| Connection                   | connection-based             | connection-less               |
+| Reliability                  | high                         | low                           |
+| Packet ordering              | guaranteed                   | not guaranteed                |
+| Delivery speed               | lower than UDP               | higher than TCP               |
+| Error checking               | yes, with recovery           | yes, but without recovery     |
+| Delivery acknowledgement     | yes                          | no                            |
 
 ---
 
-### Клиент-сървър имплементация със сокети
+### Client-Server Implementation with Sockets
 
 ---
 
 ### `java.net.ServerSocket`
 
 ```java
-ServerSocket() // създава server socket, който не е свързан.
-               // Изисква извикване на bind(), преди да се използва
-ServerSocket(int port) // създава server socket, свързан с дадения порт.
-                       // Стойноста на port е от 0 до 65535,
-                       // като 0 означава автоматично определен
-ServerSocket(int port, int backlog) // задава максимален брой чакащи
-                                    // заявки за свързване
+ServerSocket()               // unbound; call bind() before use
+ServerSocket(int port)       // bound to the given port (0 = auto-assigned)
+ServerSocket(int port, int backlog)              // max pending connection queue size
 ServerSocket(int port, int backlog, InetAddress bindAddr)
 
-void bind(SocketAddress endpoint) // свързва към конкретния IP адрес
+void bind(SocketAddress endpoint)
 void bind(SocketAddress endpoint, int backlog)
 
-Socket accept() // блокира и чака заявка за свързване от клиент
+Socket accept()              // blocks until a client connects
 ```
 
 ---
@@ -535,21 +525,20 @@ Socket accept() // блокира и чака заявка за свързван
 ### `java.net.Socket`
 
 ```java
-Socket() // създава socket, който не е свързан
-Socket(String host, int port) // създава socket и го свързва
-                              // със зададения host и порт
+Socket()                                        // unconnected socket
+Socket(String host, int port)                   // connects on construction
 Socket(InetAddress address, int port)
 
-void connect​(SocketAddress endpoint) // свързва сокета към сървъра
-void connect​(SocketAddress endpoint, int timeout)
+void connect(SocketAddress endpoint)
+void connect(SocketAddress endpoint, int timeout)
 
-InputStream getInputStream() // връща входен поток за четене
-OutputStream getOutputStream() // връща изходен поток за писане
+InputStream getInputStream()   // read from the connection
+OutputStream getOutputStream() // write to the connection
 ```
 
 ---
 
-### Сокети (Sockets)
+### Sockets
 
 <p align="center">
   <img width="100%" src="images/10.3-network-sockets.png" alt="Socket Calls" />
@@ -557,7 +546,7 @@ OutputStream getOutputStream() // връща изходен поток за пи
 
 ---
 
-### java.net | TCP комуникация
+### java.net | TCP Communication Flow
 
 <p align="center">
   <img width="100%" src="images/10.7-java-net-tcp-flow.png" alt="TCP Flow" />
@@ -565,7 +554,7 @@ OutputStream getOutputStream() // връща изходен поток за пи
 
 ---
 
-### java.net: blocking мрежова комуникация
+### java.net | Blocking Network Communication
 
 <p align="center">
   <img width="100%" src="images/10.6-java-net-blocking-io.png" alt="Blocking IO" />
@@ -573,7 +562,7 @@ OutputStream getOutputStream() // връща изходен поток за пи
 
 ---
 
-### java.net | Клиент-сървър архитектура
+### java.net | Client-Server Architecture
 
 <p align="center">
   <img width="100%" src="images/10.8-java-net-architecture.png" alt="Java.net Architecture" />
@@ -581,62 +570,59 @@ OutputStream getOutputStream() // връща изходен поток за пи
 
 ---
 
-### java.net | Архитектура
+### java.net | Multithreaded Architecture
 
 <p align="center">
-  <img width="100%" src="images/10.8.1-java-net-multithreading.png" alt="Java.net Architecture" />
+  <img width="100%" src="images/10.8.1-java-net-multithreading.png" alt="Java.net Multithreaded Architecture" />
 </p>
 
 ---
 
-### java.net | Предимства и недостатъци
+### java.net | Advantages and Disadvantages
 
-- Предимства
-    - Сравнително прост код: познатото I/O Stream API
-    - Няма нужда от проверки за частично получени съобщения
-        - нишката блокира, докато прочете цялото съобщение
-- Недостатъци
-    - Неефективно използване на нишките
-        - Много нишки в waiting/blocked състояние, заради блокиращите операции
-        - Допълнителна памет (за нишките)
-    - Performance penalty заради context switching между нишките
-    - Ограничен брой паралелни конекции, защото нишките на сървъра са краен брой
+- **Advantages**
+    - Relatively simple code — uses the familiar I/O Stream API.
+    - No need to handle partial reads — the thread blocks until the full message arrives.
+- **Disadvantages**
+    - Inefficient thread usage — many threads sit in waiting/blocked state due to blocking operations.
+    - Extra memory consumed by idle threads.
+    - Performance penalty from context switching between threads.
+    - Limited number of concurrent connections because the server thread pool is finite.
 
 ---
 
-### Мрежово програмиране с Non-blocking I/O (NIO)
+### Non-Blocking I/O (NIO) for Network Programming
 
-- Java NIO API-то реализира алтернативен начин за мрежова комуникация, който позволява неблокиращи (асинхронни) входно-изходни операции
-- Чрез него се реализират мрежови приложения, които работят ефективно с огромен брой паралелни клиенти и заявки
-
----
-
-### java.nio | Основни обекти
-
-- **Буфер** (Buffer) - Блок от паметта, който се използва за временно съхранение на данни за четене или писане
-- **Канал** (Channel) - Абстракция за комуникационна връзка (connection)
-- **Селектор** (Selector) - Компонент, в който се регистрират множество канали, позволяващ обработката им в една нишка
+- The Java NIO API provides an alternative to `java.net` that supports non-blocking (asynchronous) I/O operations.
+- It enables network applications that efficiently handle a very large number of concurrent clients and requests.
 
 ---
 
-### java.nio | Буфери
+### java.nio | Core Abstractions
 
-- Буферът е контейнер, който съдържа временно данни, които ще бъдат записани или прочетени
-- Представлява масив от примитивен тип с фиксиран размер, който пази състояние: докъде е запълнен, колко свободно място има, докъде са прочетени или записани данните
-- Класът `Buffer` е абстрактен, но има наследници за всички не-булеви примитивни типове: `ByteBuffer`, `CharBuffer`, `ShortBuffer`, `IntBuffer`, `LongBuffer`, `FloatBuffer`, `DoubleBuffer`
-- `java.nio` комуникацията се основава на буфери, за разлика от `java.io` комуникацията, основана на входно-изходни потоци
+- **Buffer** — a block of memory used as temporary storage for data being read or written.
+- **Channel** — an abstraction for a communication connection.
+- **Selector** — a component with which multiple channels are registered, allowing a single thread to handle many channels.
+
+---
+
+### java.nio | Buffers
+
+- A buffer is a container for data that will be written to or read from a channel.
+- It is a fixed-size array of a primitive type that tracks its own state: how much data it holds, how much space remains, and how far reading/writing has progressed.
+- `Buffer` is abstract; concrete subclasses exist for all non-boolean primitive types: `ByteBuffer`, `CharBuffer`, `ShortBuffer`, `IntBuffer`, `LongBuffer`, `FloatBuffer`, `DoubleBuffer`.
+- NIO communication is buffer-based, whereas classic `java.io` communication is stream-based.
 
 ---
 
 ### java.nio.Buffer
 
-- Състоянието на буфера се определя от четири атрибута:
-    - *капацитет* (capacity): максималния брой елементи, които може да съдържа буфера. Задава се при създаването му и не може да се променя
-    - *лимит* (limit): първият индекс на буфера, който не трябва да се достъпва за четене или писане
-    - *позиция* (position): индекса на следващия елемент на буфера за прочитане или за записване
-    - *маркер* (mark): индекс, в който може да запомним текущата позиция, за да се върнем към нея по-късно
-- Четирите индекса са в следната зависимост:
-    0 <= mark <= position <= limit <= capacity
+- The state of a buffer is defined by four attributes:
+    - *capacity*: maximum number of elements; set at creation, never changes.
+    - *limit*: the first index that should not be read or written.
+    - *position*: index of the next element to be read or written.
+    - *mark*: a saved position to which the buffer can be reset.
+- Invariant: `0 <= mark <= position <= limit <= capacity`
 
 ---
 
@@ -657,17 +643,16 @@ Buffer reset()
 ### java.nio.Buffer
 
 ```java
-// Подготвя буфера за "източване" / прочитане.
-// Лимитът става равен на позицията, а позицията на нула
+// Prepare buffer for draining (reading).
+// Sets limit = position, then position = 0.
 Buffer flip()
 
-// Подготвя буфера за ново запълване.
-// Лимитът става равен на капацитета, а позицията на нула
+// Prepare buffer for a fresh fill (writing).
+// Sets limit = capacity, then position = 0.
 Buffer clear()
 
-// Подготвя буфера за повторно прочитане на данните,
-// които вече съдържа. Лимитът остава без промяна,
-// позицията се нулира
+// Prepare buffer for re-reading the same data.
+// Limit is unchanged; position is reset to 0.
 Buffer rewind()
 ```
 
@@ -684,7 +669,7 @@ ByteBuffer put(int index, byte b)
 
 ---
 
-### java.nio | Как работи буферът
+### java.nio | How Buffers Work
 
 <p align="center">
   <img width="100%" src="images/10.9-nio-buffer-operations.png" alt="NIO Buffer Operations" />
@@ -692,29 +677,31 @@ ByteBuffer put(int index, byte b)
 
 ---
 
-### java.nio | Директни и индиректни буфери
+### java.nio | Direct vs. Indirect Buffers
 
-- Буферите биват *директни* и *индиректни*
+- Buffers are either *direct* or *indirect*.
 
 <br>
 
 ```java
-ByteBuffer buffer = ByteBuffer.allocateDirect(1024); // direct buffer
-ByteBuffer buffer = ByteBuffer.allocate(1024); // indirect buffer
+ByteBuffer direct   = ByteBuffer.allocateDirect(1024); // direct buffer
+ByteBuffer indirect = ByteBuffer.allocate(1024);       // indirect buffer
 ```
 
 ---
 
-### java.nio | Директни и индиректни буфери
+### java.nio | Direct vs. Indirect Buffers
 
-- Директните буфери ще използват при възможност native I/O операции за четене и запис директно през операционната система
-- Директният буфер представлява непрекъснат регион на постоянно място в паметта, индиректният е Java масив, може да не е непрекъснят регион и може да се мести от garbage collector-a
-- Директният буфер е по-скъп за създаване, но ще работи по-ефективно за големи размери и ако живее дълго в паметта
-- Индиректният буфер не е толкова ефективен като директният за повечето операции, но управлението на паметта му се осъществява от JVM-a (garbage collector-a) и е по-предсказуемо
+- A **direct** buffer uses native I/O operations for reading and writing, bypassing the JVM heap.
+    - It occupies a contiguous, pinned region of memory; the GC cannot move it.
+    - More expensive to allocate, but faster for large, long-lived buffers.
+- An **indirect** buffer is a regular Java byte array on the heap.
+    - The JVM (GC) manages its memory — allocation and reclamation are predictable.
+    - Less efficient for most I/O operations than a direct buffer of the same size.
 
 ---
 
-### Java I/O performance
+### Java I/O Performance
 
 <p align="center">
   <img width="100%" src="images/10.10-java-io-performance.png" alt="Java IO Performance" />
@@ -722,10 +709,10 @@ ByteBuffer buffer = ByteBuffer.allocate(1024); // indirect buffer
 
 ---
 
-### Канали (Channels)
+### Channels
 
-- Каналите са абстракция за връзка ("тръба") за ефективно транспортиране на данни между byte буфери и обект на другия край на канала (най-често файл или сокет)
-- Каналите позволяват с минимален overhead да се достъпват native входно-изходните услуги на операционна система, а буферите са вътрешните крайни точки, които каналите използват за изпращане и получаване на данни
+- Channels are an abstraction for a connection ("pipe") that efficiently transports data between byte buffers and an entity at the other end of the channel (typically a file or socket).
+- Channels provide low-overhead access to native I/O services of the operating system; buffers are the internal endpoints that channels use to send and receive data.
 
 ---
 
@@ -740,7 +727,7 @@ SocketChannel accept()
 
 // Binds the channel's socket to a local address
 // and configures the socket to listen for connections
-ServerSocketChannel bind(SocketAddress local) 
+ServerSocketChannel bind(SocketAddress local)
 
 // Retrieves a server socket associated with this channel
 ServerSocket socket()
@@ -753,26 +740,26 @@ ServerSocket socket()
 ```java
 // Opens a socket channel
 static SocketChannel open()
-// Opens a socket channel and connects it to a remote address
+// Opens and connects a socket channel to a remote address
 static SocketChannel open(SocketAddress remote)
 
 // Connects this channel's socket
 boolean connect(SocketAddress remote)
 
-// Retrieves a socket associated with this channel
+// Retrieves the socket associated with this channel
 Socket socket()
 
 // Reads bytes from this channel into the given buffer
-int read(ByteBuffer dst) 
+int read(ByteBuffer dst)
 // Writes bytes to this channel from the given buffer
 int write(ByteBuffer src)
 ```
 
 ---
 
-### Selector и SelectionKey
+### Selector and SelectionKey
 
-Селекторите осигуряват възможността за избор (селектиране) на канали според готовността им за I/O операции (readiness selection), което е предпоставка за multiplexed I/O, т.е. с една нишка да обслужваме голям брой канали.
+Selectors enable *readiness selection* — choosing channels that are ready for I/O — which is the foundation of multiplexed I/O: one thread serving a large number of channels.
 
 <p align="center">
   <img width="100%" src="images/10.11-selectors-and-channels.jpg" alt="Selectors and Channels" />
@@ -780,14 +767,14 @@ int write(ByteBuffer src)
 
 ---
 
-### Selector и SelectionKey
+### Selector and SelectionKey
 
-1. Регистрираме един или повече вече създадени канали с инстанция на селектор
-2. Регистрирането връща ключ, който представлява релацията между канала и селектора
-3. Ключът "помни" операциите върху даден канал, от които се интересуваме и следи готовността на канала да ги изпълнява
-4. При извикване на select() метода на селектора, се актуализират всички асоциирани с този селектор ключове на канали
-5. От селектора може да получим множеството от ключове, чиито канали са готови за операция
-6. Итерираме това множество и обслужваме всеки от готовите канали
+1. Register one or more channels with a `Selector` instance.
+2. Registration returns a `SelectionKey` representing the channel-selector relationship.
+3. The key records which operations on the channel the application is interested in, and tracks the channel's readiness to perform them.
+4. Calling `selector.select()` updates the readiness state of all registered keys.
+5. Retrieve the set of keys whose channels are ready for an operation.
+6. Iterate over that set and service each ready channel.
 
 ---
 
@@ -797,10 +784,10 @@ int write(ByteBuffer src)
 // Opens a selector
 static Selector open()
 
-// Selects a set of keys whose corresponding channels are ready for I/O operations
+// Selects a set of keys whose corresponding channels are ready for I/O
 int select()
 
-// Returns this selector's selected-key set
+// Returns the set of ready keys
 Set<SelectionKey> selectedKeys()
 ```
 
@@ -833,8 +820,8 @@ Object attachment()
 ### java.nio.channels.ServerSocketChannel
 
 ```java
-// ServerSocketChannel е канал, който може да слуша
-// за входящи TCP заявки за свързване, точно както ServerSocket
+// ServerSocketChannel listens for incoming TCP connections,
+// just like ServerSocket, but in non-blocking mode.
 
 ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
 serverSocketChannel.bind(new InetSocketAddress(9999));
@@ -848,12 +835,11 @@ while (true) {
 
 ---
 
-### java.nio | SocketChannel | Регистрация
+### java.nio | SocketChannel | Registration
 
 ```java
-// SocketChannel представлява една TCP връзка. За да се използва
-// асинхронно, трябва да се регистрира в селектор. Каналът трябва
-// да се постави в nonblocking режим, преди да се регистрира със селектор.
+// A SocketChannel represents a single TCP connection.
+// It must be put into non-blocking mode before registering with a Selector.
 
 Selector selector = Selector.open();
 socketChannel.configureBlocking(false);
@@ -862,20 +848,21 @@ socketChannel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
 
 ---
 
-### java.nio | SocketChannel | Регистрация
+### java.nio | SocketChannel | Interest Ops
 
-- Когато регистрираме `SocketChannel`, трябва да укажем, за какви операции да бъдем известени:
-    - `OP_READ` – когато се получи нещо за четене от канала
-    - `OP_WRITE` – когато каналът е готов за запис
-    - `OP_CONNECT` – когато каналът е готов да завърши последователността си за свързване към отдалечената система
-    - `OP_ACCEPT` – когато пристигне заявка за нова конекция
+When registering a `SocketChannel`, specify which events to be notified about:
+
+- `OP_READ` — data is available to read from the channel.
+- `OP_WRITE` — the channel is ready to accept writes.
+- `OP_CONNECT` — the channel has finished the connection sequence to the remote host.
+- `OP_ACCEPT` — a new incoming connection request has arrived.
 
 ---
 
 ### java.nio | SocketChannel | Notification
 
 ```java
-// Получаване на известие за няколко канала
+// Receiving notifications for multiple channels
 while (true) {
     int readyChannels = selector.select();
     if (readyChannels == 0) { continue; }
@@ -894,16 +881,16 @@ while (true) {
 
 ---
 
-### java.nio | SocketChannel | Notification | Четене
+### java.nio | SocketChannel | Reading
 
 ```java
-// Четене на данните от канал
+// Reading data from a channel
 if (key.isReadable()) {
     SocketChannel sc = (SocketChannel) key.channel();
     while (true) {
         buffer.clear();
         int r = sc.read(buffer);
-        if (r <= 0) { continue; }
+        if (r <= 0) { break; }
         buffer.flip();
         sc.write(buffer);
     }
@@ -914,11 +901,10 @@ if (key.isReadable()) {
 
 ---
 
-### java.nio | SocketChannel | Запис
+### java.nio | SocketChannel | Writing
 
 ```java
-// Използваме SocketChannel канал (channel) и за изпращане на данни
-// по TCP връзката (connection)
+// Use a SocketChannel to send data over a TCP connection
 
 SocketChannel socketChannel = SocketChannel.open();
 socketChannel.connect(new InetSocketAddress("127.0.0.1", 9999));
@@ -926,7 +912,7 @@ socketChannel.connect(new InetSocketAddress("127.0.0.1", 9999));
 String newData = "Current time: " + System.currentTimeMillis();
 ByteBuffer buf = ByteBuffer.allocate(48);
 
-buf.put(newData.getBytes());
+buf.put(newData.getBytes(StandardCharsets.UTF_8));
 buf.flip();
 while (buf.hasRemaining()) {
     socketChannel.write(buf);
@@ -935,7 +921,7 @@ while (buf.hasRemaining()) {
 
 ---
 
-### java.nio | Изпращане на данни
+### java.nio | Sending Data
 
 <p align="center">
   <img width="100%" src="images/10.11.1a-java-nio-sending.png" alt="Java NIO Sending" />
@@ -943,7 +929,7 @@ while (buf.hasRemaining()) {
 
 ---
 
-### java.nio | Изпращане на данни
+### java.nio | Sending Data
 
 <p align="center">
   <img width="100%" src="images/10.11.1b-java-nio-sending.png" alt="Java NIO Sending" />
@@ -951,7 +937,7 @@ while (buf.hasRemaining()) {
 
 ---
 
-### java.nio | Изпращане на данни
+### java.nio | Sending Data
 
 <p align="center">
   <img width="100%" src="images/10.11.1c-java-nio-sending.png" alt="Java NIO Sending" />
@@ -959,7 +945,7 @@ while (buf.hasRemaining()) {
 
 ---
 
-### java.nio | Изпращане на данни
+### java.nio | Sending Data
 
 <p align="center">
   <img width="100%" src="images/10.11.1d-java-nio-sending.png" alt="Java NIO Sending" />
@@ -967,7 +953,7 @@ while (buf.hasRemaining()) {
 
 ---
 
-### java.nio | Получаване на данни
+### java.nio | Receiving Data
 
 <p align="center">
   <img width="100%" src="images/10.11.2a-java-nio-receiving.png" alt="Java NIO Receiving" />
@@ -975,7 +961,7 @@ while (buf.hasRemaining()) {
 
 ---
 
-### java.nio | Получаване на данни
+### java.nio | Receiving Data
 
 <p align="center">
   <img width="100%" src="images/10.11.2b-java-nio-receiving.png" alt="Java NIO Receiving" />
@@ -983,7 +969,7 @@ while (buf.hasRemaining()) {
 
 ---
 
-### java.nio | Получаване на данни
+### java.nio | Receiving Data
 
 <p align="center">
   <img width="100%" src="images/10.11.2c-java-nio-receiving.png" alt="Java NIO Receiving" />
@@ -991,7 +977,7 @@ while (buf.hasRemaining()) {
 
 ---
 
-### java.nio | Получаване на данни
+### java.nio | Receiving Data
 
 <p align="center">
   <img width="100%" src="images/10.11.2d-java-nio-receiving.png" alt="Java NIO Receiving" />
@@ -999,15 +985,15 @@ while (buf.hasRemaining()) {
 
 ---
 
-### java.nio | Архитектура
+### java.nio | Architecture
 
-- Нишка селектор (Selector), която позволява обработването на няколко канала от една нишка
-- Намалява броя на нишките, като премахва нуждата от отделна нишка за всяка връзка (connection)
-- Асинхронни (неблокиращи) операции
+- A `Selector` thread handles multiple channels from a single thread.
+- Reduces the number of threads needed — no dedicated thread per connection.
+- Asynchronous (non-blocking) operations.
 
 ---
 
-### java.nio | Архитектура
+### java.nio | Architecture
 
 <p align="center">
   <img width="100%" src="images/10.13-java-nio-architecture-2.png" alt="Java NIO Architecture" />
@@ -1015,7 +1001,7 @@ while (buf.hasRemaining()) {
 
 ---
 
-### java.nio | Архитектура
+### java.nio | Architecture
 
 <p align="center">
   <img width="100%" src="images/10.14-java-nio-architecture-3.png" alt="Java NIO Architecture" />
@@ -1023,7 +1009,7 @@ while (buf.hasRemaining()) {
 
 ---
 
-### java.nio | Архитектура
+### java.nio | Architecture
 
 <p align="center">
   <img width="100%" src="images/10.15-java-nio-architecture-4.png" alt="Java NIO Architecture" />
@@ -1031,7 +1017,7 @@ while (buf.hasRemaining()) {
 
 ---
 
-### java.nio | Архитектура
+### java.nio | Architecture
 
 <p align="center">
   <img width="100%" src="images/10.16-java-nio-architecture-5.png" alt="Java NIO Architecture" />
@@ -1047,7 +1033,34 @@ while (buf.hasRemaining()) {
 
 ---
 
-### Полезни четива
+### java.net.http | Modern HTTP Client (Java 11+)
+
+```java
+HttpClient client = HttpClient.newHttpClient();
+
+HttpRequest request = HttpRequest.newBuilder()
+    .uri(URI.create("https://api.example.com/data"))
+    .GET()
+    .build();
+
+HttpResponse<String> response = client.send(request,
+    HttpResponse.BodyHandlers.ofString());
+
+System.out.println(response.statusCode());
+System.out.println(response.body());
+```
+
+---
+
+### Where to Go Next
+
+- [Java NIO — Ron Hitchens (O'Reilly)](images/10.18-java-nio-oreilly.jpg)
+- [Netty in Action — Maurer & Wolfthal](https://www.manning.com/books/netty-in-action) — high-performance async network library
+- [Java Network Programming — Elliotte Harold](https://www.oreilly.com/library/view/java-network-programming/9781449365936/)
+
+---
+
+### Further Reading
 
 <p align="center">
   <img width="50%" src="images/10.18-java-nio-oreilly.jpg" alt="Java NIO" />

@@ -1,27 +1,27 @@
-# Многонишково програмиране с Java
+# Multithreaded Programming in Java
 
-15.12.2021
+2021-12-15
 
 ---
 
-### Предната лекция говорихме за:
+### Last Lecture Recap
 
-- Lambda изрази
+- Lambda expressions
 - Stream API
 
 ---
 
-### Днес ще разгледаме:
+### Today's Topics
 
-- Concurrent и паралелно изпълнение на програми
-- Многонишково програмиране (Multithreading)
-    - Нишки и техния жизнен цикъл
-    - Атомарни типове данни
-    - Комуникация и синхронизиране между нишки
+- Concurrent and parallel execution of programs
+- Multithreading
+    - Threads and their lifecycle
+    - Atomic data types
+    - Inter-thread communication and synchronisation
 
 ---
 
-### Какво значи *concurrent*?
+### What Does *Concurrent* Mean?
 
 <p align="center">
   <img width="85%" src="images/09.0-meaning-of-concurrent.png" alt="Meaning of Concurrent" />
@@ -31,58 +31,58 @@
 
 ### Concurrency
 
-- Concurrency е способността да се прави повече от едно нещо в един и същи момент
-    - т.е. множество задачи започват, изпълняват се и приключват, в припокриващи се времеви периоди, в непредсказуем ред
-    - например, мога да редактирам документ, докато слушам музика от друго приложение и свалям файл от Интернет от трето, *едновременно*
-- Concurrency не предполага непременно няколко приложения. Едновременното изпълнение на части от едно приложение, също се нарича concurrency
-    - например, текстов редактор форматира текста, прави spell-checking и respond-ва на keyboard events, *едновременно*
+- Concurrency is the ability to do more than one thing at the same time
+    - Multiple tasks start, execute, and complete in overlapping time periods, in unpredictable order
+    - For example: editing a document while listening to music from one app and downloading a file from a third — *simultaneously*
+- Concurrency does not necessarily imply multiple applications. Simultaneous execution of parts of a single application is also called concurrency
+    - For example: a text editor formats text, performs spell-checking, and responds to keyboard events — *simultaneously*
 
 ---
 
 ### Units of Concurrency
 
-Concurrency е много общ термин и може да се използва на различни нива.
+Concurrency is a broad term that can be applied at different levels.
 
-- *Multiprocessing* - много процесори, изпълняващи инструкции concurrently. Единицата е процесор (CPU)
-- *Multitasking (Многозадачност)* - много задачи/процеси, изпълняващи се едновременно на един процесор. Единицата е процес
-- *Multithreading (Многонишковост)* - множество части на една и съща програма се изпъляват concurrently. Единицата е нишка
-
----
-
-### Процеси и нишки
-
-- *Процес* е програма по време на изпълнение
-    - има си собствено адресно пространство, call stack и handles към ресурси (например, отворени файлове)
-- *Нишка* е път на изпълнение вътре в процес
-    - всеки процес има поне една нишка, наричана *main*
-    - всяка нишка може да създава допълнителни нишки
-    - нишките в един процес споделят ресурсите му, в частност, памет или отворени файлове. Всяка нишка обаче си има собствен call stack
+- *Multiprocessing* — multiple processors executing instructions concurrently. The unit is a processor (CPU)
+- *Multitasking* — multiple tasks/processes executing simultaneously on one processor. The unit is a process
+- *Multithreading* — multiple parts of the same program execute concurrently. The unit is a thread
 
 ---
 
-### Процеси и нишки
+### Processes and Threads
 
-|               | Процеси     | Нишки             |
-|:------------- |:------------|:----------------- |
-| Стартиране    | Бавно       | Относително бързо |
-| Изолация      | Да          | Не                |
-| Комуникация   | Бавна       | Бърза             |
-
----
-
-### Concurrency: кратка история
-
-- древното минало: преди появата на операционните системи
-- еднозадачни операционни системи
-- многозадачни операционни системи. Процеси. Комуникация между процеси
-    - утилизиране на ресурсите
-    - fairness
-    - удобство
-- едно- и многопроцесорни системи, hyper-threading (2002), многоядрени процесори (2005)
+- A *process* is a program in execution
+    - It has its own address space, call stack, and handles to resources (e.g., open files)
+- A *thread* is a path of execution inside a process
+    - Every process has at least one thread, called *main*
+    - Each thread can create additional threads
+    - Threads within a process share its resources — in particular, memory and open files. However, each thread has its own call stack
 
 ---
 
-### Hyper-threading и многоядрени процесори
+### Processes vs. Threads
+
+|               | Processes   | Threads                |
+|:------------- |:------------|:---------------------- |
+| Start-up      | Slow        | Relatively fast        |
+| Isolation     | Yes         | No                     |
+| Communication | Slow        | Fast                   |
+
+---
+
+### Concurrency: A Brief History
+
+- Ancient past: before operating systems existed
+- Single-tasking operating systems
+- Multi-tasking operating systems — processes, inter-process communication
+    - Resource utilisation
+    - Fairness
+    - Convenience
+- Single- and multi-processor systems, hyper-threading (2002), multi-core processors (2005)
+
+---
+
+### Hyper-threading and Multi-Core Processors
 
 <p align="center">
   <img width="65%" src="images/09.1-multi-core-cpus.png" alt="Multi-Core CPUs" />
@@ -90,16 +90,16 @@ Concurrency е много общ термин и може да се използ
 
 ---
 
-### Concurrent vs. паралелно изпълнение
+### Concurrent vs. Parallel Execution
 
-- Concurrency не предполага непременно паралелно изпълнение
-- Когато казваме "множество задачи, изпълняващи се едновременно", всъщност имаме предвид "множество задачи, прогресиращи през един и същи времеви интервал"
-    - ОС превключва между задачите толкова често, че за потребителя изглежда, че тe се изпълняват едновременно, в един и същ физически момент
-    - Всъщност, паралелно изпълнение е невъзможно на компютър с единствен (single-core, без hyperthreading) процесор
+- Concurrency does not necessarily imply parallel execution
+- When we say "multiple tasks executing simultaneously" we really mean "multiple tasks progressing within the same time interval"
+    - The OS switches between tasks so frequently that it appears to the user as if they run at exactly the same physical instant
+    - True parallel execution is impossible on a computer with a single-core, non-hyperthreaded processor
 
 ---
 
-### Едно- и многонишкови програми
+### Single- and Multi-threaded Programs
 
 <p align="center">
   <img width="75%" src="images/09.2-multithreading.png" alt="Multi-threading" />
@@ -107,7 +107,7 @@ Concurrency е много общ термин и може да се използ
 
 ---
 
-### Concurrent vs. паралелно изпълнение
+### Concurrent vs. Parallel Execution
 
 <p align="center">
   <img width="80%" src="images/09.2.1-concurrent-parallel.png" alt="Concurrent vs. Parallel Execution" />
@@ -115,60 +115,60 @@ Concurrency е много общ термин и може да се използ
 
 ---
 
-### Ползи от многонишковостта
+### Benefits of Multithreading
 
-- Съществено увеличена производителност на програмите, чрез пълноценна употреба (utilization) на наличните ресурси, като CPU
-- Подобрено потребителско изживяване (more responsive UIs)
-- По-проста архитектура
-    - сложен, асинхронен workflow може да се декомпозира до няколко прости, последователни workflows, изпълнявани в отделни нишки
+- Significantly increased program performance through full utilisation of available resources such as the CPU
+- Improved user experience (more responsive UIs)
+- Simpler architecture
+    - A complex, asynchronous workflow can be decomposed into several simple, sequential workflows running in separate threads
 
 ---
 
-### Проблеми, свързани с concurrency
+### Concurrency Problems
 
 - Thread interference (Race Conditions)
-    - когато множество нишки едновременно четат и пишат споделенни данни и тези операции се припокриват във времето
-    - тогава резултатът зависи от реда на четенията и писанията, който е непредвидим
+    - When multiple threads simultaneously read and write shared data and those operations overlap in time
+    - The result then depends on the order of reads and writes, which is unpredictable
 
 ---
 
-### Проблеми, свързани с concurrency
+### Concurrency Problems
 
 - Memory inconsistency
-    - когато различни нишки "виждат" по различен начин едни и същи данни в един и същи момент
-        - случва се, когато една нишка промени стойността на някаква споделена данна, но тази промяна не е "стигнала" до другите нишки, които продължават да виждат старата стойност
-        - причината е, че компилаторът, JVM-ът и CPU-то правят оптимизации (разместват инструкции, кешират стойности от RAM паметта в регистри или кеш на CPU и т.н.)
+    - When different threads "see" the same data differently at the same moment
+        - This occurs when one thread changes the value of shared data, but the change has not yet "reached" other threads, which continue to see the old value
+        - The cause: the compiler, JVM, and CPU apply optimisations (reordering instructions, caching RAM values in registers or CPU cache, etc.)
 
 ---
 
-### Проблеми, свързани с multithreading
+### Multithreading Drawbacks
 
-- Кодът става по-сложен и неинтуитивен
-- Ползваме повече ОС ресурси за многото нишки, например памет
-- Нов източник на трудни за репродуциране и дебъгване грешки, поради race conditions и memory inconsistency
-- [*Liveness*](https://en.wikipedia.org/wiki/Liveness), [*Starvation*](https://www.baeldung.com/cs/deadlock-livelock-starvation) и Performance рискове
-- Многонишкови фреймуърци като "черна кутия"
-
----
-
-### Управление на нишки в Java
-
-- жизнен цикъл: създаване, стартиране, изпълнение, приключване
-    - текущо състояние
-- синхронизация
-- комуникация между нишки
+- Code becomes more complex and less intuitive
+- More OS resources are consumed for the extra threads (e.g., memory)
+- A new source of hard-to-reproduce and hard-to-debug errors due to race conditions and memory inconsistency
+- [*Liveness*](https://en.wikipedia.org/wiki/Liveness), [*Starvation*](https://www.baeldung.com/cs/deadlock-livelock-starvation), and performance risks
+- Multithreading frameworks as a "black box"
 
 ---
 
-### Създаване на нишка
+### Thread Management in Java
 
-- Всяка Java програма при стартирането си съдържа една нишка (main)
-- За да създадем нова нишка в Java, наследяваме класа `java.lang.Thread` или имплементираме интерфейса `java.lang.Runnable`
-- Логиката (инструкциите за изпълнение) е в метода `run()`
+- Lifecycle: creation, starting, execution, termination
+    - Current state inspection
+- Synchronisation
+- Inter-thread communication
 
 ---
 
-### Създаване на нишка
+### Creating a Thread
+
+- Every Java program starts with one thread (`main`)
+- To create a new thread in Java, either extend `java.lang.Thread` or implement `java.lang.Runnable`
+- The logic (instructions to execute) lives in the `run()` method
+
+---
+
+### Creating a Thread — Examples
 
 ```java
 // Option 1: extend java.lang.Thread
@@ -177,7 +177,6 @@ public class CustomThread extends Thread {
         System.out.println("Hello world!");
     }
 }
-
 Thread customThread = new CustomThread();
 
 // Option 2: implement java.lang.Runnable
@@ -186,23 +185,15 @@ public class CustomRunnable implements Runnable {
         System.out.println("Hello world, from a Runnable!");
     }
 }
-
 Thread customThread = new Thread(new CustomRunnable());
 ```
 
 ---
 
-### Създаване на нишка
+### Creating a Thread — Modern Alternatives
 
 ```java
-public class CustomRunnable implements Runnable {
-    public void run() {
-        System.out.println("Hello world, from a Runnable!");
-    }
-}
-
-Thread customThread = new Thread(new CustomRunnable());
-
+// Anonymous class
 Thread customThread2 = new Thread() {
     @Override
     public void run() {
@@ -210,103 +201,96 @@ Thread customThread2 = new Thread() {
     }
 };
 
+// Lambda (preferred in Java 17)
 Thread customThread3 =
     new Thread(() -> System.out.println("Hello world, from a lambda!"));
 ```
 
 ---
 
-### Стартиране на нишка
+### Starting a Thread
 
-- За да стартираме нишка, трябва
-    - да извикаме метода `start()`
-        - който вътрешно ще извика `run()`
+- To start a thread, call its `start()` method
+    - `start()` internally invokes `run()` in a new OS thread
+    - Calling `run()` directly does **not** start a new thread — it runs on the calling thread
 
 ---
 
-### Спиране на нишка
+### Stopping a Thread
 
-- Нишка не може да бъде спряна експлицитно, веднъж щом е стартирана
-- Нишката прекратява изпълнението си автоматично след приключването на метода `run()`
-- Нишката не може да бъде стартирана повторно
+- A thread cannot be forcibly stopped once it has started
+- A thread terminates automatically when its `run()` method returns
+- A thread cannot be restarted after it has terminated
 
 ---
 
 ### `Thread` vs. `Runnable`
 
-При употреба на `Runnable` сме по-гъвкави:
+Using `Runnable` gives more flexibility:
 
-- можем да наследим друг клас
-- можем да решим да изпълним имплементацията в:
-    - нова нишка (като извикаме `start()`)
-    - чрез thread pool (ще научим по-късно какво е това)
-    - в текущата нишка (като извикаме директно `run()`)
+- The class can still extend another class (single inheritance is not blocked)
+- The implementation can be run in:
+    - A new thread (via `start()`)
+    - A thread pool (covered later)
+    - The current thread (by calling `run()` directly)
 
 ---
 
-### Thread API
+### Thread API — Naming and Groups
 
-Можем да дадем human-readable име на нишка чрез `setName()`. Имената нe са уникални.
-Също така, нишките могат да се групират логически чрез `ThreadGroup`. Групата може да се задава само чрез конструктора.
-
-<br>
+You can give a thread a human-readable name via `setName()`. Names are not unique.
+Threads can also be logically grouped with `ThreadGroup`. The group can only be set via the constructor.
 
 ```java
 customThread.setName("Cool thread #1");
 
-// Конструктор, който приема група и име
+// Constructor accepting a group and a name
 ThreadGroup coolThreads = new ThreadGroup("Cool thread group");
-coolThread1 = new Thread(coolThreads, "Cool thread #1"); 
-coolThread2 = new Thread(coolThreads, "Cool thread #2");
+Thread coolThread1 = new Thread(coolThreads, "Cool thread #1");
+Thread coolThread2 = new Thread(coolThreads, "Cool thread #2");
 ```
 
 ---
 
-### Thread API
+### Thread API — Key Methods
 
 ```java
-// Паузиране – нишката „заспива“ и не получава процесорно време
-// за определен интервал време
-Thread.sleep(long milliseconds)
+// Pause — the thread "sleeps" and receives no CPU time for the given interval
+Thread.sleep(long milliseconds);
 
-// Референция към текущата нишка
-Thread.currentThread()
+// Reference to the currently executing thread
+Thread.currentThread();
 
-// Stack trace-ът на нишката
-Thread.getStackTrace()
+// The stack trace of the thread
+thread.getStackTrace();
 
-// Можем да проверим, дали дадена нишка не е приключила изпълнението си
-boolean isAlive()
+// Check whether the thread has not yet finished
+boolean isAlive();
 ```
 
 ---
 
-### Приоритет на нишки
+### Thread Priority
 
 ```java
-// Подсказка към диспечера на нишки, каква част от процесорното
-// време да получи дадена нишка. Скалата е от 1 до 10.
-// По-малко число означава по-висок приоритет
-// Приоритетът по подразбиране е 5
-void setPriority(int prio)
+// Hint to the thread scheduler about how much CPU time this thread should receive.
+// Scale: 1 (MIN) to 10 (MAX). Default is 5 (NORM).
+// Higher number = higher priority.
+void setPriority(int prio);
 
-// Подсказка към диспечера на нишки, че текущата нишка се отказва
-// от своето процесорно време в полза на друга,
-// чийто приоритет е минимум колкото този на текущата
-void yield()
+// Hint to the scheduler that the current thread is willing to yield its CPU time
+// to another thread of at least the same priority.
+static void yield();
 
-// NB!
-// Добре написано приложение не трябва да разчита на
-// приоритетите на нишки или на yield за своята коректност
+// NB: A well-written application must NOT rely on thread priorities
+//     or yield() for correctness.
 ```
 
 ---
 
-### Присъединяване към друга нишка
+### Joining Another Thread
 
-Дадена нишка може да паузира изпълнението си, докато друга нишка приключи, чрез метода `join()`
-
-<br>
+A thread can pause until another thread finishes by calling `join()`.
 
 <p align="center">
   <img width="42%" src="images/09.3-thread-join.png" alt="Thread Join" />
@@ -314,54 +298,51 @@ void yield()
 
 ---
 
-### Присъединяване към друга нишка
+### `join()` Methods
 
 ```java
-// Извикващата нишка блокира, докато нишката,
-// на която е извикала join(), приключи
-void join()
+// The calling thread blocks until the target thread terminates.
+void join() throws InterruptedException;
 
-// Ако нишката приключи или зададеното време изтече,
-// извикващата нишка ще продължи изпълнението си
-void join(long millis)
+// If the thread finishes or the specified time elapses,
+// the calling thread continues execution.
+void join(long millis) throws InterruptedException;
 ```
 
 ---
 
-### Daemon нишки
+### Daemon Threads
 
-- Според режима на работа, нишките в Java могат да бъдат два вида:
-    - Стандартни (non-daemon) нишки
-    - Демон (daemon) нишки
-
----
-
-### Стандартни нишки
-
-- изпълняват задачи, които са свързани с основната идея на програмата
-- всяка JVM работи, докато има поне една работеща стандартна нишка
+- Threads in Java fall into two categories:
+    - Standard (non-daemon) threads
+    - Daemon threads
 
 ---
 
-### Daemon нишки
+### Standard Threads
 
-- изпълняват задачи, които не са жизненоважни за програмата 
-- JVM ще прекрати работата на нишките от този тип, ако няма поне една работеща стандартна нишка
-- Нишките наследяват режима на работа от тази, която ги е създала, или го задават експлицитно
+- Execute tasks that are central to the program's purpose
+- The JVM runs as long as at least one non-daemon thread is alive
 
-<br>
+---
+
+### Daemon Threads
+
+- Execute tasks that are not critical to the program
+- The JVM terminates daemon threads when no non-daemon threads remain
+- Threads inherit the daemon mode from the thread that created them, or it can be set explicitly
 
 ```java
-// Може да сменим режима на нишка чрез:
-void setDaemon(boolean flag)
+// Set before starting the thread
+thread.setDaemon(true);
 ```
 
 ---
 
-### Състояние на нишка
+### Thread State
 
-- Нишката може да бъде в различно състояние в даден момент от изпълнението си
-- Методът `getState()` ни дава възможност да проверим моментното състояние на нишка
+- A thread can be in different states at different points during its execution
+- The `getState()` method returns the current state of a thread
 
 ---
 
@@ -371,57 +352,54 @@ void setDaemon(boolean flag)
 
 ---
 
-### Thread.State
+### `Thread.State`
 
-enum, съдържащ всички възможни състояния:
+Enum listing all possible states:
 
-- NEW
-- RUNNABLE
-- BLOCKED
-- WAITING
-- TIMED_WAITING
-- TERMINATED
-
----
-
-### Thread Safety
-
-- Основна концепция в многонишковото програмиране
-- Клас е *thread-safe*, ако работи коректно при concurrent достъп от множество нишки
-- Касае управлението на достъпа до състоянието на обектите
-    - по-конкретно, на shared & mutable състоянието
+- `NEW` — created but not yet started
+- `RUNNABLE` — executing or ready to execute
+- `BLOCKED` — waiting to acquire a monitor lock
+- `WAITING` — waiting indefinitely for another thread's signal
+- `TIMED_WAITING` — waiting for a specified time
+- `TERMINATED` — execution has completed
 
 ---
 
 ### Thread Safety
 
-- thread safety цели защитата на данните от неконтролиран concurrent достъп
-- thread-safe класовете енкапсулират евентуалната необходима синхронизация, така че ползвателите им да не се грижат за нея
+- A fundamental concept in multithreaded programming
+- A class is *thread-safe* if it behaves correctly under concurrent access from multiple threads
+- Concerns management of access to object state — specifically, *shared mutable* state
 
 ---
 
 ### Thread Safety
 
-- Когато повече от една нишка достъпва състоянието на обект и поне една нишка може да го промени, всички тези нишки трябва да синхронизират достъпа си до това състояние
-- Енкапсулацията и data hiding помагат за thread safety
+- Thread safety protects data from uncontrolled concurrent access
+- Thread-safe classes encapsulate whatever synchronisation is needed, so their callers do not have to worry about it
 
 ---
 
-### Атомарност (Atomicity)
+### Thread Safety
 
-- *Атомарни* vs. *съставни* (*compound*) операции
-- *race conditions*
+- When more than one thread accesses an object's state and at least one thread can modify it, all threads must synchronise their access to that state
+- Encapsulation and data hiding help achieve thread safety
 
 ---
 
-### Примери за race condition
+### Atomicity
 
-- race condition тип *check-then-act*
-    - lazy инициализация
-- race condition тип *read-modify-write*
-    - инкрементиране на брояч
+- *Atomic* operations vs. *compound* operations
+- A compound operation is not atomic even if each individual step is — *race conditions* arise in the gaps between steps
 
-<br>
+---
+
+### Race Condition Examples
+
+- *Check-then-act* race condition
+    - Lazy initialisation
+- *Read-modify-write* race condition
+    - Counter increment
 
 ```java
 // check-then-act race condition
@@ -431,32 +409,31 @@ if (ref == null) {
 return ref;
 
 // read-modify-write race condition
-i++; // this is equivalent to i = i + 1,
-     // which in fact consists of three operations
+i++; // equivalent to i = i + 1,
+     // which actually consists of three non-atomic operations
 ```
 
 ---
 
-### Атомарни типове данни
+### Atomic Data Types
 
-- Класове в `java.util.concurrent.atomic` пакета
-- Предоставят атомарни имплементации на примитивните типове, масиви от примитивни типове и абстракция за атомарна референция
-- `AtomicBoolean`, `AtomicInteger`, `AtomicLong`, `AtomicIntegerArray`, `AtomicLongArray`, `AtomicReference<ActualType>`
-
----
-
-### Атомарни типове данни
-
-- Предоставят възможност за атомарни съставни операции
-- Използват специални CPU инструкции ("compare-and-swap", [CAS](https://en.wikipedia.org/wiki/Compare-and-swap)), които позволяват избягването на синхронизация чрез ключалки, което ги прави много бързи
+- Classes in the `java.util.concurrent.atomic` package
+- Provide atomic implementations of primitive types, arrays of primitives, and an atomic reference abstraction
+- `AtomicBoolean`, `AtomicInteger`, `AtomicLong`, `AtomicIntegerArray`, `AtomicLongArray`, `AtomicReference<T>`
 
 ---
 
-### Атомарни операции
+### Atomic Data Types — How They Work
+
+- Provide the ability to perform compound operations atomically
+- Use special CPU instructions ("compare-and-swap", [CAS](https://en.wikipedia.org/wiki/Compare-and-swap)), which allow avoiding lock-based synchronisation — making them very fast
+
+---
+
+### Atomic Operations — Basic Usage
 
 ```java
-// Всички имплементации имат методи get() и set() за достъп до
-// съхраняваната променлива.
+// All implementations have get() and set() for accessing the stored variable.
 AtomicInteger atomicInt = new AtomicInteger();
 atomicInt.set(2021);
 System.out.println(atomicInt.get()); // 2021
@@ -464,134 +441,128 @@ System.out.println(atomicInt.get()); // 2021
 
 ---
 
-### Примери за атомарни операции
+### Atomic Operations — Examples
 
 ```java
-// thread-safe вариант на ++i (i=i+1)
+// Thread-safe equivalent of ++i
 System.out.println(atomicInt.incrementAndGet()); // 2022
 
-// thread-safe вариант на i += x (i=i+x)
+// Thread-safe equivalent of i += x
 System.out.println(atomicInt.addAndGet(5)); // 2027
 
 AtomicReference<String> atomicRef = new AtomicReference<>();
-// atomicRef не е null, но стойността, която съдържа (wrap-ва), е
+// atomicRef itself is not null, but the value it wraps is
 
-// thread-safe вариант на if (ref == expected) { ref = update; }
-// NB! Сравняваме референции затова използваме `==`, а не equals
+// Thread-safe equivalent of: if (ref == expected) { ref = update; }
+// NB: compares references with ==, not equals()
 atomicRef.compareAndSet(null, "Happy new year!");
-System.out.println(atomicRef); // Happy new year!
+System.out.println(atomicRef.get()); // Happy new year!
 ```
 
 ---
 
-### Concurrent достъп до споделени ресурси
+### Concurrent Access to Shared Resources
 
 ---
 
-### Синхронизирана (Критична) секция
+### Synchronised (Critical) Section
 
-- Когато две или повече нишки достъпват concurrently даден ресурс, който може да бъде променян, е необходима синхронизация
-- Постига се чрез ключовата дума `synchronized`. Секцията се cъстои от:
-    - монитор – логическа "ключалка"
-    - блок код, който ще се изпълни ексклузивно от една нишка за даден монитор
+- When two or more threads concurrently access a resource that can be modified, synchronisation is required
+- Achieved with the `synchronized` keyword. The section consists of:
+    - A monitor — a logical "lock"
+    - A code block that executes exclusively for one thread at a time for a given monitor
 
 ---
 
-### Синхронизирана секция
+### Synchronised Section — Example
 
 ```java
 public void depositMoney(BankAccount acc, double amount) {
-    // Критична секция – една-единствена нишка за дадена сметка
-    // acc може да изпълнява кода в синхронизираната секция
+    // Critical section — only one thread per account 'acc'
+    // can execute the code inside this synchronised block at a time
     synchronized (acc) {
         acc.deposit(amount);
     }
 
-    // Не-критична секция - много нишки могат да бъдат едновременно тук
+    // Non-critical section — many threads can be here simultaneously
     System.out.println("Deposit completed");
 }
 ```
 
 ---
 
-### Синхронизирана секция
+### Synchronised Section — Semantics
 
-- Всеки обект има вътрешен имплицитен *монитор* (*ключалка*, *lock*) т.е. може да се ползва за монитор
-- Само една нишка в даден момент за даден монитор може да изпълнява кода (mutex == mutual exclusion)
-- всеки достъп до дадено състояние, което може да бъде променено от друга нишка, трябва винаги да става в синхронизирана секция по един и същ монитор
-
----
-
-### Синхронизирана секция
-
-Мониторът се управлява имплицитно от JVM:
-
-- при влизане, ако е свободен, се маркира като "зает" от съответната нишка
-- при влизане, ако не е свободен, нишката блокира и чака
-- при излизане, lock-ът се освобождава и, ако има блокирани нишки, те могат да се опитат да вземат ключалката
+- Every object has an implicit internal *monitor* (*lock*) — any object can serve as a monitor
+- Only one thread per monitor can execute the guarded code at a time (mutex = mutual exclusion)
+- Every access to state that can be modified by another thread must always occur inside a synchronised section using the **same** monitor
 
 ---
 
-### Синхронизиран метод
+### How the Monitor Is Managed
 
-Много често искаме да поставим цялото тяло на даден метод в критична секция. С цел по-четим код, Java ни предлага по-сбит вариант.
+The JVM manages the monitor implicitly:
 
-<br>
+- On entry, if free: marked as "owned" by the entering thread
+- On entry, if not free: the thread blocks and waits
+- On exit: the lock is released; blocked threads can attempt to acquire it
+
+---
+
+### Synchronised Method
+
+When you want to guard the entire method body, Java offers a more concise syntax:
 
 ```java
 public void doSomeWork() {
     synchronized (this) {
-        // Критична секция - само една нишка може да
-        // изпълнява кода за конкретната инстанция 'this'
+        // Critical section — only one thread per 'this' instance
     }
 }
 
-public synchronized void doSomeWork() { 
-    // Критична секция - само една нишка може да 
-    // изпълнява кода за конкретната инстанция 'this' 
+// Equivalent shorthand
+public synchronized void doSomeWork() {
+    // Critical section — only one thread per 'this' instance
 }
 ```
 
 ---
 
-### Синхронизирана секция или метод?
+### Synchronised Section or Method?
 
-- Методът ce препоръчва, само ако е достатъчно кратък (и бърз за изпълнение) и наистина има нужда цялото тяло да бъде „охранявано"
-- Синхронизираната секция е за предпочитане, когато:
-    - нуждаещото се от синхронизация парче код е малка част от метод
-    - искаме да ползваме монитор, различен от `this`
+- Prefer the **synchronised method** only when the method is short and the entire body needs to be guarded
+- Prefer the **synchronised block** when:
+    - Only a small part of the method requires synchronisation
+    - You need a monitor other than `this`
 
 ---
 
-### Рекурсивност
+### Reentrant Locks
 
-Lock-ът е *рекурсивен* (*reentrant*): нишката, която го "притежава", може да извиква други критични секции по същия монитор.
-
-<br>
+The lock is *reentrant*: the thread that already owns it can enter other critical sections guarded by the **same** monitor without blocking.
 
 ```java
 class Demo {
     public void method1() {
         synchronized (this) {
-            // изпълняващата нишка вече притежава lock-а,
-            // следователно може да извика method2()
+            // The executing thread already owns the lock,
+            // so it can call method2() without deadlocking
             method2();
         }
     }
 
     public synchronized void method2() {
+        // ...
     }
 }
 ```
 
 ---
 
-### Използване на монитор, различен от `this`
+### Using a Dedicated Monitor Object
 
-- Може да изберем да синхронизираме достъпа в дадена инстанция на обект чрез член-променлива, създадена с целта, която да се използва като ключалка
-- понякога даден клас има нужда от различни монитори за "охраняване" на различно състояние
-
-<br>
+- You can synchronise access using a dedicated private field as the lock
+- Useful when a class needs separate monitors for different pieces of state
 
 ```java
 private final Object dedicatedMonitor = new Object();
@@ -599,61 +570,55 @@ private final Object dedicatedMonitor = new Object();
 
 ---
 
-### Използване на няколко монитора
+### Multiple Monitors
 
-Една нишка може да "притежава" много на брой монитори, стига те да са свободни:
-
-<br>
+A single thread can hold many monitors at once, as long as each is free:
 
 ```java
-// Държането на няколко ключалки е лоша практика и 
-// при възможност трябва да се избягва
+// Holding multiple locks is bad practice and should be avoided when possible
 public void multipleLocks() {
     synchronized (lock1) {
-        // нишката притежава lock1
+        // owns lock1
         synchronized (lock2) {
-            // нишката притежава lock1 & lock2
+            // owns lock1 & lock2
             synchronized (lock3) {
-                // нишката притежава lock1, lock2 & lock3
+                // owns lock1, lock2 & lock3
             }
-            // нишката притежава lock1 & lock2
         }
-        // нишката притежава lock1
     }
 }
 ```
 
 ---
 
-### Синхронизация между множество инстанции на клас
+### Synchronisation Across Multiple Instances
 
-- Подходящо е да ползваме ключалка, обща за класа
-- удобно е да ползваме статична променлива за монитор
+- When all instances of a class must share a single lock, use a static field as the monitor
 
 ---
 
-### Синхронизация между множество инстанции на клас
+### Class-Level Monitors
 
-Всяка инстанция на клас има статична референция към обекта на класа, към който принадлежи. Можем да я достъпим чрез:
-
-<br>
+Every instance has a reference to its `Class` object, which can be used as a class-wide lock:
 
 ```java
-BankAccount.class // статично
-this.getClass() // чрез ‘this’
+BankAccount.class  // static access
+this.getClass()    // via 'this'
 ```
 
 ---
 
-### Статични синхронизирани методи
+### Static Synchronised Methods
 
 ```java
+// Explicit synchronisation on the class object
 static void incrementOpCount() {
     synchronized (BankAccount.class) {
         opCount++;
     }
 }
 
+// Equivalent shorthand
 static synchronized void incrementOpCount() {
     opCount++;
 }
@@ -661,22 +626,20 @@ static synchronized void incrementOpCount() {
 
 ---
 
-### Thread-safe обекти
+### Thread-Safe Objects by Design
 
-Някои обекти са thread-safe по подразбиране:
+Some objects are thread-safe by default:
 
-- Локални обекти (локални променливи на метод)
-- Stateless обекти
-- Immutable обекти
-- Обекти, които са ефективно final (read-only)
+- Local objects (local variables of a method — not shared between threads)
+- Stateless objects
+- Immutable objects
+- Effectively-final objects (read-only after publication)
 
 ---
 
-### Съставни операции
+### Compound Operations
 
-Ако комбинираме няколко thread-safe операции в една по-сложна (обща), нямаме никаква гаранция, че те ще се изпълнят атомарно.
-
-<br>
+Combining several thread-safe operations into a larger compound operation gives **no** guarantee that the compound executes atomically.
 
 ```java
 public synchronized void withdraw(double amount) {
@@ -687,7 +650,7 @@ public synchronized double getBalance() {
     return balance;
 }
 
-// Бъг - този метод също трябва да е синхронизиран
+// Bug: this method must also be synchronised
 public void verifyAndWithdraw(double amount) {
     if (getBalance() >= amount) {
         withdraw(amount);
@@ -697,49 +660,47 @@ public void verifyAndWithdraw(double amount) {
 
 ---
 
-### Мъртва хватка (Deadlock)
+### Deadlock
 
-Получава се, когато две или повече нишки се блокират една друга, всяка от тях притежаваща ключалка, от която друга нишка има нужда, но чакайки за ключалка, която някоя от другите нишки притежава.
+Occurs when two or more threads block each other — each holds a lock that another thread needs, while waiting for a lock held by one of the others.
 
 <p align="center">
-  <img width="35%" src="images/09.5-deadlock.jpg" alt="deadlock" />
+  <img width="35%" src="images/09.5-deadlock.jpg" alt="Deadlock" />
 </p>
 
 ---
 
-### Мъртва хватка (Deadlock)
+### Deadlock
 
-- Нишките не могат да бъдат прекратявани отвън
-- Ключалките не могат да бъдат отнемани насилствено
-- Единственият изход от мъртва хватка, е рестартиране на JVM
-
----
-
-### Предотвратяване на deadlock
-
-- мониторите да се вземат винаги в същия ред
-- използване на един общ монитор
-- избягваме да притежаваме повече от един монитор
-- подреждаме мониторите спрямо някакъв признак
+- Threads cannot be terminated from the outside
+- Locks cannot be forcibly taken away
+- The only escape from a deadlock is restarting the JVM
 
 ---
 
-### Комуникация между нишки
+### Preventing Deadlock
+
+- Always acquire monitors in the same order across all threads
+- Use a single shared monitor where possible
+- Avoid holding more than one monitor at a time
+- Order monitors by a consistent criterion (e.g., object identity hash code)
 
 ---
 
-### Busy wait
+### Inter-Thread Communication
 
-Неефективен (и възможно некоректен) начин за комуникация е т.нар. *busy wait*: в цикъл изчакваме събитието да се случи
+---
 
-<br>
+### Busy Wait
+
+An inefficient (and potentially incorrect) form of inter-thread communication is *busy wait*: polling in a loop until a condition becomes true.
 
 ```java
-// Всеки месец се пуска нова нишка, която тегли сумата на месечната вноска
-// от сметката на кредитополучателя
+// Each month a new thread tries to withdraw the monthly payment
+// from the borrower's account
 public void withdrawCreditPayment(double monthFee) {
     while (this.balance < monthFee) {
-        // Стоим в цикъла, докато няма достатъчно пари да погасят вноската
+        // Spin until there is enough balance to cover the payment
         Thread.sleep(1_000);
     }
     balance -= monthFee;
@@ -748,18 +709,18 @@ public void withdrawCreditPayment(double monthFee) {
 
 ---
 
-### Изчакване чрез `wait()`
+### Waiting with `wait()`
 
 ```java
-// Нишка може да заяви, че иска да изчака, докато дадено събитие се случи
-// в друга нишка, чрез метода wait() на java.lang.Object
+// A thread can declare that it wants to wait for an event in another thread
+// using the wait() method on java.lang.Object
 public synchronized void withdrawCreditPayment(double monthFee) {
     while (this.balance < monthFee) {
         try {
-            // Изчакваме и освобождаваме монитора this
+            // Release the monitor 'this' and enter WAITING state
             this.wait();
         } catch (InterruptedException e) {
-            // хвърля изключение, ако нишката бъде прекъсната
+            Thread.currentThread().interrupt();
         }
     }
     balance -= monthFee;
@@ -770,31 +731,38 @@ public synchronized void withdrawCreditPayment(double monthFee) {
 
 ### `java.lang.Object.wait()`
 
-- извикването на `wait()` винаги става в критична секция по обекта, който ползваме за монитор
-    - в противен случай, се хвърля `java.lang.IllegalMonitorStateException`
-- `wait()` освобождава текущия монитор и нишката преминава в статус `WAITING`
+- `wait()` must always be called inside a synchronised section on the monitor being waited on
+    - Otherwise, `java.lang.IllegalMonitorStateException` is thrown
+- `wait()` atomically releases the current monitor and transitions the thread to `WAITING` state
 
 ---
 
-### `java.lang.Object.wait()`
+### `wait()` — Guarded Wait Pattern
 
-- Възможно е да извикаме `wait()` с аргумент за време – по този начин нишката ще се събуди, ако бъде известена или времето изтече
-- Винаги след събуждане, трябва да проверяваме в цикъл, дали събитието, за което сме чакали, в действителност е настъпило: шаблон, известен като *guarded wait*
-
----
-
-### Известяване чрез `notify()`
+- `wait()` can be called with a timeout argument — the thread wakes up when notified or when the time elapses
+- Always re-check the condition in a `while` loop after waking up — this is the *guarded wait* pattern
 
 ```java
-// Нишка може да извести чакащи нишки, че дадено събитие се е случило
-// и те могат да продължат своето изпълнение. Това става чрез метода
-// notify() на java.lang.Object
+synchronized (lock) {
+    while (!conditionMet()) {
+        lock.wait();
+    }
+    // proceed
+}
+```
 
-// При депозиране на пари по сметка, уведомяваме чакащите нишки,
-// че са постъпили средства по сметката
+---
+
+### Notifying with `notify()`
+
+```java
+// A thread can notify waiting threads that an event has occurred
+// using notify() on java.lang.Object
+
+// When money is deposited, notify threads waiting on this account
 public synchronized void deposit(double amount) {
-    this.notify();
     this.balance += amount;
+    this.notify(); // notify after updating state
 }
 ```
 
@@ -802,38 +770,63 @@ public synchronized void deposit(double amount) {
 
 ### `java.lang.Object.notify()`
 
-- Събужда една нишка, чакаща за съответния монитор
-- Извикването на `notify()` винаги става в критична секция по обекта, който ползваме за монитор
-- не освобождава монитора
+- Wakes up one thread waiting on the corresponding monitor
+- Must always be called inside a synchronised section on the same monitor
+- Does **not** release the monitor — the notified thread must wait until the monitor is released
 
 ---
 
 ### `notify()` vs. `notifyAll()`
 
-- `notify()` – събужда една произволна нишка, чакаща за този монитор. Полезно е само когато сме сигурни, че само една нишка може да продължи изпълнението си, и не искаме да "платим" цената да събудим всички
-- `notifyAll()` – събужда всички нишки. В много случаи, повече от една нишка може да продължи действието си след известяването си. Нишките се изпълняват последователно в синхронизираната секция по монитора след събуждането си
+- `notify()` — wakes up one arbitrary waiting thread. Useful only when you are certain only one thread can make progress, and you want to avoid the cost of waking all
+- `notifyAll()` — wakes up all waiting threads. Use this when more than one thread might be able to continue after the notification. Threads then compete for the monitor and run sequentially inside the synchronised section
 
 ---
 
 ### `notify()` vs. `notifyAll()`
 
-- Ако имаме няколко чакащи нишки за текущия монитор, нямаме възможност да кажем коя/кои нишки да бъдат събудени или да бъдат събудени първи
-- В практиката по-често се ползва `notifyAll()`. Правилно имплементирана проверка в `while` може да ни гарантира същото поведение като при `notify()` – макар и събудени повече нишки – те ще заспят отново, след като видят, че не могат да продължат
+- If there are multiple threads waiting on the same monitor, you cannot control which thread(s) are woken first
+- In practice, `notifyAll()` is the safer choice. A properly implemented `while` loop in the waiting thread ensures the same correctness as `notify()` — woken threads that cannot proceed simply go back to sleep
 
 ---
 
-### Прекъсване на нишка
+### Interrupting a Thread
 
-- Eдна нишка може да съобщи на друга да спре изпълнението си
-- Какво действие ще се извърши в нишката, зависи изцяло от програмиста, възможно е сигналът да се игнорира
-- Нишката може да провери дали е била прекъсната
-- Някои методи, например `sleep()` или `join()` хвърлят изключение `java.lang.InterruptedException`, когато нишката e получила сигнал за прекъсване, докато те се изпълняват
-
-<br>
+- One thread can signal another to stop execution
+- What action is taken is entirely up to the programmer — the signal may be ignored
+- A thread can check whether it has been interrupted
+- Methods like `sleep()` and `join()` throw `InterruptedException` when the thread receives an interrupt signal while they are executing
 
 ```java
-customThread.interrupt()
+customThread.interrupt();
 
-Thread.interrupted() // изчиства флага след прочитането (статичен)
-isInterrupted() // не изчиства флага (не-статичен)
+Thread.interrupted()    // static — clears the interrupted flag after reading
+isInterrupted()         // instance — does NOT clear the flag
 ```
+
+---
+
+### Virtual Threads (Java 21 Preview)
+
+- *Virtual threads* are lightweight threads managed by the JVM rather than the OS
+- Designed for high-throughput concurrent applications
+- Created with `Thread.ofVirtual()`:
+
+```java
+Thread vt = Thread.ofVirtual().start(() ->
+    System.out.println("Running in a virtual thread")
+);
+vt.join();
+```
+
+- Ideal for I/O-bound workloads; not a silver bullet for CPU-bound work
+
+---
+
+### Where to Go Next
+
+- [Java Concurrency in Practice](https://jcip.net/) — Brian Goetz et al. — the definitive reference
+
+<p align="center">
+  <img width="25%" src="images/09.6-java-concurrency-in-practice.jpg" alt="Java Concurrency in Practice" />
+</p>

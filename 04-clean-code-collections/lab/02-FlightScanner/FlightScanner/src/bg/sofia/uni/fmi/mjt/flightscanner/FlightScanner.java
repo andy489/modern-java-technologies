@@ -3,8 +3,6 @@ package bg.sofia.uni.fmi.mjt.flightscanner;
 import bg.sofia.uni.fmi.mjt.flightscanner.airport.Airport;
 import bg.sofia.uni.fmi.mjt.flightscanner.exception.FlightCapacityExceededException;
 import bg.sofia.uni.fmi.mjt.flightscanner.flight.Flight;
-import bg.sofia.uni.fmi.mjt.flightscanner.flight.FlightByDestinationComparator;
-import bg.sofia.uni.fmi.mjt.flightscanner.flight.FlightsByFreeSeatsComparator;
 import bg.sofia.uni.fmi.mjt.flightscanner.flight.RegularFlight;
 import bg.sofia.uni.fmi.mjt.flightscanner.passenger.Gender;
 import bg.sofia.uni.fmi.mjt.flightscanner.passenger.Passenger;
@@ -109,12 +107,12 @@ public class FlightScanner implements FlightScannerAPI {
 
     @Override
     public List<Flight> getFlightsSortedByFreeSeats(Airport from) {
-        return getFlightsSortedByComparator(from, new FlightsByFreeSeatsComparator());
+        return getFlightsSortedByComparator(from, Comparator.comparingInt(Flight::getFreeSeatsCount));
     }
 
     @Override
     public List<Flight> getFlightsSortedByDestination(Airport from) {
-        return getFlightsSortedByComparator(from, new FlightByDestinationComparator());
+        return getFlightsSortedByComparator(from, Comparator.comparing(f -> f.getTo().id()));
     }
 
     private List<Flight> getFlightsSortedByComparator(Airport from, Comparator<Flight> customComparator) {

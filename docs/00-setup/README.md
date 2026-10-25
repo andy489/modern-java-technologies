@@ -1,26 +1,23 @@
-# Подготовка на инструментите и някои tips & tricks
+# Environment Setup — Tips & Tricks
 
 - [Java Development Kit](#java-development-kit)
 - [Integrated Development Environment](#integrated-development-environment)
     - [IntelliJ IDEA](#intellij-idea)
     - [Eclipse](#eclipse)
 - [Online Auto Grader](#online-auto-grader)
-    - [Eclipse Plugin за Grader](#eclipse-plugin-за-grader)
+    - [Eclipse Plugin for Grader](#eclipse-plugin-for-grader)
 
 ## Java Development Kit
 
-- [Инсталация за Windows](https://docs.oracle.com/en/java/javase/17/install/installation-jdk-microsoft-windows-platforms.html#GUID-A740535E-9F97-448C-A141-B95BF1688E6F)
+- [Install on Windows](https://docs.oracle.com/en/java/javase/17/install/installation-jdk-microsoft-windows-platforms.html#GUID-A740535E-9F97-448C-A141-B95BF1688E6F)
+- [Install on Linux](https://docs.oracle.com/en/java/javase/17/install/installation-jdk-linux-platforms.html#GUID-737A84E4-2EFF-4D38-8E60-3E29D1B884B8)
+- [Install on macOS](https://docs.oracle.com/en/java/javase/17/install/installation-jdk-macos.html#GUID-2FE451B0-9572-4E38-A1A5-568B77B146DE)
 
-- [Инсталация на Linux](https://docs.oracle.com/en/java/javase/17/install/installation-jdk-linux-platforms.html#GUID-737A84E4-2EFF-4D38-8E60-3E29D1B884B8)
+> **Note:** Download JDK 17 from **Builds** for your operating system at [jdk.java.net/17](https://jdk.java.net/17).
 
-- [Инсталация на Mac OS](https://docs.oracle.com/en/java/javase/17/install/installation-jdk-macos.html#GUID-2FE451B0-9572-4E38-A1A5-568B77B146DE)
+Verify that the installation succeeded:
 
-**Забележка:** Изтеглете JDK 17 от **Builds** за вашата операционна система от [тук](
-https://jdk.java.net/17).
-
-**Забележка:** Уверете се, че инсталацията е успешна:
-
-```console
+```bash
 $ java -version
 openjdk version "17" 2021-09-14
 OpenJDK Runtime Environment (build 17+35-Ubuntu-120.04)
@@ -29,121 +26,121 @@ OpenJDK 64-Bit Server VM (build 17+35-Ubuntu-120.04, mixed mode, sharing)
 
 ## Integrated Development Environment
 
-Може да използате което и да е _IDE_ или любимия ви текстов редактор. Все пак, ние бихме препоръчали _IntelliJ IDEA_ или_Eclipse_:
+You may use any IDE or text editor you prefer. We recommend either _IntelliJ IDEA_ or _Eclipse_.
 
 ### IntelliJ IDEA
 
-За целите на курса безплатната (Community) версия на [IntelliJ IDEA](https://www.jetbrains.com/idea/download/) ще ни бъде напълно достатъчна.
+The free (Community) edition of [IntelliJ IDEA](https://www.jetbrains.com/idea/download/) is fully sufficient for this course.
 
-#### Инсталация на IntelliJ IDEA и Hello World
+#### Installation and Hello World
 
-- официалната документация на _IntelliJ IDEA_ има подробни [стъпки за инсталация](https://www.jetbrains.com/help/idea/installation-guide.html)
+- The official IntelliJ IDEA documentation provides detailed [installation steps](https://www.jetbrains.com/help/idea/installation-guide.html).
+- A [short, useful video](https://www.youtube.com/watch?time_continue=245&v=c0efB_CKOYo) walks through creating, running, and configuring a Hello World project.
+- The same topic in written form: [Creating and running your first Java application](https://www.jetbrains.com/help/idea/creating-and-running-your-first-java-application.html).
 
-- [кратко и полезно видео](https://www.youtube.com/watch?time_continue=245&v=c0efB_CKOYo) за създаване, пускане и конфигуриране на Hello World проект
+#### Useful IntelliJ IDEA Shortcuts
 
-- подобно на горното видео, но в текстов вариант: [създаване и стартиране на Hello World приложение](https://www.jetbrains.com/help/idea/creating-and-running-your-first-java-application.html)
+The most commonly used shortcuts are listed in [Mastering IntelliJ IDEA keyboard shortcuts](https://www.jetbrains.com/help/idea/mastering-keyboard-shortcuts.html#d1746384e89).
 
-#### Полезни IntelliJ IDEA Shortcuts
+A brief UI overview along with handy shortcuts is available in [IntelliJ IDEA overview](https://www.jetbrains.com/help/idea/discover-intellij-idea.html).
 
-Най-често използваните са описани в [Mastering IntelliJ IDEA keyboard shortcuts](https://www.jetbrains.com/help/idea/mastering-keyboard-shortcuts.html#d1746384e89).
+#### Debugging in IntelliJ IDEA
 
-Кратко описание на UI-а, както и полезни shortcut-и са включени в [IntelliJ IDEA overview](https://www.jetbrains.com/help/idea/discover-intellij-idea.html).
+A beginner's debugging tutorial for _IntelliJ IDEA_ can be found [here](https://www.jetbrains.com/help/idea/debugging-your-first-java-application.html).
 
-#### Дебъгване в IntelliJ IDEA
+#### JUnit Tests
 
-Beginner's Tutorial за дебъгване в _IntelliJ IDEA_ може да намерите [тук](https://www.jetbrains.com/help/idea/debugging-your-first-java-application.html).
+Some problem statements include sample tests. If you see a `Cannot resolve symbol 'Test'` error after adding a test file to your project, you need to add JUnit to the project's build path. The [official IntelliJ IDEA documentation](https://www.jetbrains.com/help/idea/testing.html) explains how to configure JUnit 4/5. Add JUnit 4 via `Alt+Enter on @Test → Add JUnit 4 to classpath`.
 
-#### JUnit Тестове
-
-Към условието на някои задачи са прикачени и тестове за примерния вход и изход от условието. Ако след като сложите файла с тестовете в проекта си, виждате грешки от вида `Cannot resolve symbol 'Test'`, ще е необходимо да добавите _JUnit_ в _Build Path_ на проекта. [Официалната документация](https://www.jetbrains.com/help/idea/testing.html) на _Intellij IDEA_ включва обяснение за това как да конфигурирате JUnit 4/5 в проекта си - вместо JUnit 5.4, добавете JUnit 4 (`Alt+Enter on @Test -> Add Junit 4 to classpath`).
-
-Пускане на тестовете - отворете файла с тестове в _IDE_-то и натиснете `ctrl+shift+f10` или `Mouse Right Click -> Run {{filename}}`.
+To run the tests, open the test file in the IDE and press `Ctrl+Shift+F10`, or right-click → **Run `<filename>`**.
 
 ### Eclipse
 
-#### Инсталация на Eclipse и Hello World
+#### Installation and Hello World
 
-Един [подробен tutorial](https://www.vogella.com/tutorials/Eclipse/article.html) за подготовка на [Eclipse]((https://www.eclipse.org/downloads/eclipse-packages/)), включващ описание как да си го инсталирате и как да направите първия си проект.
+A [detailed tutorial](https://www.vogella.com/tutorials/Eclipse/article.html) for setting up [Eclipse](https://www.eclipse.org/downloads/eclipse-packages/), including installation and creating your first project.
 
-**Забележка**: За да използвате Java 17, ще ви трябва [Eclipse 2021-09](https://www.eclipse.org/downloads/) или по-нов. За момента (към 15-10-2021) се налага и инсталация на допълнителен feature, който се намира [тук](https://marketplace.eclipse.org/content/java-17-support-eclipse-2021-09-421) (за да го инсталирате, просто drag-вате `Install` върху отворения workspace).
+> **Note:** To use Java 17, you need [Eclipse 2021-09](https://www.eclipse.org/downloads/) or later. You also need to install an additional feature available [here](https://marketplace.eclipse.org/content/java-17-support-eclipse-2021-09-421) (drag the **Install** button onto your open workspace to install it).
 
-#### Полезни Eclipse Shortcuts
+#### Useful Eclipse Shortcuts
 
-Ще ви спестят огромно време и усилие, инвестицията определено си струва.
-Някои от най-полезните:
+Learning these shortcuts saves a significant amount of time and effort.
 
-##### Редактиране
+##### Editing
 
-      Ctrl + space                   auto-complete-ва имена на променливи и методи по първите няколко букви
-      Ctlr + Shift + F               форматира ви кода
-      Ctrl + O                       организира ви import-ите
-      Ctrl + D                       изтрива текущия ред
-      Alt  + стрелка нагоре/надолу   премества текущия ред (или цялата селекция) нагоре/надолу
-      Ctrl + 7                       коментира / разкоментира маркирани редове или блокове
+| Shortcut | Action |
+|---|---|
+| `Ctrl + Space` | Auto-completes variable and method names |
+| `Ctrl + Shift + F` | Formats your code |
+| `Ctrl + O` | Organises imports |
+| `Ctrl + D` | Deletes the current line |
+| `Alt + Up/Down` | Moves the current line (or selection) up or down |
+| `Ctrl + 7` | Comments / uncomments selected lines or blocks |
 
-##### Навигиране
+##### Navigation
 
-      Ctrl + N                       oтваря New Type wizard, с който може да създадете нов проект, клас, интерфейс
-      Ctrl + T                       oтваря тип: най-бързият начин да отворите клас или интерфейс, ваш или от JDK-то
-      Ctrl + F7                      превключва между различните view-та
-      Ctrl + F8                      превключва между различните перспективи (например от Java към Debug и обратно)
-      Ctrl + Q                       прехвърля ви в позицията на последна редакция на сорса
+| Shortcut | Action |
+|---|---|
+| `Ctrl + N` | Opens the New Type wizard to create a project, class, or interface |
+| `Ctrl + T` | Opens a type — the fastest way to open any class or interface |
+| `Ctrl + F7` | Switches between views |
+| `Ctrl + F8` | Switches between perspectives (e.g. Java ↔ Debug) |
+| `Ctrl + Q` | Jumps to the last edited position in the source |
 
 ##### Run & Debug
 
-      Ctrl + F11                     стартира приложението
-      F11                            стартира приложението в дебъг режим
+| Shortcut | Action |
+|---|---|
+| `Ctrl + F11` | Runs the application |
+| `F11` | Runs the application in debug mode |
 
-Изчерпателен списък може да намерите тук: [Eclipse cheatsheet](https://github.com/pellaton/eclipse-cheatsheet).
+A comprehensive list is available in the [Eclipse cheatsheet](https://github.com/pellaton/eclipse-cheatsheet).
 
-#### Дебъгване в Eclipse
+#### Debugging in Eclipse
 
-Чудесно [ръководство по debugging](https://www.eclipse.org/community/eclipse_newsletter/2017/june/article1.php) за начинаещи.
+An excellent [beginner's debugging guide](https://www.eclipse.org/community/eclipse_newsletter/2017/june/article1.php) for Eclipse.
 
-#### JUnit Тестове
+#### JUnit Tests
 
-Към условието на някои задачи са прикачени и тестове за примерния вход и изход от условието. Ако след като сложите файла с тестовете в проекта си, виждате грешки от вида `the import org.junit cannot be resolved`, ще е необходимо да добавите _JUnit_ в _Build Path_ на проекта. Бихте могли ръчно да добавите `JUnit` в `Build Path` като следвате стъпките [тук](https://www.tutorialspoint.com/junit/junit_plug_with_eclipse.htm).
+Some problem statements include sample tests. If you see a `the import org.junit cannot be resolved` error, you need to add JUnit to the project's build path. You can do this manually by following the steps [here](https://www.tutorialspoint.com/junit/junit_plug_with_eclipse.htm).
 
-Пускане на тестовете - отворете файла с тестове в _IDE_-то и натиснете `Mouse Right Click -> Run As -> JUnit Test`.
+To run the tests, right-click the test file → **Run As** → **JUnit Test**.
 
-**Забележка**: Тестовете в курса, поне в началото, ще пишем с JUnit 4. Все пак, малко полезна информация за JUnit 5 може да намерите [тук](https://www.eclipse.org/community/eclipse_newsletter/2017/october/article5.php).
+> **Note:** Tests in this course are written with JUnit 4. Some additional information about JUnit 5 can be found [here](https://www.eclipse.org/community/eclipse_newsletter/2017/october/article5.php).
 
 ## Online Auto Grader
 
-Онлайн системата за автоматично тестване e [grader.sapera.org](http://grader.sapera.org).
+The automated testing system is hosted at [grader.sapera.org](http://grader.sapera.org).
 
-За да се регистрирате, свържете се с администратора.
-Ще я ползваме както за упражненията, така и за домашните.
+To register, contact the administrator. The grader is used for both lab exercises and homework assignments. Submit your solutions via the web interface.
 
-Решенията може да качвате за оценяване през уеб интерфейса на системата.
+### Eclipse Plugin for Grader
 
-### Eclipse Plugin за Grader
+If you use Eclipse, you can submit solutions directly from the IDE using the grader integration plugin.
 
-В случай че ползвате Eclipse, може директно от IDE-то да качвате решенията си чрез plugin-а за интеграция с grader-a.
+#### Installation
 
-#### Инсталация
+1. Open _Eclipse_.
+2. Go to **Help** → **Install New Software...**.
+3. In the **Work with...** field, enter `http://web-cat.org/eclstats/`.
+4. Select the **Web-CAT Electronic Assignments Feature** checkbox and click **Next**.
+5. Wait for the dialog to load, then click **Next** again.
+6. Select **I accept the terms of the license agreements** and click **Finish**.
+7. The download and installation will take a moment. If a popup warns about unsigned content, click **Install Anyway**.
+8. When installation finishes, agree to restart Eclipse.
 
-1. Отваряте _Eclipse_.
-2. _Help_ > _Install New Software_...
-3. В полето _Work with..._ въвеждате "http://web-cat.org/eclstats/".
-4. Маркирате check box-a _Web-CAT Electronic Assignments Featurе_ и натискате бутона _Next>_.
-5. Тук ще почакате малко. Като ви се отвори диалога, отново натискате бутона _Next>_.
-6. Маркирате радио бутона _I accept the terms of the license agreements_ и натискате бутона _Finish_.
-7. Свалянето и инсталирането ще отнеме известно време. Ако ви се появи pop-up с предупреждение, че инсталирате неподписано съдържание, натискате бутона _Install Anyway_.
-8. Когато инсталацията приключи, съгласявате се с подканата да рестартирате _Eclipse_.
+#### Configuration
 
-#### Конфигурация
+1. Open _Eclipse_.
+2. Go to **Window** → **Preferences**.
+3. In the left panel, select **Configured Assignments**.
+4. In both the **Download URL** and **Submit URL** fields, enter `http://grader.sapera.org/WebObjects/Web-CAT.woa/wa/assignments/eclipse` and click **Apply and Close**.
 
-1. Отваряте _Eclipse_.
-2. _Window_ > _Preferences_.
-3. В навигацията в десния панел на _Preferences_ диалога избирате _Configured Assignments_.
-4. В полетата _Download URL_ и _Submit URL_ въвеждате "http://grader.sapera.org/WebObjects/Web-CAT.woa/wa/assignments/eclipse" и натискате бутона _Apply and Close_.
+#### Usage
 
-#### Употреба
-
-1. В _Navigator_ панела селектирате проекта, който искате да предадете.
-2. _Project_ > _Submit Assignment_...
-3. В диалога _Submit An Assignment for Grading_ селектирате задачата, за която искате да предадете решение, и натискате бутона _Finish_.
-4. В появилия се диалог за автентикация, въвеждате потребителското си име и парола за grader-a. Може да селектирате check box-a _Remember my password for the rest of this session_. Натискате бутона _ОК_.
-5. В новоотворилия се прозорец на default-ния ви браузър след няколко секунди ще видите оценката си.
-6. Повтаряте стъпки 2-5, докато не сте удовлетворени от резултата или не изчерпите броя submissions, в случай че са ограничени за съответната задача :).
+1. In the **Navigator** panel, select the project you want to submit.
+2. Go to **Project** → **Submit Assignment...**.
+3. In the **Submit An Assignment for Grading** dialog, select the assignment and click **Finish**.
+4. In the authentication dialog, enter your grader username and password. You may select **Remember my password for the rest of this session**. Click **OK**.
+5. A browser window will open and, after a few seconds, display your grade.
+6. Repeat steps 2–5 until you are satisfied with your result or exhaust the submission limit (if one applies).

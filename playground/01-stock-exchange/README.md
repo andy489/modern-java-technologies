@@ -1,21 +1,23 @@
-### Стокова борса :currency_exchange:
+# Stock Exchange
 
-### Условие
+## Problem
 
-Кой е подходящият момент да купим и продадем акции, така че да си максимизираме печалбата?
+When is the right time to buy and sell stocks in order to maximise profit?
 
-Създайте публичен клас `StockExchange` с метод
+Create a public class `StockExchange` with the following method:
 
 ```java
 public static int maxProfit(int[] prices)
 ```
 
-който определя максималната печалба от покупко-продажбата на акции на борсата. Методът приема като параметър масив от цели числа, които представят предсказания за цената на акциите на дадена компания в поредни дни в бъдещето: `i`-тият елемент на масива представлява цената на акциите в `i`-тият ден след днешния. В дадения времеви интервал могат да се завършат най-много две транзакции. Не може да се случват множество паралелни транзакции (т.е. трябва да продадете акции преди да може да купите отново).
+The method determines the maximum profit achievable from buying and selling stocks. It accepts an array of integers representing predicted stock prices for a company on consecutive future days: the `i`-th element is the price on day `i` after today.
 
-### Примери
+At most **two transactions** may be completed within the given time window. Parallel transactions are not allowed — you must sell your shares before you can buy again.
 
-| Вход                                 | Резултат | Обяснение  |
-| :----------------------------------- |:---------| :--------- |
-| {7, 1, 5, 3, 6, 4}  | 7 | Купваме в ден 2 (цена = 1) и продаваме в ден 3 (цена = 5), печалба = 5-1 = 4.<br/>После купуваме в ден 4 (цена = 3) и продаваме в ден 5 (цена = 6), печалба = 6 - 3 = 3. |
-| {1, 2, 3, 4, 5}  | 4 | Купваме в ден 1 (цена = 1) и продаваме в ден 5 (цена = 5), печалба = 5-1 = 4.<br/>Забележете, че не може да купим в ден 1, да купим в ден 2 и да ги продадем по-късно,<br/>защото би означавало да правим няколко паралелни тракзакции, засичащи се във времето.</br>Трябва да продадем акции преди да може да купим отново. |
-| {7, 6, 4, 3, 1}  | 0 | В този случай, нямаме полезен ход, максималната печалба е 0 (ако не търгуваме). |
+## Examples
+
+| Input | Result | Explanation |
+|:---|:---|:---|
+| `{7, 1, 5, 3, 6, 4}` | `7` | Buy on day 2 (price = 1), sell on day 3 (price = 5), profit = 4. Then buy on day 4 (price = 3), sell on day 5 (price = 6), profit = 3. Total = 7. |
+| `{1, 2, 3, 4, 5}` | `4` | Buy on day 1 (price = 1), sell on day 5 (price = 5), profit = 4. Note: you cannot buy on day 1, buy again on day 2, and sell later — that would be two overlapping transactions. You must sell before buying again. |
+| `{7, 6, 4, 3, 1}` | `0` | There is no profitable move. Maximum profit is 0 (do not trade). |

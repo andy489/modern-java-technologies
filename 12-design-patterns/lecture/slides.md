@@ -1,26 +1,26 @@
 # Design Patterns
 
-12.01.2022
+2022-01-12
 
 ---
 
-### Предната лекция говорихме за:
+### Last lecture covered:
 
 - HTTP
 - REST
 - JSON
-- Библиотеки за работа с HTTP и JSON
+- Libraries for working with HTTP and JSON
 
 ---
 
-### Днес ще разгледаме:
+### Today we will cover:
 
-- S.O.L.I.D. дизайн принципите
+- S.O.L.I.D. design principles
 - Design Patterns
 
 ---
 
-### S.O.L.I.D дизайн принципи
+### S.O.L.I.D. Design Principles
 
 <p align="center">
   <img width="60%" src="images/12.1-solid.png" alt="S.O.L.I.D." />
@@ -28,66 +28,68 @@
 
 ---
 
-### S.O.L.I.D: Single responsibility principle
+### S.O.L.I.D: Single Responsibility Principle
 
 <p align="center">
-  <img width="50%" src="images/12.1.1-solid-s.png" alt="Single responsibility principle" />
+  <img width="50%" src="images/12.1.1-solid-s.png" alt="Single Responsibility Principle" />
 </p>
 
 <br>
 
-- A class should have only a single responsibility (i.e. changes to only one part of the software's specification should be able to affect the specification of the class)
+- A class should have only a single responsibility — changes to only one part of the software's specification should affect the specification of the class
 - "A class should have only one reason to change."
 
 ---
 
-### S.O.L.I.D: Open/Closed principle
+### S.O.L.I.D: Open/Closed Principle
 
 <p align="center">
-  <img width="50%" src="images/12.1.2-solid-o.png" alt="Open/Closed principle" />
+  <img width="50%" src="images/12.1.2-solid-o.png" alt="Open/Closed Principle" />
 </p>
 
 <br>
 
-- software entities (classes, modules, functions, etc.) should be open for extension, but closed for modification
+- Software entities (classes, modules, functions, etc.) should be **open for extension**, but **closed for modification**
+- Add new behaviour by extending, not by altering existing code
 
 ---
 
-### S.O.L.I.D: Liskov substitution principle
+### S.O.L.I.D: Liskov Substitution Principle
 
 <p align="center">
-  <img width="50%" src="images/12.1.3-solid-l.png" alt="Liskov substitution principle" />
+  <img width="50%" src="images/12.1.3-solid-l.png" alt="Liskov Substitution Principle" />
 </p>
 
 <br>
 
-- objects in a program should be replaceable with instances of their subtypes without altering the correctness of that program
+- Objects in a program should be replaceable with instances of their subtypes without altering the correctness of that program
+- Subtypes must honour the contract of their base type
 
 ---
 
-### S.O.L.I.D: Interface segregation principle
+### S.O.L.I.D: Interface Segregation Principle
 
 <p align="center">
-  <img width="50%" src="images/12.1.4-solid-i.png" alt="Interface segregation principle" />
+  <img width="50%" src="images/12.1.4-solid-i.png" alt="Interface Segregation Principle" />
 </p>
 
 <br>
 
-- A client should not be forced to implement an interface that it doesn't use
+- A client should not be forced to implement an interface it doesn't use
 - Many client-specific interfaces are better than one general-purpose interface
 
 ---
 
-### S.O.L.I.D: Dependency inversion principle
+### S.O.L.I.D: Dependency Inversion Principle
 
 <p align="center">
-  <img width="50%" src="images/12.1.5-solid-d.png" alt="Dependency inversion principle" />
+  <img width="50%" src="images/12.1.5-solid-d.png" alt="Dependency Inversion Principle" />
 </p>
 
 <br>
 
-- high level modules must not depend on low level modules, but they should depend on abstractions
-- one should "depend upon abstractions, not concretions"
+- High-level modules must not depend on low-level modules — both should depend on abstractions
+- "Depend upon abstractions, not concretions."
 
 ---
 
@@ -95,12 +97,13 @@
 
 ---
 
-### Design Patterns
+### What are Design Patterns?
 
-Шаблоните за дизайн са
+Design patterns are:
 
-- обобщени добри практики
-- стандартни решения на общи / често срещани проблеми
+- Generalised best practices accumulated from experienced software developers
+- Standard solutions to common / frequently occurring design problems
+- A shared vocabulary that helps developers communicate efficiently
 
 ---
 
@@ -110,42 +113,45 @@
   <img width="50%" src="images/12.2-design-patterns.jpg" alt="Design Patterns" />
 </p>
 
----
-
-### Design Patterns - ползи
-
-- Използване на колективния опит за софтуерно проектиране за доказани решения на често срещани проблеми
-- Поощряват reusability на кода, което води до по-качествен и лесен за поддръжка код
-- Обща терминология, която помага на програмистите да се разбират лесно
+*Gang of Four — Gamma, Helm, Johnson, Vlissides (1994)*
 
 ---
 
-### Design Patterns - видове
+### Design Patterns — Benefits
 
-- Creational Patterns
-- Structural Patterns
-- Behavioral Patterns
+- Leverage collective software design experience for proven solutions to recurring problems
+- Encourage code reusability, leading to higher-quality and more maintainable code
+- Provide a common terminology that helps developers communicate clearly
+- Speed up the development process by providing tested, proven paradigms
+
+---
+
+### Design Patterns — Categories
+
+- **Creational Patterns** — object creation
+- **Structural Patterns** — class and object composition
+- **Behavioral Patterns** — communication between objects
 
 ---
 
 ### Creational Patterns
 
-- Осигуряват начин да се създават обекти на класове, скривайки логиката по създаването им (вместо да се инстанцират директно чрез оператора `new`)
-- Factory, Abstract Factory, Builder, Singleton, Prototype
+- Provide a way to create objects while hiding the creation logic, rather than instantiating objects directly with `new`
+- Examples: Factory, Abstract Factory, Builder, Singleton, Prototype
 
 ---
 
 ### Structural Patterns
 
-- Осигуряват различни начини за създаване на по-сложни класове чрез наследяване и композиция на по-прости класове
-- Adapter, Composite, Proxy, Flyweight, Facade, Bridge, Decorator
+- Provide different ways to create more complex classes through inheritance and composition of simpler classes
+- Examples: Adapter, Composite, Proxy, Flyweight, Facade, Bridge, Decorator
 
 ---
 
 ### Behavioral Patterns
 
-- Свързани са с комуникацията между обекти
-- Template Method, Mediator, Chain of Responsibility, Observer, Strategy, Command, State, Visitor, Interpreter, Iterator, Memento
+- Concerned with communication and responsibility between objects
+- Examples: Template Method, Mediator, Chain of Responsibility, Observer, Strategy, Command, State, Visitor, Interpreter, Iterator, Memento
 
 ---
 
@@ -163,18 +169,42 @@
 
 ### Factory
 
-- creational pattern
-- създаваме обект без да expose-ваме логиката по създаването му на клиента
-- използва се, когато имаме родителски клас с няколко наследници и искаме да създаваме един от наследниците на родителския клас според подаден параметър
-- примери от JDK-то: `valueOf()` метода на wrapper класовете като `Boolean`, `Integer` и т.н., `of()` методите на `List`, `Set`, `Map`, `of()` метода на `Path`, `of()` метода на `Stream`
+- **Creational pattern**
+- Creates an object without exposing the creation logic to the client
+- Used when there is a parent class with multiple subclasses and the correct subclass to instantiate is determined at runtime based on an input parameter
+- JDK examples: `Boolean.valueOf()`, `Integer.valueOf()`, `List.of()`, `Set.of()`, `Map.of()`, `Path.of()`, `Stream.of()`
 
 ---
 
-### Factory
+### Factory — Example Diagram
 
 <p align="center">
-  <img width="70%" src="images/12.4-factory-demo-diagram.png" alt="Factory" />
+  <img width="70%" src="images/12.4-factory-demo-diagram.png" alt="Factory Demo Diagram" />
 </p>
+
+---
+
+### Factory — Code Sketch
+
+```java
+public interface Shape {
+    void draw();
+}
+
+public class Circle implements Shape {
+    public void draw() { System.out.println("Drawing Circle"); }
+}
+
+public class ShapeFactory {
+    public static Shape create(String type) {
+        return switch (type.toLowerCase()) {
+            case "circle"    -> new Circle();
+            case "rectangle" -> new Rectangle();
+            default -> throw new IllegalArgumentException("Unknown shape: " + type);
+        };
+    }
+}
+```
 
 ---
 
@@ -188,18 +218,51 @@
 
 ### Builder
 
-- creational pattern
-- решава някои проблеми на Factory pattern-а за класове с много атрубути, от които много са optional
-- примери от JDK-то: `StringBuilder`, `StringBuffer`, `HttpClient`, `HttpRequest`
+- **Creational pattern**
+- Solves problems of the Factory pattern for classes with many attributes, many of which are optional
+- Avoids telescoping constructors and invalid intermediate states
+- JDK examples: `StringBuilder`, `StringBuffer`, `HttpClient.newBuilder()`, `HttpRequest.newBuilder()`
 
 ---
 
-### Builder - имплементация
+### Builder — Implementation Steps
 
-- Създаваме `static` вложен клас и копираме всички параметри от външния клас в builder класа
-- builder класът трябва да има публичен конструктор с всички задължителни атрибути като параметри
-- setter методи за всички опционални параметри, които връщат същата builder инстанция
-- `build()` метод, който връща обекта (`this`)
+1. Create a `static` nested builder class and copy all parameters from the outer class into it
+2. The builder class should have a public constructor accepting all **mandatory** attributes as parameters
+3. Add setter methods for all **optional** parameters — each returns `this` (the same builder instance) for chaining
+4. Add a `build()` method that validates and returns the fully constructed outer object
+
+---
+
+### Builder — Code Sketch
+
+```java
+public class Pizza {
+    private final String size;   // required
+    private final boolean cheese;
+    private final boolean pepperoni;
+
+    private Pizza(Builder b) {
+        this.size      = b.size;
+        this.cheese    = b.cheese;
+        this.pepperoni = b.pepperoni;
+    }
+
+    public static class Builder {
+        private final String size;
+        private boolean cheese;
+        private boolean pepperoni;
+
+        public Builder(String size) { this.size = size; }
+        public Builder cheese(boolean v)    { cheese = v;    return this; }
+        public Builder pepperoni(boolean v) { pepperoni = v; return this; }
+        public Pizza build() { return new Pizza(this); }
+    }
+}
+
+// Usage
+var pizza = new Pizza.Builder("large").cheese(true).pepperoni(true).build();
+```
 
 ---
 
@@ -213,19 +276,43 @@
 
 ### Singleton
 
-- creational pattern
-- клас, от който може да съществува най-много една инстанция
-- имплементация
-    - `private` конструктор
-    - `private static` член-променлива от тип същия клас, която реферира единствената инстанция на класа
-    - `public static` метод, който връща инстанцията на класа
+- **Creational pattern**
+- Ensures that at most one instance of a class exists at any time
+- Implementation:
+    - `private` constructor
+    - `private static` field of the same class type holding the single instance
+    - `public static` method that returns the instance (lazy or eager initialisation)
 
 ---
 
-### Singleton
+### Singleton — Thread-Safe Implementation
 
-- типични употреби: logging, caching, thread pools
-- В други design patterns (Factory, Builder, Facade, Prototype, …)
+```java
+public class ConfigManager {
+    private static volatile ConfigManager instance;
+
+    private ConfigManager() {}
+
+    public static ConfigManager getInstance() {
+        if (instance == null) {
+            synchronized (ConfigManager.class) {
+                if (instance == null) {
+                    instance = new ConfigManager();
+                }
+            }
+        }
+        return instance;
+    }
+}
+```
+
+---
+
+### Singleton — When to Use
+
+- Typical use cases: logging, caching, thread pools, configuration managers
+- Often used within other design patterns (Factory, Builder, Facade, Prototype)
+- **Caution:** singletons introduce global state — use sparingly and prefer dependency injection where possible
 
 ---
 
@@ -243,25 +330,26 @@
 
 ### Flyweight
 
-- structural pattern
-- позволява да се съберат повече обекти в наличната памет чрез споделяне на общите части на state-a между множество обекти
-- намалява memory footprint-а на програмата
-- може също да подобри бързодействието в приложения, където инстанцирането на обектите е скъпа операция
+- **Structural pattern**
+- Allows fitting more objects into available memory by sharing common parts of state between multiple objects
+- Reduces the memory footprint of a program
+- Can also improve performance in applications where object instantiation is expensive
 
 ---
 
-### Flyweight
+### Flyweight — Key Rules
 
-- flyweight обектите са immutable: всяка операция, която променя състоянието им трябва да се изпълнява от factory-то
-- примери от JDK-то: `String` с имплементацията на string pool-a, `Integer.valueOf(int)`, `Byte.valueOf(byte)` и подобните са останалите wrapper типове
+- Flyweight objects are **immutable**: any operation that modifies their state must be performed by the factory
+- The shared state is called **intrinsic** state; per-instance state is called **extrinsic** state
+- JDK examples: `String` (string pool), `Integer.valueOf(int)`, `Byte.valueOf(byte)`, and similar cached ranges in other wrapper types
 
 ---
 
-### Flyweight - имплементация
+### Flyweight — Implementation
 
-- интерфейс, който дефинира операциите, които клиентския код може да извършва върху flyweight обектите
-- една или повече конкретни имплементации на този интерфейс
-- factory, което отговаря за инстанциране и кеширане
+1. Define an interface with the operations client code can perform on flyweight objects
+2. Create one or more concrete implementations of that interface
+3. Create a factory responsible for instantiating and caching flyweight objects — never create flyweights directly
 
 ---
 
@@ -279,16 +367,17 @@
 
 ### Iterator
 
-- behavioral pattern
-- позволява последователното обхождане на поредица от обекти
-- примери от JDK-то: `java.util.Iterator` и обхождането на колекции
+- **Behavioral pattern**
+- Provides a way to sequentially traverse a collection of objects without exposing the underlying representation
+- Decouples the traversal algorithm from the collection
+- JDK examples: `java.util.Iterator`, enhanced `for`-loop over any `Iterable`
 
 ---
 
-### Iterator
+### Iterator — Example Diagram
 
 <p align="center">
-  <img width="70%" src="images/12.9-iterator-demo-diagram.png" alt="Iterator" />
+  <img width="70%" src="images/12.9-iterator-demo-diagram.png" alt="Iterator Demo Diagram" />
 </p>
 
 ---
@@ -303,16 +392,17 @@
 
 ### Command
 
-- behavioral pattern
-- използва се за имплементиране на loose coupling в модел тип заявка-отговор
-- пример от JDK-то: `java.lang.Runnable`
+- **Behavioral pattern**
+- Encapsulates a request as an object, decoupling the sender from the receiver
+- Enables undo/redo, queuing, and logging of operations
+- JDK example: `java.lang.Runnable`, `java.util.concurrent.Callable`
 
 ---
 
-### Command
+### Command — Example Diagram
 
 <p align="center">
-  <img width="70%" src="images/12.11-command-demo-diagram.png" alt="Command" />
+  <img width="70%" src="images/12.11-command-demo-diagram.png" alt="Command Demo Diagram" />
 </p>
 
 ---
@@ -327,17 +417,18 @@
 
 ### Observer
 
-- behavioral pattern
-- удобен е, когато се интересуваме от състоянието на даден обект и искаме да бъдем нотифицирани, когато има промяна в състоянието
-- обектът, който наблюдава за промяна на състоянието на друг обект, се нарича *Observer*, а наблюдаваният обект се нарича *Subject*
-- пример от JDK-то: `java.util.Observer`, `java.util.Observable`
+- **Behavioral pattern**
+- Useful when we are interested in the state of an object and want to be notified when it changes
+- The object that watches for state changes is called an *Observer*; the watched object is called a *Subject* (or *Publisher*)
+- JDK examples: `java.beans.PropertyChangeListener`, event listeners in Swing/JavaFX
+- Note: `java.util.Observer` / `java.util.Observable` were **deprecated** in Java 9
 
 ---
 
-### Observer
+### Observer — Example Diagram
 
 <p align="center">
-  <img width="70%" src="images/12.13-observer-demo-diagram.png" alt="Observer" />
+  <img width="70%" src="images/12.13-observer-demo-diagram.png" alt="Observer Demo Diagram" />
 </p>
 
 ---
@@ -352,14 +443,39 @@
 
 ### Strategy
 
-- behavioral pattern
-- прилага се, когато имаме множество алгоритми за дадена задача и клиентът решава по време на изпълнение, коя имплементация на алгоритъм да се ползва
-- примери от JDK-to: `Collections.sort()`, който сортира по различен критерий/алгоритъм в зависимост от подадения `Comparator`
+- **Behavioral pattern**
+- Applied when there are multiple algorithms for a task and the client decides at runtime which implementation to use
+- Replaces complex conditionals with polymorphism
+- JDK examples: `Collections.sort()` / `List.sort()` — sorts by different criteria depending on the supplied `Comparator`
 
 ---
 
-### Design Patterns - примери с код
+### Strategy — Code Sketch
 
-- може да разгледате приложените [code snippets](https://github.com/fmi/java-course/tree/master/12-design-patterns/snippets/design-patterns)
-- хубави обяснения и примери с псевдокод [Refactoring Guru: Design Patterns](https://refactoring.guru/design-patterns)
-- тук може да намерите информация и примери с код на Java за голям брой design patterns (не само 23-те от *Gang-of-Four*): [Java Design Patterns](https://github.com/iluwatar/java-design-patterns)
+```java
+@FunctionalInterface
+public interface SortStrategy {
+    void sort(int[] data);
+}
+
+public class Sorter {
+    private final SortStrategy strategy;
+
+    public Sorter(SortStrategy strategy) { this.strategy = strategy; }
+
+    public void sort(int[] data) { strategy.sort(data); }
+}
+
+// Usage — strategy supplied as a lambda
+var sorter = new Sorter(Arrays::sort);
+sorter.sort(new int[]{5, 3, 1, 4, 2});
+```
+
+---
+
+### Where to Go Next
+
+- Code examples from this lecture: [java-course snippets](https://github.com/fmi/java-course/tree/master/12-design-patterns/snippets/design-patterns)
+- Detailed explanations and pseudo-code examples: [Refactoring Guru — Design Patterns](https://refactoring.guru/design-patterns)
+- Large catalogue of Java implementations (beyond the original GoF 23): [Java Design Patterns](https://github.com/iluwatar/java-design-patterns)
+- Original book: *Design Patterns: Elements of Reusable Object-Oriented Software* — Gamma, Helm, Johnson, Vlissides (1994)

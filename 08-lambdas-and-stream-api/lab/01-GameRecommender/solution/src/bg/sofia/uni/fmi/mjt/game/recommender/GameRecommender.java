@@ -29,8 +29,6 @@ public class GameRecommender {
 
             games = reader.lines().skip(1).map(Game::of).toList();
 
-            System.out.println("Games loaded: " + games.size());
-
         } catch (IOException ex) {
             throw new IllegalArgumentException("Could not load dataset", ex);
         }

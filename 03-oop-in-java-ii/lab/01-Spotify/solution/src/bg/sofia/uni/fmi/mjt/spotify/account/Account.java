@@ -5,7 +5,7 @@ import bg.sofia.uni.fmi.mjt.spotify.playable.Playable;
 
 import java.util.Objects;
 
-public class Account {
+public abstract class Account {
 
     private final String email;
     private final Library library;
@@ -36,19 +36,12 @@ public class Account {
         return totalListenTime;
     }
 
-    public AccountType getType() {
-        return AccountType.FREE;
-    }
+    public abstract AccountType getType();
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Account account = (Account) o;
+        if (this == o) return true;
+        if (!(o instanceof Account account)) return false;
         return Objects.equals(email, account.email);
     }
 
@@ -59,8 +52,6 @@ public class Account {
 
     @Override
     public String toString() {
-        return "Account{" +
-            "email='" + email + '\'' +
-            '}';
+        return "Account{email='" + email + "'}";
     }
 }

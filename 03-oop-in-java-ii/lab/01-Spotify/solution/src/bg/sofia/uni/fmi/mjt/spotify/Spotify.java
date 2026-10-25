@@ -93,12 +93,10 @@ public class Spotify implements StreamingService {
         double totalMoneyEarned = 0.0;
 
         for (Account account : accounts) {
-            switch (account.getType()) {
-                case FREE ->
-                    totalMoneyEarned += account.getAdsListenedTo() * AD_FEE;
-                case PREMIUM ->
-                    totalMoneyEarned += PREMIUM_FEE;
-            }
+            totalMoneyEarned += switch (account.getType()) {
+                case FREE -> account.getAdsListenedTo() * AD_FEE;
+                case PREMIUM -> PREMIUM_FEE;
+            };
         }
 
         return totalMoneyEarned;

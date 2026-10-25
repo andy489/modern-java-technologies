@@ -1,27 +1,28 @@
-### Анализ на ДНК :microscope:
+# DNA Analyzer
 
-Задачата е вдъхновена от курс по алгоритми във [Факултета по Компютърни науки](https://www.cs.princeton.edu) на [Princeton University](https://www.princeton.edu).
+*Inspired by an algorithms course at the [Department of Computer Science](https://www.cs.princeton.edu), [Princeton University](https://www.princeton.edu).*
 
-### Условие
+## Problem
 
-Ще имплементираме детектор, определящ най-дългата повтаряща се последователност от символи в даден (потенциално много дълъг) низ. Например, "abra" е най-дългата повтаряща се последователност в низа "abracadabra". Ако има две или повече повтарящи се последователности с еднаква дължина, детекторът връща произволна от тях.
+Implement a detector that finds the **longest repeating subsequence** of characters in a given (potentially very long) string. For example, `"abra"` is the longest repeating subsequence in `"abracadabra"`. If two or more repeating subsequences share the same maximum length, the detector may return any one of them.
 
-За да вкараме малко контекст и перспектива, тази на пръв поглед самоцелна задача е възникнала покрай реални проблеми в областта на обработката на текстове на естествен език и криптографията, а днес тя има революционни приложения в молекулярната биология. В ДНК-то, разглеждано като последователност от нуклеобази (аденин, тимин, гуанин, цитозин), има забележително количество повтарящи се последователности, и те играят критична роля в различни биологични функции, както и в еволюцията на видовете.
+### Background
 
-**Забележка**
-*Brute force* решението е сравнително просто, но е с алгоритмична сложност O(N^3). Ако се справите и искате да задълбаете в посока алгоритми, хубаво предизвикателство е да се опитате да решите задачата с по-бърз алгоритъм. Търсенето на ефективни алгоритми за намиране на повтарящи се последователности в символни редици (*redundancy detection problem*) днес е област на активни изследвания, защото подобни алгоритми ще позволят на учените да разгадаят някои от големите загадки в молекулярната биология.
+This seemingly academic problem emerged from real challenges in natural language processing and cryptography. Today it has revolutionary applications in molecular biology. DNA — viewed as a sequence of nucleobases (adenine, thymine, guanine, cytosine) — contains a remarkable number of repeating subsequences that play a critical role in various biological functions and in species evolution.
 
-Създайте публичен клас `DNAAnalyzer` с метод
+> **Note:** The brute-force solution is relatively straightforward but has O(N³) time complexity. If you complete it and want to go deeper into algorithms, try solving the problem with a faster approach. Finding efficient algorithms for redundancy detection in character sequences is an active area of research, as such algorithms could help scientists unravel some of the great mysteries of molecular biology.
+
+Create a public class `DNAAnalyzer` with the following method:
 
 ```java
 public static String longestRepeatingSequence(String dna)
 ```
 
-който приема низ като параметър и връща (пак като низ) най-дългата повтаряща се последователност от символи в низа.
+The method accepts a string and returns the longest repeating subsequence of characters found within it.
 
-### Примери
+## Examples
 
-| Извикване                                    | Резултат  |
-|:-------------------------------------------- |:--------- |
-| `longestRepeatingSequence("abracadabra")`    | `"abra"`  |
+| Call | Result |
+|:---|:---|
+| `longestRepeatingSequence("abracadabra")` | `"abra"` |
 | `longestRepeatingSequence("ATACTCGGTACTCT")` | `"TACTC"` |

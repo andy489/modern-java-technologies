@@ -1,23 +1,23 @@
-# Въведение в Java
+# Introduction to Java
 
-13.10.2021
+2024-09-01
 
 ---
 
-### Какво е Java?
+### What is Java?
 
-- Език за програмиране
-- Java компилатор
-- Java виртуална машина (JVM)
+- A programming language
+- Java compiler
+- Java Virtual Machine (JVM)
 - Java Development Kit (JDK)
   - Java Runtime Environment (JRE)
-- Java платформа
+- The Java platform
 
 ---
 
 ### Java Editions
 
-- Java Edition е вариация на Java платформата (JDK-то), асемблирана за различна цел
+- A Java Edition is a variation of the Java platform (the JDK), assembled for a different purpose
   - Java Platform Standard Edition (Java SE)
   - Java Platform Enterprise Edition (Java EE)
   - Java Platform Micro Edition (Java ME)
@@ -26,20 +26,20 @@
 
 ---
 
-### JDK инструменти
+### JDK Tools
 
-- Основни
+- Core tools
   - javac
   - java
-- Допълнителни
-  - jshell 
+- Additional tools
+  - jshell
   - javadoc
   - jar
   - ...
 
 ---
 
-### Java: най-популярните IDE-та
+### Java: Most Popular IDEs
 
 - IntelliJ IDEA
 - Eclipse
@@ -47,26 +47,25 @@
 
 ---
 
-### Езикът Java
+### The Java Language
 
-- Създаден през 1995 от James Gosling (Sun Microsystems)
-- Актуална версия: Java 17 (released 14.09.2021)
-
-
+- Created in 1995 by James Gosling (Sun Microsystems)
+- Current LTS version: Java 21 (released 2023-09-19)
+- Java 17 (released 2021-09-14) is also an LTS version, widely used in production
 
 ![Java logo and mascot](images/01.1-java-logo-mascot.png)
 
 ---
 
-### Езикът Java
+### The Java Language
 
-- Обектно-ориентиран
-- Със C/C++ синтаксис
+- Object-oriented
+- C/C++-inspired syntax
 - "Write once, run anywhere"
 
 ---
 
-### Hello world!
+### Hello World!
 
 ```java
 public class HelloWorldApp {
@@ -86,7 +85,7 @@ Hello world!
 
 ---
 
-### Стандартно Java приложение
+### A Standard Java Application
 
 <p align="center">
   <img src="images/01.2-java-app.jpg" />
@@ -94,39 +93,39 @@ Hello world!
 
 ---
 
-### Java виртуалната машина (JVM)
+### The Java Virtual Machine (JVM)
 
-- Интерпретира и изпълнява byte код инструкции
-- Компилира по време на изпълнението byte кода до машинен код
-- Заделя памет за оперативните данни
-- Автоматично изчиства паметта
-- Зарежда класове
-- Стартира нишки
-- Взаимодейства с операционната система
-
----
-
-### Ще започнем с езика Java от...
-
-- Tиповете данни
-- Оператори, изрази, statements
-- Условия и разклонения
-- Итерация / Цикли
-- Низове и операции с тях
-- Масиви
-- Функции
+- Interprets and executes bytecode instructions
+- JIT-compiles bytecode to native machine code at runtime
+- Allocates memory for runtime data
+- Automatically reclaims unused memory (garbage collection)
+- Loads classes dynamically
+- Manages threads
+- Interfaces with the operating system
 
 ---
 
-### Tипове данни и променливи
+### We Will Start with...
 
-- Тип данни == множество стойности + операции върху тях
-- Java е статично типизиран език → всички променливи трябва да бъдат декларирани, преди да бъдат използвани, и типът на дадена променлива се фиксира в декларацията ѝ и не може да се променя
-- Декларацията включва името и типа, и може да е съчетана (или не) с инициализация
+- Data types
+- Operators, expressions, statements
+- Conditionals and branching
+- Iteration / Loops
+- Strings and string operations
+- Arrays
+- Functions (methods)
 
 ---
 
-### Tипове данни и променливи
+### Data Types and Variables
+
+- A data type = a set of values + the operations defined on them
+- Java is statically typed → all variables must be declared before use, and their type is fixed at declaration and cannot change
+- A declaration includes the name and type, and may optionally include an initializer
+
+---
+
+### Data Types and Variables
 
 <p align="center">
   <img src="images/01.3-variables.jpg" />
@@ -134,34 +133,34 @@ Hello world!
 
 ---
 
-### Tипове данни
+### Data Types
 
-- Примитивни типове
-  - Булев (boolean) тип
-  - Числени (numeric) типове
-      - Целочислени (integral) типове
-      - Типове за числа с плаваща запетая (floating-point)
-- Reference типове
+- Primitive types
+  - Boolean type (`boolean`)
+  - Numeric types
+      - Integral types (`byte`, `short`, `int`, `long`, `char`)
+      - Floating-point types (`float`, `double`)
+- Reference types
 
 ---
 
-### Примитивни типове данни
+### Primitive Data Types
 
-| Тип данни | Размер  | Минимум         | Максимум                   |
+| Data type | Size    | Minimum         | Maximum                    |
 | :-------- | :------ | :-------------- | :------------------------- |
 | boolean   | -       | -               | -                          |
-| byte      | 8 бита  | -128            | +127                       |
-| char      | 16 бита | Unicode 0       | Unicode 2<sup>16</sup> - 1 |
-| short     | 16 бита | -2<sup>15</sup> | +2<sup>15</sup> - 1        |
-| int       | 32 бита | -2<sup>31</sup> | +2<sup>31</sup> - 1        |
-| long      | 64 бита | -2<sup>63</sup> | +2<sup>63</sup> - 1        |
-| float     | 32 бита | IEEE754         | IEEE754                    |
-| double    | 64 бита | IEEE754         | IEEE754                    |
+| byte      | 8 bits  | -128            | +127                       |
+| char      | 16 bits | Unicode 0       | Unicode 2<sup>16</sup> - 1 |
+| short     | 16 bits | -2<sup>15</sup> | +2<sup>15</sup> - 1        |
+| int       | 32 bits | -2<sup>31</sup> | +2<sup>31</sup> - 1        |
+| long      | 64 bits | -2<sup>63</sup> | +2<sup>63</sup> - 1        |
+| float     | 32 bits | IEEE754         | IEEE754                    |
+| double    | 64 bits | IEEE754         | IEEE754                    |
 | void      | -       | -               | -                          |
 
 ---
 
-### Минимална и максимална стойност на примитивните типове
+### Min and Max Values of Primitive Types
 
 ```java
 Byte.MIN_VALUE // -128
@@ -175,42 +174,43 @@ Long.MAX_VALUE // 9223372036854775807
 (int) Character.MIN_VALUE // 0
 (int) Character.MAX_VALUE // 65535
 ```
----
-
-### Типът char
-
-- цяло число без знак
-- стойност (*code point*) от 0 до 65535 включително
-- представя Unicode символ
-- може да участва в аритметични операции (със своя code point)
 
 ---
 
-### Типът char
+### The `char` Type
 
-| Code point | Unicode escape | Печатна репрезентация | Описание                  |
-| ---------- | -------------- | --------------------- | :------------------------ |
-| 33         | \u0021         | !                     | Символ за удивителна      |
-| 50         | \u0032         | 2                     | Цифра 2                   |
-| 65         | \u0041         | A                     | Главна латинска буква 'A' |
+- An unsigned integer
+- Value (*code point*) from 0 to 65535 inclusive
+- Represents a Unicode character
+- Can participate in arithmetic operations (using its code point value)
 
 ---
 
-### Литерали на примитивните типове
+### The `char` Type
+
+| Code point | Unicode escape | Printed representation | Description              |
+| ---------- | -------------- | ---------------------- | :----------------------- |
+| 33         | !         | !                      | Exclamation mark         |
+| 50         | 2         | 2                      | Digit 2                  |
+| 65         | A         | A                      | Latin capital letter 'A' |
+
+---
+
+### Primitive Type Literals
 
 ```java
 int i = 1;           // int by default
 long l = 1L;         // L or l
 double d = 0.1;      // d or D is optional
-double d2 = 1e-1;    // same, in scientific
-float f = 0.1;       // will not compile, why?
+double d2 = 1e-1;    // same value, scientific notation
+float f = 0.1f;      // without f it won't compile
 char c = 'A';
-char c2 = '\u0041';  // again, 'A'
+char c2 = 'A';  // also 'A'
 ```
 
 ---
 
-### Целочислени литерали
+### Integer Literals
 
 ```java
 // The number 26, in decimal
@@ -228,7 +228,7 @@ int octVal = 032;
 
 ---
 
-### Литерали с подчертавка: syntactic sugar
+### Underscore in Literals: Syntactic Sugar
 
 ```java
 int thousand = 1_000;
@@ -240,61 +240,63 @@ int mask     = 0b1010_1010_1010;
 
 ---
 
-### Стойности по подразбиране
+### Default Values
 
-Компилаторът **не** присвоява стойности по подразбиране на неинициализираните локални променливи!
-
----
-
-### Стойности по подразбиране
-
-| Тип данни        | Стойност по подразбиране |
-| :--------------- | :----------------------- |
-| boolean          | false                    |
-| short            | 0                        |
-| int              | 0                        |
-| long             | 0L                       |
-| float            | 0.0f                     |
-| double           | 0.0d                     |
-| char             | '\u0000'                 |
-| Reference типове | null                     |
+The compiler **does not** assign default values to uninitialized local variables!
 
 ---
 
-### Конвертиране на типовете
+### Default Values
 
-- Имплицитно - без загуба на точност
-- Експлицитно - чрез cast
+| Data type        | Default value |
+| :--------------- | :------------ |
+| boolean          | false         |
+| short            | 0             |
+| int              | 0             |
+| long             | 0L            |
+| float            | 0.0f          |
+| double           | 0.0d          |
+| char             | '\u0000'      |
+| Reference types  | null          |
+
+---
+
+### Type Conversions
+
+- Implicit — widening conversions, no loss of precision
+- Explicit — narrowing conversions via cast
 
 <br>
 
-| Израз             | Тип на израза | Стойност на израза |
-| :---------------- | :------------ | :----------------- |
-| "1234" + 99       | String        | "123499"           |
-| (int) 2.71828     | int           | 2                  |
-| 11 \* 0.3         | double        | 3.3                |
-| (int) 11 \* 0.3   | double        | 3.3                |
-| 11 \* (int) 0.3   | int           | 0                  |
-| (int) (11 \* 0.3) | int           | 3                  |
+| Expression        | Type of expression | Value of expression |
+| :---------------- | :----------------- | :------------------ |
+| "1234" + 99       | String             | "123499"            |
+| (int) 2.71828     | int                | 2                   |
+| 11 \* 0.3         | double             | 3.3                 |
+| (int) 11 \* 0.3   | double             | 3.3                 |
+| 11 \* (int) 0.3   | int                | 0                   |
+| (int) (11 \* 0.3) | int                | 3                   |
 
 ---
 
-### Защо ни трябват типове?
+### Why Do We Need Types?
 
-- За да ни помага компилаторът в откриването на грешки
+- So the compiler can help us catch errors early
 
 <p align="center">
   <img src="images/01.4-rocket.jpg" />
 </p>
 
-*През 1996, ракетата Ариана 5 експлодира след излитане поради софтуерна грешка в конвертирането на типове (опит да „набута“ 64-битово число в 16 бита).*
+*In 1996, the Ariane 5 rocket exploded shortly after launch due to a software bug in type conversion — an attempt to fit a 64-bit floating-point number into a 16-bit integer.*
 
 ---
 
+### Operator Precedence
+
 <table style="width:100%">
   <tr>
-    <th style="width:50%; font-size:1.3em;">Оператори</th>
-    <th style="width:50%; font-size:1.3em;">Приоритет</th>
+    <th style="width:50%; font-size:1.3em;">Operators</th>
+    <th style="width:50%; font-size:1.3em;">Precedence</th>
   </tr>
   <tr style="font-size:0.7em; text-align: left;">
     <td>postfix</td>
@@ -367,47 +369,46 @@ int mask     = 0b1010_1010_1010;
         // Both x & q available
     }
     // Only x available
-    // q is "out of scope" 
+    // q is "out of scope"
 }
-
 ```
 
 ---
 
-### Wrapper types
+### Wrapper Types
 
-- Представляват референтни аналози на примитивните типове
-- Използват се
-    - където синтаксисът на езика изисква обект, а не примитивен тип
-    - когато ни трябват константи или помощни функции, които са имплементирани в съответния wrapper клас
-- имплицитно се конвертират към съответния си примитивен тип, и обратно
+- Reference-type counterparts of the primitive types
+- Used when:
+    - the language syntax requires an object rather than a primitive (e.g., generics)
+    - constants or utility methods defined on the wrapper class are needed
+- Implicitly converted to/from their primitive counterpart (autoboxing / unboxing)
 
 ---
 
-### Примитивни типове и wrapper типове
+### Primitive Types and Wrapper Types
 
-| Тип данни | Размер  | Минимум         | Максимум                   | Wrapper   |
+| Data type | Size    | Minimum         | Maximum                    | Wrapper   |
 | :-------- | :------ | :-------------- | :--------------------------| :-------- |
 | boolean   | -       | -               | -                          | Boolean   |
-| char      | 16 бита | Unicode 0       | Unicode 2<sup>16</sup> - 1 | Character |
-| byte      | 8 бита  | -128            | +127                       | Byte      |
-| short     | 16 бита | -2<sup>15</sup> | +2<sup>15</sup> - 1        | Short     |
-| int       | 32 бита | -2<sup>31</sup> | +2<sup>15</sup> - 1        | Integer   |
-| long      | 64 бита | -2<sup>63</sup> | +2<sup>63</sup> - 1        | Long      |
-| float     | 32 бита | IEEE754         | IEEE754                    | Float     |
-| double    | 64 бита | IEEE754         | IEEE754                    | Double    |
+| char      | 16 bits | Unicode 0       | Unicode 2<sup>16</sup> - 1 | Character |
+| byte      | 8 bits  | -128            | +127                       | Byte      |
+| short     | 16 bits | -2<sup>15</sup> | +2<sup>15</sup> - 1        | Short     |
+| int       | 32 bits | -2<sup>31</sup> | +2<sup>31</sup> - 1        | Integer   |
+| long      | 64 bits | -2<sup>63</sup> | +2<sup>63</sup> - 1        | Long      |
+| float     | 32 bits | IEEE754         | IEEE754                    | Float     |
+| double    | 64 bits | IEEE754         | IEEE754                    | Double    |
 | void      | -       | -               | -                          | Void      |
 
 ---
 
-### Константи и utility методи във wrapper типовете
+### Constants and Utility Methods in Wrapper Types
 
 ```java
-Integer.MAX_VALUE // максималната стойност на типа
-Integer.MIN_VALUE // минималната стойност на типа
-Integer.valueOf(25) // връща Integer инстанция, "опаковаща" 25
-Integer.intValue() // връща int стойността, "опакована" в дадената инстанция
-Integer.parseInt(String) // конвертира низ с текстово представяне на цяло число към int
+Integer.MAX_VALUE         // maximum value of the type
+Integer.MIN_VALUE         // minimum value of the type
+Integer.valueOf(25)       // returns an Integer instance wrapping 25
+Integer.intValue()        // returns the int value wrapped in the instance
+Integer.parseInt(String)  // parses a string representation of an integer to int
 ```
 
 ---
@@ -415,60 +416,60 @@ Integer.parseInt(String) // конвертира низ с текстово пр
 ### Autoboxing
 
 ```java
-// инициализиране на променлива от тип char с литерал
+// initializing a char variable with a literal
 char c = 'a';
 
-// инициализирне на Character обект с литерал
-Character ch1 = new Character('a');
+// initializing a Character object with a literal
+Character ch1 = Character.valueOf('a');
 
-// autoboxing: char implicitly converted to Character
+// autoboxing: char is implicitly converted to Character
 Character ch2 = 'x';
 
-// wrapper to primitive conversion
+// unboxing: wrapper is converted back to the primitive type
 char c2 = ch1;
 ```
 
 ---
 
-### Низове в Java
+### Strings in Java
 
-- Низовете са reference тип, а не примитивен
-- Инстанции са на `String` класа
-- Immutable са: всяка промяна води до създаване на нов `String` обект, а старият остава непроменен
-
----
-
-### Низовете в паметта: string pool vs heap
-
-- `String` литералите се създават в специална област на паметта на JVM-a, наречена *string pool*
-- При опит за добавяне на низ в string pool-a, ако там вече съществува низ със същото съдържание, не се създава нов обект, а се връща референция към съществуващия (→ пести се памет)
+- Strings are a reference type, not a primitive
+- Instances of the `String` class
+- Immutable: any modification produces a new `String` object; the original remains unchanged
 
 ---
 
-### Низовете в паметта: string pool vs heap
+### Strings in Memory: String Pool vs Heap
 
-- `String` обектите, създадени с оператора `new`, се създават в динамичната памет (heap-a). Всеки низ в heap-a е отделна инстанция, дори съдържанието на два и повече низа да е идентично
-- `String` обект може да се прехвърли от heap-a в string pool-a чрез извикване на метода му `intern()`
-
----
-
-### Сравняване на низове
-
-- Сравняването на низове с `==` е сравнение на съответните референции
-- Сравняването на низове за идентичност като съдържание се прави с метода `equals()` на `String` класа
+- `String` literals are stored in a special JVM memory area called the *string pool*
+- When a string is added to the pool, if an identical string already exists there, no new object is created — a reference to the existing one is returned (saves memory)
 
 ---
 
-### Низовете в паметта: string pool vs heap
+### Strings in Memory: String Pool vs Heap
+
+- `String` objects created with the `new` operator are allocated on the heap. Each is a separate instance, even if the contents are identical to another string
+- A heap `String` can be moved to the string pool by calling `intern()`
+
+---
+
+### Comparing Strings
+
+- Comparing strings with `==` compares references, not content
+- To compare by content, use the `equals()` method of the `String` class
+
+---
+
+### Strings in Memory: String Pool vs Heap
 
 ```java
-String literalOne = "FMI"; // goes to the string pool
-String literalTwo = "FMI"; // "FMI" is present in the String pool ->
-                           // literalTwo will refer to the same object
+String literalOne = "FMI"; // goes into the string pool
+String literalTwo = "FMI"; // "FMI" is already in the pool ->
+                           // literalTwo points to the same object
 
 System.out.println(literalOne == literalTwo); // true
 
-String newString = new String("FMI"); // new object in the heap
+String newString = new String("FMI"); // new object on the heap
 
 System.out.println(literalOne == newString); // false
 System.out.println(literalOne.equals(newString)); // true
@@ -476,13 +477,13 @@ System.out.println(literalOne.equals(newString)); // true
 String intern = newString.intern(); // adds the string to the pool
                                     // and returns a reference to it
 System.out.println(literalOne == newString); // false, newString
-                                             // is not reassigned
+                                             // was not reassigned
 System.out.println(literalOne == intern); // true
 ```
 
 ---
 
-### Низове - литерали, конкатениране
+### Strings — Literals and Concatenation
 
 ```java
 String language = "Java";
@@ -493,17 +494,17 @@ String year = "The current year is " + 2021;
 
 ---
 
-### Многоредови низови литерали
+### Multi-line String Literals
 
 ```java
-// multi-line string literals before
+// multi-line string literals before Java 15
 String html = "<html>\n" +
               "    <body>\n" +
               "        <p>Hello world!</p>\n" +
               "    <body>\n" +
               "</html>\n";
 
-// new in Java 15: text blocks for multi-line string literals
+// from Java 15: text blocks for multi-line string literals
 String html = """
                        <html>
                            <body>
@@ -515,15 +516,15 @@ String html = """
 
 ---
 
-### Низове - обхождане
+### Strings — Iteration
 
 ```java
 String s = "Firebird";
 char ic = s.charAt(i);
 char[] ca = s.toCharArray();
 
-for (int i = 0; i < ca.size(); i++) {...}
-for (char c : ca) {...} // enhanced for-loop, a.k.a. for-each
+for (int i = 0; i < ca.length; i++) {...}
+for (char c : ca) {...} // enhanced for-loop (for-each)
 
 Arrays.sort(ca);
 String sorted = String.valueOf(ca); // "Fbdeiirr"
@@ -536,26 +537,26 @@ String sorted = String.valueOf(ca); // "Fbdeiirr"
 ```java
 String str1 = "Current year is 2021";
 
-String[] tokens = str1.split(" "); // разделител – интервал
+String[] tokens = str1.split(" "); // delimiter — space
 
 // tokens = ["Current", "year", "is", "2021"]
 
-int year = Integer.parseInt(tokens[3]); 
+int year = Integer.parseInt(tokens[3]);
 // year == 2021
 ```
 
 ---
 
-### Други операции с низове
+### Other String Operations
 
-Класът `String` има още много методи, реализиращи операции, които ще ни потрябват.
-Разгледайте ги в [документацията](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html) на класа.
+The `String` class has many more useful methods.
+Explore them in the [official documentation](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html).
 
 ---
 
-### Mutable низове
+### Mutable Strings
 
-Когато имаме нужда от mutable низове, т.е. такива, промяната на които да не води до създаване на нова инстанция, вместо `String` трябва да използваме класовете `StringBuilder` или `StringBuffer`.
+When a mutable string is needed — one whose modification does not create a new instance — use `StringBuilder` or `StringBuffer` instead of `String`.
 
 <br>
 
@@ -567,33 +568,50 @@ int year = Integer.parseInt(tokens[3]);
 
 ---
 
-### Local variable type inference
+### Local Variable Type Inference
 
 ```java
-// since Java 10
-var message = "FMI rulez!"; // local variable type inference
+// from Java 10
+var message = "FMI rulez!"; // type inferred from the initializer
 
-message = "Cool"; // variable can be reassigned
+message = "Cool"; // the variable can be reassigned
 
-message = 1; // will not compile: type is fixed upon declaration
+message = 1; // won't compile: the type is fixed at declaration
              // and cannot change
 
-var mystery; // will not compile: type cannot be inferred
-             // without initializer
+var mystery; // won't compile: type cannot be inferred
+             // without an initializer
 ```
 
 ---
 
-### Булеви константи
+### `final` Variables and Constants
 
-- `true` или `false`
-- За разлика от С/С++, не може да се използва число вместо булев израз
+- A `final` variable can be assigned only once; attempting to reassign it is a compile error
+- By convention, constants (static final fields) are named in `UPPER_SNAKE_CASE`
+
+```java
+final int MAX_RETRIES = 3;
+// MAX_RETRIES = 5; // compile error
+
+static final double PI = 3.14159265358979;
+static final String DEFAULT_ENCODING = "UTF-8";
+```
+
+- `final` local variables are useful to communicate intent — this value should not change — and are required when used in lambdas or anonymous classes
 
 ---
 
-### Булеви логически оператори
+### Boolean Constants
 
-```
+- `true` or `false`
+- Unlike C/C++, a number cannot be used in place of a boolean expression
+
+---
+
+### Boolean Logical Operators
+
+```text
 |    the OR operator
 &    the AND operator
 ^    the XOR operator
@@ -606,7 +624,7 @@ var mystery; // will not compile: type cannot be inferred
 
 ---
 
-### Булеви логически оператори
+### Boolean Logical Operators
 
 <table style="width:100%">
   <tr style="text-align: left; background: #F0F0F0;">
@@ -649,7 +667,7 @@ var mystery; // will not compile: type cannot be inferred
     <td>false</td>
     <td>false</td>
   </tr>
-<table>
+</table>
 
 ---
 
@@ -669,23 +687,23 @@ if (booleanExpression) {
 
 ---
 
-### Операторът ? :
+### The Ternary Operator `? :`
 
 ```java
-// the only ternary (i.e. three-argument) operator in Java
+// the only ternary (three-operand) operator in Java
 condition ? statement1 : statement2
 
-// the above is equivalent to
+// equivalent to:
 if (condition) {
     statement1
 } else {
     statement2
-}  
+}
 ```
 
 ---
 
-### Итерация - while
+### Iteration — while
 
 ```java
 while (booleanExpression) {
@@ -695,7 +713,7 @@ while (booleanExpression) {
 
 ---
 
-### Итерация - do-while
+### Iteration — do-while
 
 ```java
 do {
@@ -705,7 +723,7 @@ do {
 
 ---
 
-### Итерация - for
+### Iteration — for
 
 ```java
 for (initialization; booleanExpression; step) {
@@ -715,12 +733,12 @@ for (initialization; booleanExpression; step) {
 
 ---
 
-### Безусловно разклонение на изпълнението
+### Unconditional Control Flow
 
 - `return [value]`
 - `break [label]`
 - `continue [label]`
-- Няма `goto` (ключовата дума е запазена, но не е използвана)
+- No `goto` (the keyword is reserved but unused)
 
 ---
 
@@ -728,17 +746,17 @@ for (initialization; booleanExpression; step) {
 
 ```java
 switch (selector) {
-    case value1 : statement; break; 
-    case value2 : statement; break; 
-    case value3 : statement; break; 
-    // [... ]
-    default: statement; 
+    case value1 : statement; break;
+    case value2 : statement; break;
+    case value3 : statement; break;
+    // [...]
+    default: statement;
 }
 ```
 
 ---
 
-### Подобрен `switch` (от Java 15)
+### Enhanced `switch` (from Java 15)
 
 ```java
 char ch = 'a';
@@ -751,7 +769,7 @@ switch (ch) {
     default       : t = 27;
 }
 
-// since Java 15
+// from Java 15
 switch (ch) {
     case 'a'      -> t = 1;
     case 'b', 'c' -> t = 12;
@@ -761,7 +779,7 @@ switch (ch) {
 
 ---
 
-### Подобрен `switch` като израз (от Java 15)
+### Enhanced `switch` as an Expression (from Java 15)
 
 ```java
 int z = switch (ch) {
@@ -779,21 +797,21 @@ int r = switch (ch) {
 
 ---
 
-### Pattern matching for `switch` (Java 17 preview feature)
+### Pattern Matching for `switch` (Java 17 preview feature)
 
 ```java
-String s = switch(obj) {
-    case Integer i && i > 100 -> "It's an Integer > 100"; // "guarded pattern"
-    case Integer i -> "It's an Integer";
-    case String s -> "It's a String";
-    case null -> "It's a null reference"; // able to handle null references
-    default -> "It is none of the known data types";
+String s = switch (obj) {
+    case Integer i when i > 100 -> "It's an Integer > 100"; // guarded pattern
+    case Integer i              -> "It's an Integer";
+    case String str             -> "It's a String";
+    case null                   -> "It's a null reference";
+    default                     -> "It is none of the known data types";
 };
 ```
 
 ---
 
-### Масиви
+### Arrays
 
 <p align="center">
   <img src="images/01.5-array.jpg" />
@@ -801,14 +819,14 @@ String s = switch(obj) {
 
 ---
 
-### Масиви
+### Arrays
 
 ```java
-int[] a;     // preferred syntax
+int[] a;     // recommended syntax
 int a[];     // also valid
 
 // explicit initialization
-// can be done only during declaration
+// can only be done at declaration
 int[] a = {1, 2, 3, 4};
 
 int[] b = new int[7];
@@ -817,15 +835,15 @@ b.length;
 
 ---
 
-### Масиви
+### Arrays
 
-- Декларация – не се заделя памет за елементите на масива
-- Инициализация – заделя се памет за елементите на масива
-- Масивите от примитивни типове се инициализират автоматично със стойността по подразбиране на съответния тип
+- Declaration — no memory is allocated for the elements
+- Initialization — memory is allocated for the elements
+- Arrays of primitive types are automatically initialized to the default value of their element type
 
 ---
 
-### Многомерни масиви
+### Multidimensional Arrays
 
 ```java
 int[][] a;
@@ -844,42 +862,55 @@ int[][] b = {
 
 ---
 
-### Многомерни масиви
+### Multidimensional Arrays
 
 ```java
 double[][] matrix = new double[7][];
-// rows have not yet been created
+// rows have not been created yet
 
 for (int i = 0; i < 7; i++) {
-    // Create row i with i + 1 elements.
-    matrix[i] = new double[i+1];
+    // Creates row i with i + 1 elements.
+    matrix[i] = new double[i + 1];
 }
 ```
 
 ---
 
-### Операции с масиви
+### Array Operations
 
 ```java
-System.arraycopy(src, srcPos, dest, destPos, length); // копиране
+System.arraycopy(src, srcPos, dest, destPos, length); // copy
 
-Arrays.equals(arr1, arr2); // проверка за еднаквост
-Arrays.fill(arr, value); // запълване с дадена стойност
-Arrays.toString(arr); // конвертиране в низ
+Arrays.equals(arr1, arr2); // check equality
+Arrays.fill(arr, value);   // fill with a value
+Arrays.toString(arr);      // convert to string
 ```
 
 ---
 
-### Операции с масиви
+### Array Operations
 
 ```java
-Arrays.sort(arr); // сортиране
-Arrays.sort(a, Collections.reverseOrder()); // сортиране в обратен ред
+Arrays.sort(arr);                              // sort ascending
+Arrays.sort(a, Collections.reverseOrder());   // sort descending
 ```
 
 ---
 
-### Функции
+### More Array Operations
+
+```java
+// copy a range of elements into a new array
+int[] slice = Arrays.copyOfRange(arr, fromIndex, toIndex);
+
+// binary search (array must be sorted first)
+int idx = Arrays.binarySearch(arr, key);
+// returns the index if found, or a negative value if not found
+```
+
+---
+
+### Functions
 
 <p align="center">
   <img src="images/01.7-funcs.jpg" />
@@ -887,7 +918,9 @@ Arrays.sort(a, Collections.reverseOrder()); // сортиране в обрат�
 
 ---
 
-Писане на стандартния изход
+### Standard Input and Output
+
+Writing to standard output
 
 ```java
 System.out.println("Something printed on the console");
@@ -895,7 +928,7 @@ System.out.println("Something printed on the console");
 
 <br>
 
-Четене от стандартния вход
+Reading from standard input
 
 ```java
 import java.util.Scanner;
@@ -906,6 +939,15 @@ String lineRead = sc.nextLine();
 
 // [...]
 ```
+
+---
+
+### Where to Go Next
+
+- [Official Java Documentation](https://docs.oracle.com/en/java/javase/21/) — API reference, tutorials, and language specification
+- [JEP Index](https://openjdk.org/jeps/0) — track new language features and JVM improvements
+- *Effective Java* by Joshua Bloch — essential reading for writing idiomatic, robust Java
+- Practice: [LeetCode](https://leetcode.com) and [HackerRank](https://www.hackerrank.com) for algorithmic problem-solving in Java
 
 ---
   

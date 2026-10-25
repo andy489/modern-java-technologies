@@ -83,8 +83,7 @@ public class InvestmentWallet implements Wallet {
 
         balance -= bill;
 
-        Integer currentQuantity = assetQuantities.get(asset);
-        currentQuantity = (currentQuantity != null) ? currentQuantity : 0;
+        int currentQuantity = assetQuantities.getOrDefault(asset, 0);
         assetQuantities.put(asset, currentQuantity + quantity);
 
         Acquisition acquisition = new DefaultAcquisition(asset, askPrice, quantity);
@@ -99,8 +98,7 @@ public class InvestmentWallet implements Wallet {
         assertNonNegative(quantity, QUANTITY_PARAM_NAME);
         assertNonNegative(minPrice, MIN_PRICE_PARAM_NAME);
 
-        Integer currentQuantity = assetQuantities.get(asset);
-        currentQuantity = (currentQuantity != null) ? currentQuantity : 0;
+        int currentQuantity = assetQuantities.getOrDefault(asset, 0);
         if (currentQuantity < quantity) {
             throw new InsufficientResourcesException(
                 "Not enough quantity to sell. Current quantity is " + currentQuantity);
@@ -160,18 +158,10 @@ public class InvestmentWallet implements Wallet {
 
     @Override
     public Asset getMostValuableAsset() {
-        return Collections.max(assetQuantities.keySet(), new Comparator<Asset>() {
-            @Override
-            public int compare(Asset o1, Asset o2) {
-                double bidPrice1 = quoteService.getQuote(o1).bidPrice();
-                double value1 = getValuation(o1, bidPrice1);
-
-                double bidPrice2 = quoteService.getQuote(o2).bidPrice();
-                double value2 = getValuation(o2, bidPrice2);
-
-                return Double.compare(value1, value2);
-            }
-        });
+        return Collections.max(assetQuantities.keySet(), Comparator.comparingDouble(a -> {
+            double bidPrice = quoteService.getQuote(a).bidPrice();
+            return getValuation(a, bidPrice);
+        }));
     }
 
     @Override

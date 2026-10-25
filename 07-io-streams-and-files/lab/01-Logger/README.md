@@ -1,19 +1,20 @@
-# Logger :scroll:
+# Logger
 
-Професионалните приложения обикновено използват *logging framework* (или накратко, *logger*), за да записват информация (най-често във файл), която служи за проследяване на изпълнението, откриване и отстраняване на проблеми, отбелязване на важни за приложението събития и т.н. Използването на framework за целта е улеснение, прави кода по-четим, често по-ефективен, а също и стандартизира формата на съобщенията, така че да е възможна автоматизираната им обработка и да се улесни търсенето и филтрирането на събщенията.
+Professional applications typically use a *logging framework* (or *logger*) to record information — usually to a file — for tracking execution, diagnosing problems, and noting important application events. Using a framework for this purpose makes code more readable, is often more efficient, standardises message formats, and enables automated processing, searching, and filtering of messages.
 
-Самото JDK предоставя logging framework, в пакета [`java.util.logging`](https://docs.oracle.com/en/java/javase/17/core/java-logging-overview.html), има и множество популярни open-source Java logging frameworks, като [Log4j](https://logging.apache.org/log4j/2.x/).
+The JDK ships its own logging framework in the [`java.util.logging`](https://docs.oracle.com/en/java/javase/17/core/java-logging-overview.html) package, and there are many popular open-source Java logging frameworks such as [Log4j](https://logging.apache.org/log4j/2.x/).
 
-Ще създадем наш прост logging framework, който ще предоставя базови възможности както за log-ване, така и за извличане и филтриране на log съобщения.
+We will build a simple logging framework that provides basic capabilities for logging as well as extracting and filtering log messages.
 
-### Logger
+## Logger
 
-В пакета `bg.sofia.uni.fmi.mjt.logger` създайте клас `DefaultLogger`, който има конструктор
+In the package `bg.sofia.uni.fmi.mjt.logger`, create a class `DefaultLogger` with the constructor:
 
 ```java
 public DefaultLogger(LoggerOptions options)
 ```
-и имплементира интерфейса `Logger`:
+
+that implements the `Logger` interface:
 
 ```java
 package bg.sofia.uni.fmi.mjt.logger;
@@ -24,16 +25,16 @@ import java.time.LocalDateTime;
 public interface Logger {
 
     /**
-     * Logs message to the current log file. If the currently configured minimum log
-     * level is higher than the provided log level, the message should be ignored.
+     * Logs a message to the current log file. If the configured minimum log level
+     * is higher than the provided log level, the message is ignored.
      *
      * @param level     the log message severity
      * @param timestamp the time of logging
      * @param message   log message
-     * @throws IllegalArgumentException if {@code level} is null, {@code timestamp} is null
+     * @throws IllegalArgumentException if {@code level} is null, {@code timestamp} is null,
      *                                  or {@code message} is null or empty
-     * @throws LogException             if LoggerOptions.shouldThrowErrors() is true and if the operation cannot be completed
-     *                                  In case LoggerOptions.shouldThrowErrors() is false, the method should suppress any problems
+     * @throws LogException             if LoggerOptions.shouldThrowErrors() is true and the operation fails.
+     *                                  If shouldThrowErrors() is false, any problems are suppressed.
      */
     void log(Level level, LocalDateTime timestamp, String message);
 
@@ -50,219 +51,100 @@ public interface Logger {
      * @return the current log file path
      */
     Path getCurrentFilePath();
-
 }
 ```
 
-### Logger Options
+## Logger Options
 
-`Logger`-ът има множество задължителни и опционални параметри:
-  - текущия клас (задължителен)
-  - името на директорията, където да се записват log файловете (задължителен)
-  - максималният размер (в байтове) на log файла (опционален, по подразбиране 1024 байта)
-  - да хвърля или игнорира евентуални изключения при самото log-ване (опционален, по подразбиране - да игнорира)
-  - минимален *log level* (опционален, по подразбиране INFO)
+The logger has several mandatory and optional parameters:
 
-Параметрите се описват от класа `LoggerOptions` в пакета `bg.sofia.uni.fmi.mjt.logger:`
+- the class being logged from (mandatory)
+- the directory name where log files are written (mandatory)
+- the maximum size in bytes of a log file (optional, default: 1024 bytes)
+- whether to throw or suppress exceptions during logging (optional, default: suppress)
+- minimum log level (optional, default: INFO)
 
-```java
-package bg.sofia.uni.fmi.mjt.logger;
+Parameters are described by the `LoggerOptions` class in the `bg.sofia.uni.fmi.mjt.logger` package.
 
-public class LoggerOptions {
+## Usage
 
-    private static final long DEFAULT_MAX_FILE_SIZE_BYTES = 1024;
-    private static final boolean DEFAULT_SHOULD_THROW_ERROR = false;
-
-    private final Class<?> clazz;
-    private final String directory;
-
-    private long maxFileSizeBytes = DEFAULT_MAX_FILE_SIZE_BYTES;
-    private Level minLogLevel = Level.INFO;
-    private boolean shouldThrowErrors = DEFAULT_SHOULD_THROW_ERROR;
-
-    public LoggerOptions(Class<?> clazz, String directory) {
-        this.clazz = clazz;
-        this.directory = directory;
-    }
-
-    public Class<?> getClazz() {
-        return clazz;
-    }
-
-    public String getDirectory() {
-        return directory;
-    }
-
-    public long getMaxFileSizeBytes() {
-        return maxFileSizeBytes;
-    }
-
-    public void setMaxFileSizeBytes(long maxFileSizeBytes) {
-        this.maxFileSizeBytes = maxFileSizeBytes;
-    }
-
-    public Level getMinLogLevel() {
-        return minLogLevel;
-    }
-
-    public void setMinLogLevel(Level minLogLevel) {
-        this.minLogLevel = minLogLevel;
-    }
-
-    public boolean shouldThrowErrors() {
-        return shouldThrowErrors;
-    }
-
-    public void setShouldThrowErrors(boolean shouldThrowErrors) {
-        this.shouldThrowErrors = shouldThrowErrors;
-    }
-}
-```
-
-### Употреба
-
-Примерна употреба на нашия logging framework би изглеждала така:
+Example usage of the logging framework:
 
 ```java
 package com.cryptobank.investment;
-
-// [...]
 
 public class InvestmentWallet {
 
     private Logger logger = new DefaultLogger(new LoggerOptions(this.getClass(), "/logs"));
 
-    // [...]
-
     void buyAsset() {
-        // [...]
         logger.log(Level.INFO, LocalDateTime.now(), String.format("Bought asset with ID %s", assetId));
     }
-
 }
 ```
 
-### Log файлове
+## Log Files
 
-Лог файловете са текстови файлове, които се създават в избраната директория. Имената им се състоят от фиксиран префикс, "logs-", пореден номер, започващ от 0 и разширение ".txt". Във всеки момент от времето, точно един от лог файловете е активен (текущ): този с най-големия пореден номер. Файловете имат фиксиран максимален размер. При опит да се запише съобщение, ако текущият лог файл е достигнал или надхвърлил максималния размер, се създава нов файл със следващ пореден номер, той става активен (текущ) и съобщението се записва в него.
+Log files are text files created in the configured directory. Their names consist of the fixed prefix `"logs-"`, a sequential number starting from 0, and the extension `.txt`. At any point in time, exactly one log file is active (current): the one with the highest sequential number. Files have a fixed maximum size. When attempting to write a message, if the current log file has reached or exceeded its maximum size, a new file with the next sequential number is created, it becomes the active file, and the message is written to it.
 
-### Log съобщения
+## Log Messages
 
-Всеки ред от лог файл съдържа едно съобщение във формата
+Each line in a log file contains one message in the format:
 
-```bash
+```text
 [level]|timestamp|package|message
 ```
 
-като съдържа четири полета, с разделител `|` (pipe) и семантика: нивото (log level) на съобщението, timestamp на log-ване на съобщението във формат `DateTimeFormatter.ISO_DATE_TIME`, име на пакет (на класа, в/от който се log-ва даденото съобщение) и накрая самото съобщение.
+The four fields, separated by `|` (pipe), represent: the log level, the timestamp in `DateTimeFormatter.ISO_DATE_TIME` format, the package name of the class from which the log was written, and finally the message itself.
 
-Примерно съдържание на log файла може да е
+Example log file content:
 
-```bash
+```text
 [INFO]|2021-11-27T01:11:03.935601200|com.cryptobank.investment|Bought asset with ID 167305
 [WARN]|2021-11-27T01:11:04.099162900|com.cryptobank.investment|Disk space is getting low
 [ERROR]|2021-11-27T01:11:04.431274900|com.cryptobank.investment|Failed to process request {1405}
 ```
 
-Log съобщението се моделира от record-a `Log`:
+A log message is modelled by the `Log` record:
 
 ```java
-package bg.sofia.uni.fmi.mjt.logger;
-
-import java.time.LocalDateTime;
-
-public record Log(Level level, LocalDateTime timestamp, String packageName, String message) {
-}
+public record Log(Level level, LocalDateTime timestamp, String packageName, String message) { }
 ```
 
-### Log ниво
+## Log Level
 
-Log нивото (понякога наричано и *log severity*) е свойството на дадено съобщение, което отразява неговата важност, критичност и приоритет. Нашият logging framework поддържа четири нива, моделирани от `enum`-a `Level`:
+The log level (also called *log severity*) reflects the importance and priority of a message. The framework supports four levels modelled by the `Level` enum:
 
 ```java
-package bg.sofia.uni.fmi.mjt.logger;
-
 public enum Level {
     ERROR(4), WARN(3), INFO(2), DEBUG(1);
-
-    private final int level;
-
-    Level(int level) {
-        this.level = level;
-    }
-
-    int getLevel() {
-        return level;
-    }
 }
 ```
 
-Всяко ниво има асоциирана числова стойност, като по-голяма стойност означава по-висока важност:
+- `ERROR` — a problem affecting correct application behaviour
+- `WARN` — something unexpected happened that may be a potential problem
+- `INFO` — standard level indicating that an event occurred or the application entered a particular state
+- `DEBUG` — information useful for diagnosing and fixing a problem
 
-- ERROR - проблем, който се отразява на правилното функциониране на приложението
-- WARN - означава нещо неочаквано, което се е случило в приложението и може да е потенциален проблем
-- INFO - стандартното ниво индикира, че се е случило някакво събитие, приложението е в определено състояние и т.н.
-- DEBUG - информация, която може да е нужна за диагностициране и отстраняване на проблем
+## Log Parser
 
-### Log Parser
-
-За да извличаме и филтрираме съобщения от текущия лог файл, в пакета `bg.sofia.uni.fmi.mjt.logger` ще създадем клас `DefaultLogParser`, който има конструктор
+To extract and filter messages from the current log file, create a class `DefaultLogParser` with constructor:
 
 ```java
 public DefaultLogParser(Path logsFilePath)
 ```
-и имплементира интерфейса `LogParser`:
 
-```java
-package bg.sofia.uni.fmi.mjt.logger;
+that implements the `LogParser` interface.
 
-import java.time.LocalDateTime;
-import java.util.List;
+## Hint
 
-public interface LogParser {
+When used in a regular expression (e.g. as an argument to `String.split()`), the `|` character has special semantics. To match it literally, escape it with a backslash: `\\|`.
 
-    /**
-     * Extracts the logs with log level {@code level} from the current log file
-     *
-     * @param level log level
-     * @return list of logs with the provided log level
-     * @throws IllegalArgumentException if {@code level} is null
-     */
-    List<Log> getLogs(Level level);
+## Testing
 
-    /**
-     * Extracts the logs from {@code from} to {@code to} from the current log file
-     *
-     * @param from timestamp from
-     * @param to   timestamp to
-     * @return list of logs from {@code from} to {@code to}
-     * @throws IllegalArgumentException if {@code from} or {@code to} is null
-     */
-    List<Log> getLogs(LocalDateTime from, LocalDateTime to);
+Start by testing the framework manually, then write unit tests with good code coverage.
 
-    /**
-     * Extracts the last {@code n}  lines from the current log file
-     *
-     * @param n last {@code n}  lines
-     * @return list of last {@code n} logs. If {@code n} is zero, return an empty list.
-     * If there are fewer than {@code n} lines in the log file, return all of them.
-     * @throws IllegalArgumentException if {@code n} is a negative number
-     */
-    List<Log> getLogsTail(int n);
-}
-```
-
-#### Подсказки
-
-- Когато е част от регулярен израз, например аргумент на `String.split()`, символът `|` (pipe) има специална семантика. Ако искаме да се тълкува буквално като `|`, трябва да се escape-не с back slash (`\`). Самият back slash обаче има специална семантика в низовите литерали и също трябва да се escape-не. Поради тези причини, ако искате да split-нете низ по разделител `|`, трябва да използвате `String.split("\\|")`.
-
-### Тестване
-
-Може като начало да тествате ръчно logging framework-a, но очакваме да напишете и ваши unit tests с добър code coverage.
-
-### Пакети
-
-Спазвайте имената на пакетите на всички по-горе описани типове, тъй като в противен случай, решението ви няма да може да бъде автоматично тествано.
+## Package Structure
 
 ```
 src
@@ -277,5 +159,5 @@ src
     └─ LogParser.java
 test
 └─ bg.sofia.uni.fmi.mjt.logger
-    └─ (...)
+    └─ (your tests here)
 ```
