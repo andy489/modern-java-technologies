@@ -1,48 +1,47 @@
 # Unit Testing and Mocking
 
-Освен писане на code from scratch, в практиката много често се налага и да поддържаме, fix-ваме или пишем тестове за вече съществуващ код.
+In professional software development, it is very common to not only write code from scratch, but also to maintain, fix, or write tests for existing code.
 
-Целта на упражнението е да създадете и изпълните JUnit тестове, спрямо налична имплементация.
+The goal of this exercise is to create and run JUnit tests against an existing implementation.
 
 ## Generic In-Memory Cache :package:
 
-Кеширането (caching) в паметта е често използван подход за подобряване на бързодействието на алгоритми, използващи интензивно данни, съхранявани на бавно устройство.
-Ще създадем собствена имплементация на generic кеш (cache).
+In-memory caching is a widely used technique for improving the performance of algorithms that frequently access data stored on slow devices.
+We will build our own implementation of a generic cache.
 
-Достъпът до кеширани данни е в порядъци по-бърз, но за съжаление, кешът си има фиксиран капацитет, който не може да се надвишава. По тази причина, всеки кеш има т.нар. *eviction policy*, т.е. правило, по което се определя, кои елементи се изтриват от кеша при опит за добавяне на нов елемент при запълнен капацитет.
-
+Access to cached data is orders of magnitude faster than going to the backing store, but a cache has a fixed capacity that cannot be exceeded. For this reason, every cache has an *eviction policy* — a rule that determines which elements are removed from the cache when a new element needs to be added and the cache is full.
 
 ### Current Implementation
 
-В [./resources](./resources) ще намерите две имплементации на интерфейса `Cache`, различаващи се по това, какво *eviction policy* използват:
+In [./resources](./resources) you will find two implementations of the `Cache` interface, differing in their eviction policy:
 
 - [Least-Recently Used (LRU)](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU))
 - [Least-Frequently Used (LFU)](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least-frequently_used_(LFU))
 
-Конкретна имплементация на интерфейса `Cache`, използваща избрано от нас eviction policy, създаваме чрез следните статични методи на интерфейса `CacheFactory`:
+A concrete implementation of the `Cache` interface using a chosen eviction policy is created via the following static methods of the `CacheFactory` interface:
 
 ```java
 static <K, V> Cache<K, V> getInstance(Storage<K, V> storage, int capacity, EvictionPolicy policy);
 static <K, V> Cache<K, V> getInstance(Storage<K, V> storage, EvictionPolicy policy);
 ```
 
-където `EvictionPolicy`, както вече се досещате, е от изброим тип, a `Storage<K, V>` е интерфейс на storage (например база данни, файлова система и т.н.), който стои зад нашия кеш. Ако липсва стойност за ключ, който търсим, пробваме да я вземем от storage-a и ако успеем, я добавяме в кеша и я връщаме.
+where `EvictionPolicy` is an enum, and `Storage<K, V>` is an interface for the backing store (e.g. a database, file system, etc.) behind our cache. If a value is not found for a given key, we attempt to retrieve it from the storage; if successful, we add it to the cache and return it.
 
 ![cache-storage interaction](./cache.svg)
 
-#### Уточнения за имплементацията
+#### Implementation notes
 
-:point_right: При Least Frequently Used имплементацията:
-- за "използване" смятаме всяко извикване на `get` или `set` за даден елемент.
-- когато се извика `set` за вече съществуващ key с ново или същото value, броят пъти, в които сме използвали този елемент, се увеличава с 1, а не се занулява.
-- ако съществуват два или повече елемента с равна (минимална) честота на използване, при добавяне на нов елемент при пълен кеш, трием произволен от тях.
+:point_right: For the Least-Frequently Used implementation:
+- "usage" means any invocation of `get` or `set` for a given element.
+- when `set` is called for an already-existing key (with a new or the same value), the usage count for that element is incremented by 1, not reset to zero.
+- if two or more elements share the same (minimum) usage count when a new element must be added to a full cache, one of them is evicted at random.
 
-#### Важно:
+#### Important:
 
-:warning: Имайте предвид, че имплементацията съдържа някои бъгове, които трябва да отстраните в процеса на тестване. За да бъде той ефективен, първо напишете тест за някой сценарий, след това оправете бъга, който сте намерили с него.
-:warning: Не сме предоставили имплементация на интерфейса `Storage` - вместо такава, в Unit тестовете си трябва да използвате *Mockito* и да "мокнете" storage-a, който ще се използва от кеша. Алтернативно, може да направите и свой прост stub за storage-a.
+:warning: The implementation contains some bugs that you need to find and fix in the process of writing tests. To make the process effective, first write a test for a scenario, then fix the bug you discovered with it.
+:warning: No implementation of the `Storage` interface is provided — instead, use *Mockito* in your unit tests to mock the storage used by the cache. Alternatively, you may write a simple stub for the storage.
 
-Проектът ви трябва да има следната структура:
+Your project must have the following structure:
 
 ```
 src
@@ -64,4 +63,4 @@ test
     └─ (...)
 ```
 
-Успех и не се притеснявайте да задавате въпроси! :star: 
+Good luck, and don't hesitate to ask questions! :star:

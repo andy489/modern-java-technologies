@@ -24,11 +24,10 @@ public class RegularFlight implements Flight {
         this.to = to;
         this.totalCapacity = totalCapacity;
         this.passengerSet = new HashSet<>();
-//         this.passengerSet = HashSet.newHashSet(totalCapacity);
     }
 
     public static RegularFlight of(String flightId, Airport from, Airport to, int totalCapacity) {
-        if (flightId == null || flightId.isEmpty() || flightId.isBlank()) {
+        if (flightId == null || flightId.isBlank()) {
             throw new IllegalArgumentException("Flight id cannot be null, empty or blank");
         }
 

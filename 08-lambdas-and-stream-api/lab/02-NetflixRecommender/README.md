@@ -1,37 +1,40 @@
 # Netflix Recommender :popcorn:
 
-## Условие
+## Problem Statement
 
-Ще създадем програма, която предоставя статистики, търсачка и прост *recommendation engine*, базирани на реален *dataset*, 
-съдържащ данни за сериали и филми в streaming платформата [Netflix](https://www.netflix.com), която понастоящем има над 222 милиона потребители в цял свят. *Dataset*-ът съдържа данни за над 5,400 сериала и филми и е взет от [kaggle](https://www.kaggle.com/datasets/victorsoeiro/netflix-tv-shows-and-movies?select=titles.csv), онлайн платформата за machine learning и data science на Google.
-За да опростим парсването на данните, сме обработили предварително файла, като може да го свалите [от тук](./resources/dataset.csv).
+We will build a program that provides statistics, search, and a simple *recommendation engine* based on a real *dataset* containing data about TV shows and movies on the [Netflix](https://www.netflix.com) streaming platform (currently with over 222 million subscribers worldwide). The dataset covers more than 5,400 shows and movies and is sourced from [Kaggle](https://www.kaggle.com/datasets/victorsoeiro/netflix-tv-shows-and-movies?select=titles.csv).
 
-Всеки ред от файла съдържа информация за един сериал или филм, като полетата са разделени със запетая (стандартен формат, известен като [Comma-Separated Values, или CSV](https://en.wikipedia.org/wiki/Comma-separated_values)):
+To simplify parsing, we have pre-processed the file. Download it [here](./resources/dataset.csv).
+
+Each line describes one show or movie with comma-separated fields (CSV format):
 
 `id,title,type,description,release_year,runtime,genres,seasons,imdb_id,imdb_score,imdb_votes`
 
-**Забележки:**
+**Notes:**
 
-- Първият ред на файла съдържа имената на полетата
-- Семантиката и възможните стойности на всички полета, може да разгледате в [kaggle](https://www.kaggle.com/datasets/victorsoeiro/netflix-tv-shows-and-movies?select=titles.csv)
-- Разделител между полетата на всеки ред е запетая (`,`)
+- The first line contains field names (header row)
+- Field semantics and possible values are described on [Kaggle](https://www.kaggle.com/datasets/victorsoeiro/netflix-tv-shows-and-movies?select=titles.csv)
+- The field separator is a comma (`,`)
 
-### 1. Зареждане и обработка на данните
+### 1. Loading and Parsing Data
 
-Преди да започнем със същинската част на анализа на *dataset*-a, ще заредим данните в паметта.
+Before the actual analysis, load the data into memory.
 
-Една от първите стъпки в задачите за анализ на данни и machine learning, винаги е "изчистване/подготовка" на данните. В общия случай, допускаме, че може да има зле форматирани данни, може да липсват елементи, на които разчитаме, или да има такива, които не очакваме.
+A common first step in data analysis is data cleaning — assuming records may be malformed, missing fields, or containing unexpected values.
 
-Имплементирайтe `record`-a `Content` с компоненти
-    `(String id, String title, ContentType type, String description, int releaseYear,
-        int runtime, List<String> genres, int seasons, String imdbId, double imdbScore,
-        double imdbVotes)`,
+Implement the `record Content` with components:
 
-който представлява сериал или филм от *dataset*-a. Две съдържания са еднакви, ако имат еднакви id-та.
+```java
+(String id, String title, ContentType type, String description, int releaseYear,
+    int runtime, List<String> genres, int seasons, String imdbId, double imdbScore,
+    double imdbVotes)
+```
 
-:point_right: **Подсказка**: Обърнете внимание, че когато дефинирате `record` с компоненти от тип колекция (както в случая) или референтен тип, който не предефинира `equals()`, или просто има голям брой компоненти, имплементацията по подразбиране на `equals()`, която ще добави автоматично компилаторът, в общия случай не ви устройва. Тя би сравнявала с `equals()` компонентите на record-a един по един, което от една страна е сравнително бавно, а от друга, equals() за колекции в общия случай няма да върне очаквания резултат (защо?). За коректно (и ефективно) сравнение, в случая трябва да предефинирате експлицитно `equals()`.
+This record represents a single show or movie. Two content items are equal if and only if they have the same `id`.
 
-Типът съдържание (сериал или филм), се представлява от `enum`-a 
+> **Hint:** When a `record` holds a collection component (or any reference type that does not override `equals()`), the compiler-generated `equals()` compares component by component — which for collections is both slow and often incorrect. Override `equals()` explicitly to compare only `id`.
+
+The content type (show or movie) is represented by the `enum`:
 
 ```java
 package bg.sofia.uni.fmi.mjt.netflix;
@@ -43,21 +46,21 @@ public enum ContentType {
 
 ### 2. Netflix Recommender
 
-След като разполагаме с имплементация на този клас, можем да заредим данните в подходяща колекция, от която да вземем поток и (декларативно) да определим разнообразни статистики, както и да имплементираме търсене на сериали и филми по различни критерии.
+With `Content` in place, load the data into a suitable collection, obtain a stream, and use the Stream API to compute statistics and implement search functionality.
 
-Класът, който ще предоставя API за достъп до *dataset*-a, е `NetflixRecommender`, като частична негова имплементация може да намерите [тук](./resources/NetflixRecommender.java), а задачата ви ще бъде да я довършите.
+The class providing the API is `NetflixRecommender`. A partial implementation is available [here](./resources/NetflixRecommender.java) — your task is to complete it.
 
-#### Търсене по ключови думи
+#### Keyword Search
 
-API-то дава възможност и за търсене на сериали и филми по ключови думи от описанието им. За разделители между думите в описанието, приемаме whitespaces и пунктуационните символи (може да използвате следния regex: `"[\\p{IsPunctuation}\\s]+"`). Всяка дума се състои от поне един символ. При търсенето, пренебрегваме разликата в капитализацията на буквите, но търсим само цели думи. Например, ако описанието е "An eventful dramatic sequel", въпросният филм или сериал не трябва да се връща при търсене на "drama", "ram" "vent", но би отговарял на търсене например на "an" или "DRAMAtic". 
+The API supports searching shows and movies by keywords from their description. Word separators are whitespace and punctuation characters (regex: `"[\\p{IsPunctuation}\\s]+"`). Each word consists of at least one character. The search is case-insensitive but matches only complete words. For example, if a description is `"An eventful dramatic sequel"`, that title should **not** match searches for `"drama"`, `"ram"`, or `"vent"`, but **should** match `"an"` or `"DRAMAtic"`.
 
-### 3. Тестване
+### 3. Testing
 
-Валидирайте решението си чрез unit тестове.
+Validate your solution with unit tests.
 
-## Структура на проекта
+## Project Structure
 
-Спазвайте имената на пакетите на всички по-горе описани типове, тъй като в противен случай, решението ви няма да може да бъде автоматично тествано.
+Follow the package names exactly; otherwise the automated grader cannot test your solution.
 
 ```
 src
@@ -71,5 +74,4 @@ test
     └── (...)
 ```
 
-В грейдъра качете общ `zip` архив на папки `src` и `test`.
-
+Submit a zip archive of the `src` and `test` folders.

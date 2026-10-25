@@ -1,10 +1,10 @@
-# Playground :video_game:
+# Playground
 
-В тази секция има допълнителни бонус задачи, с които да премериш сили. В общия случай, те са малко по-сложни, но за сметка на това, често са най-интригуващи. Тук добавяме и любимите ни задачи от предни издания на курса.
+This section contains additional bonus problems to sharpen your skills. They are generally a bit more challenging, but are often the most interesting ones. We also add our favourite problems from previous editions of the course here.
 
-|  # | Задача                | Какво тренира       |
-|:--:|:--------------------- |:--------------------|
-| 01 | [Stock Exchange](https://github.com/fmi/java-course/tree/master/playground/01-stock-exchange) | масиви, цикли, алгоритми |
-| 02 | [DNA Analyzer](https://github.com/fmi/java-course/tree/master/playground/02-dna-analyzer) | низове, цикли, алгоритми |
-| 03 | [Dungeons](https://github.com/fmi/java-course/tree/master/playground/03-dungeons) | ООП, низове, цикли |
-| 04 | [Cryptic Letter](https://github.com/fmi/java-course/tree/master/playground/04-cryptic-letter) | низове, цикли |
+| # | Problem | Topics |
+|:--:|:---|:---|
+| 01 | [Stock Exchange](01-stock-exchange/README.md) | arrays, loops, algorithms |
+| 02 | [DNA Analyzer](02-dna-analyzer/README.md) | strings, loops, algorithms |
+| 03 | [Dungeons](03-dungeons/README.md) | OOP, strings, loops |
+| 04 | [Cryptic Letter](04-cryptic-letter/README.md) | strings, loops |

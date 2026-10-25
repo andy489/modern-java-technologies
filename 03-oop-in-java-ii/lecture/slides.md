@@ -1,66 +1,63 @@
-# Обектно-ориентирано програмиране с Java
+# Object-Oriented Programming in Java
 
-### Част II
+### Part II
 
-27.10.2021
-
----
-
-### Предната лекция говорихме за:
-
-- Класове и обекти
-- Абстрактни класове и интерфейси
-- Фундаменталните ООП принципи
-  - Енкапсулация
-  - Наследяване
-  - Полиморфизъм
-  - Абстракция
+2021-10-27
 
 ---
 
-### Днес ще разгледаме:
+### From the Previous Lecture
 
-- Някои важни детайли
-    - Предаване на аргументи
+- Classes and objects
+- Abstract classes and interfaces
+- The four fundamental OOP principles
+  - Encapsulation
+  - Inheritance
+  - Polymorphism
+  - Abstraction
+
+---
+
+### Today's Topics
+
+- Important details
+    - Passing arguments
     - Stack vs. Heap
-    - Създаване и инициализация на обектите
+    - Object creation and initialization
 - Enums
-- Records (от Java 16)
-- Sealed класове и интерфейси (от Java 17)
-- Изключения
+- Records (since Java 16)
+- Sealed classes and interfaces (since Java 17)
+- Exceptions
 
 ---
 
-### Предаване на аргументи в Java
+### Passing Arguments in Java
 
-- конструкторите и методите имат списък от (нула или повече) *параметри* (или *формални параметри*)
-- параметрите са списък (наредена n-торка) от тип и име на параметъра
-- при извикване на конструктора или метода, се подава списък от *аргументи* (или *фактически параметри*), които трябва да са съвместими като брой, подредба и тип със списъка параметри
-
----
-
-### Предаване на примитивни типове като аргументи
-
-Примитивните типове се предават по стойност, т.е. създават се техни копия и промяната на стойностите на параметрите вътре в конструктора или метода не се отразява на стойностите на променливите, подадени като аргументи.
+- Constructors and methods declare a list of zero or more *parameters* (formal parameters)
+- Parameters are an ordered tuple of type + name pairs
+- When calling a constructor or method, you pass *arguments* (actual parameters) that must be compatible in count, order, and type with the parameter list
 
 ---
 
-### Предаване на примитивни типове като аргументи
+### Passing Primitive Types as Arguments
+
+Primitive types are passed by value: a copy is made, so changes to the parameter inside the constructor or method do not affect the variable that was passed as the argument.
+
+---
+
+### Passing Primitive Types as Arguments
 
 ```java
 public class PassPrimitiveByValue {
 
     public static void main(String[] args) {
         int x = 3;
-        // invoke passMethod() with 
-        // x as argument
+        // invoke passMethod() with x as argument
         passMethod(x);
-        // print x to see if its 
-        // value has changed
+        // print x to see if its value has changed
         System.out.println("After invoking passMethod(), x = " + x);
     }
 
-    // change parameter in passMethod()
     public static void passMethod(int p) {
         p = 10;
     }
@@ -70,35 +67,34 @@ public class PassPrimitiveByValue {
 
 ---
 
-### Предаване на референтни типове като аргументи
+### Passing Reference Types as Arguments
 
-Референтните типове (обекти, масиви) също се предават по стойност: референциите, подадени като аргументи, имат същата стойност (т.е. сочат към същото място в паметта), както и преди извикването.
-Стойностите на член-данните на реферираните обекти обаче могат да се променят в метода, ако е налице необходимият достъп (в смисъл на енкапсулация) до тях.
+Reference types (objects, arrays) are also passed by value: the reference copy inside the method points to the same object in memory as the caller's variable. However, the fields of that object *can* be mutated inside the method if access is allowed.
 
 ---
 
-### Предаване на референтни типове като аргументи
+### Passing Reference Types as Arguments
 
 ```java
 public void moveCircle(Circle circle, int deltaX, int deltaY) {
-    // code to move origin of circle to x+deltaX, y+deltaY
+    // mutates the object the reference points to
     circle.setX(circle.getX() + deltaX);
     circle.setY(circle.getY() + deltaY);
-        
-    // code to assign a new reference to circle
+
+    // reassigning the local reference does NOT affect the caller
     circle = new Circle(0, 0);
 }
 
 // [...]
 
 moveCircle(myCircle, 23, 56);
-// myCircle reference remains unchanged,
-// but coordinates of the referred circle are changed after the call
+// myCircle reference is unchanged,
+// but the x/y coordinates of the circle it points to have changed
 ```
 
 ---
 
-### Декларация vs. инициализация, stack vs. heap
+### Declaration vs. Initialization, Stack vs. Heap
 
 ```java
 public class Person {
@@ -110,6 +106,7 @@ public class Person {
         this.name = name;
     }
 }
+
 public class PersonBuilder {
     private static Person buildPerson(int id, String name) {
         return new Person(id, name);
@@ -132,48 +129,47 @@ public class PersonBuilder {
 
 ---
 
-### Характеристики на stack паметта
+### Stack Memory Characteristics
 
-- автоматично се заделя при извикване на метод и освобождава при приключването му
-- променливите в стека съществуват, докато трае изпълнението на метода, който ги е създал (като параметри и локални променливи)
-- ако стек паметта се запълни, се хвърля `java.lang.StackOverFlowError`
-- обикновенно е с по-малък размер от heap паметта
-- достъпът до стек паметта е бърз в сравнение с достъпа до heap паметта
-
----
-
-### Характеристики на heap паметта
-
-- динамична памет за обекти и масиви
-- заделя се явно с оператора `new` или неявно, и се освобождава от garbage collector-a
-- новосъздаваните обекти стоят в heap-a, а референциите към тях - в stack-а
-- ако heap паметта се запълни, се хвърля `java.lang.OutOfMemoryError`
-- достъпът до heap паметта е по-бавен в сравнение с достъпа до stack паметта
+- Allocated automatically when a method is called; freed when the method returns
+- Variables on the stack exist only for the duration of the method that created them (parameters and local variables)
+- Throws `java.lang.StackOverflowError` if the stack is full (e.g., infinite recursion)
+- Typically smaller than heap memory
+- Access is fast compared to the heap
 
 ---
 
-### Създаване и инициализация на обектите
+### Heap Memory Characteristics
 
-- член-променливите на даден клас се инициализират със стойността по подразбиране на дадения тип
-- може да ги инициализираме явно, с присвояване, като част от декларацията им
-  - това е подходящо, ако е с литерал или прост израз, но не и ако инициализацията има по-сложна логика, например включва обработка на грешки, завъртане на цикъл за масиви и т.н.
-- нестатичните член-променливи могат да се инициализират и в конструкторите
-- за статичните член-променливи обаче, няма такава възможност. Затова са измислени т.нар. инициализационни блокове (*initializers*)
-
----
-
-### Initializer
-
-- представлява блок код, който
-  - не е свързан с име или тип данни
-  - намира се в тяло на дефиниция на клас, но извън конструктор или метод
-- в даден клас може да има нула, един или няколко инициализационни блока
-- могат да се ползват за инициализация на член-данните на класа (статични и нестатични)
-- алтернативата е, инициализационната логика да е отделена в методи
+- Dynamic memory region for objects and arrays
+- Allocated explicitly with `new` (or implicitly) and freed by the garbage collector
+- Newly created objects live on the heap; references to them are stored on the stack
+- Throws `java.lang.OutOfMemoryError` if no heap memory can be freed
+- Access is slower than stack memory
 
 ---
 
-### Initializer
+### Object Creation and Initialization
+
+- Instance fields are automatically initialised to their type's default value
+- You can initialise them explicitly with an assignment in the declaration — suitable for literals or simple expressions, but not for complex logic (loops, error handling, etc.)
+- Non-static fields can also be initialised in constructors
+- Static fields cannot be initialised in constructors — that is what *initializer blocks* are for
+
+---
+
+### Initializer Blocks
+
+- A block of code that:
+  - Has no name or data type
+  - Lives inside the class body but outside any constructor or method
+- A class may have zero, one, or several initializer blocks
+- Can be used to initialize both static and non-static fields
+- The alternative is to move the initialization logic into dedicated methods
+
+---
+
+### Initializer Blocks
 
 ```java
 public class InitializeMe {
@@ -182,12 +178,12 @@ public class InitializeMe {
     private static int b;
 
     static {
-        // static initializer block
+        // static initializer block — runs once when the class is loaded
         b = 100;
     }
 
     {
-        // initializer block
+        // instance initializer block — runs before every constructor
         a = 5;
     }
 
@@ -196,14 +192,14 @@ public class InitializeMe {
 
 ---
 
-### Ред на инициализация на обектите
+### Object Initialization Order
 
-1. инициализират се статичните член-променливи и се изпълняват статичните инициализатори на базовия клас, в реда на срещането им в дефиницията на класа
-2. инициализират се статичните член-променливи и се изпълняват статичните инициализатори на класа, в реда на срещането им в дефиницията му
-3. изпълняват се инициализаторите на базовия клас, в реда на срещането им
-4. изпълнява се конструкторът на базовия клас
-5. изпълняват се инициализаторите на класа, в реда на срещането им
-6. изпълнява се конструкторът на класа
+1. Static fields and static initializers of the **superclass** are executed, in declaration order
+2. Static fields and static initializers of **this class** are executed, in declaration order
+3. Instance initializers of the **superclass** are executed, in declaration order
+4. The **superclass constructor** runs
+5. Instance initializers of **this class** are executed, in declaration order
+6. **This class's constructor** runs
 
 ---
 
@@ -213,8 +209,8 @@ public class InitializeMe {
 
 ### Enum
 
-- Специален референтен тип (клас), представящ фиксирано множество от инстанции-константи
-- Нарича се *enum(eration)*, защото инстанциите се дефинират чрез изброяване
+- A special reference type (class) that represents a fixed set of named constants
+- Called an *enum(eration)* because its instances are defined by listing them
 
 ---
 
@@ -236,12 +232,11 @@ public enum Day {
 
 ### Enum
 
-- Всеки `enum` неявно наследява абстрактния клас `java.lang.Enum`
-  - не може да наследява явно друг клас, защото би било множествено наследяване
-  - може да имплементира интерфейси
-- Тялото на `enum` класа може да съдържа член-променливи и методи
-- Ако има конструктор, той трябва да е package-private или `private`
-- Той автоматично създава константите в дефиницията на `enum`-a. Не може да се извиква явно
+- Every `enum` implicitly extends `java.lang.Enum`
+  - It cannot explicitly extend another class (that would be multiple inheritance)
+  - It can implement interfaces
+- The `enum` body can contain fields and methods
+- Any constructor must be `package-private` or `private`; it is called automatically for each constant and cannot be called explicitly
 
 ---
 
@@ -250,7 +245,7 @@ public enum Day {
 ```java
 public class EnumExample {
     private Day day;
-    
+
     public EnumExample(Day day) { this.day = day; }
 
     public void tellItLikeItIs() {
@@ -264,19 +259,44 @@ public class EnumExample {
     }
 
     public static void main(String[] args) {
-        EnumExample example = new EnumExample(Day.TUESDAY);
-        example.tellItLikeItIs();
+        new EnumExample(Day.TUESDAY).tellItLikeItIs();
     }
 }
 ```
 
 ---
 
-### Enum
+### Enum — Built-in Methods
 
-- Компилаторът добавя автоматично и няколко специални статични методи:
-  - `values()` - връща масив, съдържащ всички стойности в `enum`, в реда, в който са изброени в декларацията
-  - `valueОf(String name)` - връща `enum` константата по даденото име
+The compiler automatically adds two static methods:
+- `values()` — returns an array of all constants in declaration order
+- `valueOf(String name)` — returns the constant with the given name
+
+---
+
+### Enum — Fields and Methods
+
+```java
+public enum Planet {
+    MERCURY(3.303e+23, 2.4397e6),
+    VENUS  (4.869e+24, 6.0518e6),
+    EARTH  (5.976e+24, 6.37814e6);
+
+    private final double mass;   // kg
+    private final double radius; // metres
+
+    Planet(double mass, double radius) {
+        this.mass = mass;
+        this.radius = radius;
+    }
+
+    static final double G = 6.67300E-11;
+
+    double surfaceGravity() {
+        return G * mass / (radius * radius);
+    }
+}
+```
 
 ---
 
@@ -284,21 +304,20 @@ public class EnumExample {
 
 ---
 
-### Records (от Java 16)
+### Records (since Java 16)
 
-- една от най-честите критики към Java е, че се пише доста *boilerplate* код
-- например, за почти всеки клас, се налага да дефинираме публичен конструктор, getter методи, `toString()`, `equals()` и `hashCode()`
-- за много класове, те имат стандартни, тривиални имплементации и могат да бъдат генерирани автоматично (IDE-тата имат такава функционалност)
-- дори като автори на класа да ги генерираме автоматично обаче, проблемът остава за четящите кода
+- One of Java's most common criticisms was boilerplate: almost every class needed a public constructor, getters, `toString()`, `equals()`, and `hashCode()`
+- For many classes these are trivial and can be auto-generated by an IDE — but that still makes the code harder to read
+- Records solve this at the language level
 
 ---
 
 ### Records
 
-- както enums, records са нов реферетен тип и са (ограничен) вид клас
-- описват компактно т.нар *value objects* - класове, които имат само състояние: състоят се от "полетата, само полетата и нищо освен полетата"
-- може да мислим за тях като за именувана наредена n-торка стойности
-- те са (shallowly) immutable агрегации на фиксирано множество от стойности, известни като *компоненти* на record-a
+- Like enums, records are a new reference type and a restricted kind of class
+- They concisely describe *value objects*: classes whose entire state is captured in their fields — "the fields, the whole fields, and nothing but the fields"
+- Think of them as a named, ordered tuple of values
+- They are shallowly immutable aggregations of a fixed set of values, called the record's *components*
 
 ---
 
@@ -309,34 +328,34 @@ public record Point(int x, int y) {}
 
 // [...]
 
-Point p = new Point(-1, 2);
+var p = new Point(-1, 2);
 System.out.println(p.x() + ", " + p.y());
 ```
 
 ---
 
-### Records
+### Records — What the Compiler Generates
 
-- компилаторът автоматично генерира boilerplate кода за
-  - `private` `final` член-данна за всяко поле, със същото име и тип
-  - *каноничен* конструктор: със списък с параметри, отговарящ на декларираното описание на състоянието
-  - getter методи за полетата (имената им съвпадат с имената на съответните полета)
-  - `equals()`, `hashCode()` и `toString()`
-      - ако `r` е record от тип `R` с компоненти `c1, c2, ..., cN`, и създадем копие на инстанцията като `R copy = new R(r.c1(), r.c2(), ..., r.cN())`, то `r.equals(copy) == true`
-  - компонентите на `record`-ите могат да имат анотации, например `@NotNull`
-
----
-
-### Records
-
-- инстанции се създават с оператора `new`
-- всички records имплицитно наследяват абстрактния клас `java.lang.Record`, самите те са `final` и не могат да са `abstract`
-- `java.lang.Record` не може да бъде явно наследяван
-- той дефинира `equals()`, `hashCode()` и `toString()` като абстрактни методи
+The compiler automatically generates:
+- A `private final` field for each component, with the same name and type
+- A *canonical constructor* whose parameter list matches the component list
+- Accessor methods for each component (named after the component, not `getX()`)
+- `equals()`, `hashCode()`, and `toString()`
+  - For a record `R` with components `c1, c2, ..., cN`: `r.equals(new R(r.c1(), r.c2(), ..., r.cN())) == true`
+- Components can be annotated (e.g. `@NotNull`)
 
 ---
 
-### Пример: без records
+### Records — Key Constraints
+
+- Instances are created with `new`
+- All records implicitly extend `java.lang.Record`, are themselves `final`, and cannot be `abstract`
+- `java.lang.Record` cannot be extended explicitly
+- It declares `equals()`, `hashCode()`, and `toString()` as abstract methods
+
+---
+
+### Example: Without Records
 
 ```java
 public final class FXOrderClassic {
@@ -361,66 +380,40 @@ public final class FXOrderClassic {
 
 ---
 
-### Пример: без records
+### Example: Without Records
 
 ```java
-    // ...continues from previous screen
-    public int units() {
-        return units;
-    }
+    // ...continued from previous screen
+    public int units() { return units; }
 
-    public CurrencyPair pair() {
-        return pair;
+    public CurrencyPair pair() { return pair; }
 
-    }
+    public Side side() { return side; }
 
-    public Side side() {
-        return side;
-    }
+    public double price() { return price; }
 
-    public double price() {
-        return price;
-    }
+    public LocalDateTime sentAt() { return sentAt; }
 
-    public LocalDateTime sentAt() {
-        return sentAt;
-    }
     // continues on next screen...
 ```
 
 ---
 
-### Пример: без records
+### Example: Without Records
 
 ```java
-    // ...continues from previous screen
+    // ...continued from previous screen
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof FXOrderClassic)) {
-            return false;
-        }
-
-        FXOrderClassic that = (FXOrderClassic) o;
+        if (this == o) return true;
+        if (!(o instanceof FXOrderClassic that)) return false;
         return units == that.units &&
                 Double.compare(that.price, price) == 0 &&
                 pair == that.pair &&
                 side == that.side &&
                 sentAt.equals(that.sentAt);
     }
-
-    // continues on next screen...
-```
-
----
-
-### Пример: без records
-
-```java
-    // ...continues from previous screen
 
     @Override
     public int hashCode() {
@@ -429,13 +422,8 @@ public final class FXOrderClassic {
 
     @Override
     public String toString() {
-        return "FXOrderClassic{" +
-                "units=" + units +
-                ", pair=" + pair +
-                ", side=" + side +
-                ", price=" + price +
-                ", sentAt=" + sentAt +
-                '}';
+        return "FXOrderClassic{units=" + units + ", pair=" + pair +
+               ", side=" + side + ", price=" + price + ", sentAt=" + sentAt + '}';
     }
 
 }
@@ -443,7 +431,8 @@ public final class FXOrderClassic {
 
 ---
 
-### Същия пример: с records
+### The Same Example: With Records
+
 ```java
 public record FXOrder(int units,
                       CurrencyPair pair,
@@ -454,41 +443,33 @@ public record FXOrder(int units,
 
 ---
 
-### Records
+### Records — Optional Extras
 
-- опционално, освен едноредова декларация, record-ите могат да съдържат допълнителни конструктори, методи, статични член-данни и статични *factory* методи
-- ако обаче се изкушаваме да дефинираме такива, да имплентираме допълнителни интерфейси и т.н., вероятно по-добро дизайн решение би било да създадем обикновен клас
-
----
-
-### Records
-
-- изключение са т.нар. *компактни конструктори*: в тялото на каноничния конструктор, добавяме само валидация и/или нормализация на параметрите, а останалата част от кода (присвояванията на полетата) се осигурява от компилатора
-- компактните конструктори нямат параметри, пропускат се дори празните скоби `()`
-- кодът в компактния конструктор се добавя като допълнителен код в началото на дефиницията на каноничния конструктор (а не е отделен конструктор)
+- Records can optionally contain additional constructors, methods, static fields, and static factory methods
+- If you find yourself adding many of these, a regular class is probably a better design choice
 
 ---
 
-### Пример: record с компактен конструктор
+### Records — Compact Constructors
+
+- A *compact constructor* lets you add validation/normalisation without repeating the field assignments (the compiler injects those automatically)
+- Compact constructors have no parameter list — not even empty parentheses `()`
 
 ```java
-public record FXOrder(int units, 
-                      CurrencyPair pair, 
-                      Side side, 
-                      double price, 
-                      LocalDateTime sentAt, 
+public record FXOrder(int units,
+                      CurrencyPair pair,
+                      Side side,
+                      double price,
+                      LocalDateTime sentAt,
                       int ttl) {
 
     public FXOrder {
-
         if (units < 1) {
             throw new IllegalArgumentException("FXOrder units must be positive");
         }
-
         if (price <= 0.0) {
             throw new IllegalArgumentException("FXOrder price must be positive");
         }
-
     }
 
 }
@@ -496,48 +477,48 @@ public record FXOrder(int units,
 
 ---
 
-### Пример: record със статичен factory метод
+### Records — Static Factory Method
 
 ```java
-public static FXOrder of(CurrencyPair pair, 
-                             Side side, 
-                             double price) {
-
-    return new FXOrder(1, pair, side, price, LocalDateTime.now());
-
+public static FXOrder of(CurrencyPair pair,
+                         Side side,
+                         double price) {
+    return new FXOrder(1, pair, side, price, LocalDateTime.now(), 0);
 }
 ```
 
 ---
 
-### Локални интерфейси, enums и records (от Java 16)
+### Local Interfaces, Enums, and Records (since Java 16)
 
-- Интерфейси, enums и records могат да бъдат дефинирани в тялото на метод, което ги прави локални за него
-- Това подобрява енкапсулацията, ако въпросните типове са нужни само в имплементацията на метода
-
----
-
-### Sealed класове и интерфейси (от Java 17)
-
- - `sealed` типовете ни позволяват да ограничим класовете или интерфейсите, които могат да ги наследяват или имплементират
- - така могат да се дефинират възможните йерархии в дадена проблемна област по декларативен начин
+- Interfaces, enums, and records can be defined inside a method body, making them local to that method
+- This improves encapsulation when those types are needed only within the method's implementation
 
 ---
 
-### Sealed класове и интерфейси
+## Sealed Classes and Interfaces
+
+---
+
+### Sealed Classes and Interfaces (since Java 17)
+
+- `sealed` types let you restrict which classes or interfaces may extend or implement them
+- This allows you to define the complete type hierarchy for a domain declaratively
+
+---
+
+### Sealed Classes and Interfaces
 
 ```java
-// sealed класовете декларират, кои класове могат да ги наследяват
+// sealed class declares which classes may extend it
 public abstract sealed class Shape
-    permits Circle, Rectangle {...}
+    permits Circle, Rectangle {}
 
-// дефиниране на класове - наследници на sealed клас
-public class Circle extends Shape {...} // OK
-public class Rectangle extends Shape {...} // OK
-public class Triangle extends Shape {...} // Compile error
+public final class Circle extends Shape {}    // OK
+public final class Rectangle extends Shape {} // OK
+public class Triangle extends Shape {}        // Compile error
 
-// sealed класове като селектор на switch
-// No need for default case if all permitted types are covered
+// exhaustive switch — no default case needed when all permitted types are covered
 double area = switch (shape) {
     case Circle c    -> Math.pow(c.radius(), 2) * Math.PI;
     case Rectangle r -> r.a() * r.b();
@@ -546,60 +527,54 @@ double area = switch (shape) {
 
 ---
 
-### Sealed класове и интерфейси
+### Sealed Classes and Interfaces — Motivation
 
-- Като разрешаваме само на предварително дефинирано множество от класове да наследяват даден клас, може да разделим *достъпността* (*accessibility*) от *разширяемостта* (*extensibility*) на класовете
-- С други думи, може да направим `sealed` клас достъпен за други пакети, и въпреки това да контролираме, кой може да го наследява
-- Преди Java 17, за постигнем подобен ефект, имаше две опции:
-    - да направим класа package-private (което обаче ограничава достъпа до този клас)
-    - да направим класа `public`, но с `private` или package-private конструктори (това прави класа видим, но дава много ограничен контрол върху конкретните типове, които могат да го наследят)
-- При `sealed` класовете и интерфейсите, съществува изчерпателен списък от наследниците, който е известен на компилатора, IDE-то и JVM-a, което позволява по-мощен анализ на кода
-    - например, `instanceof` и casts могат да проверяват цялата йерархия статично
+- Separates *accessibility* from *extensibility*: a `sealed` class can be `public` but its subclasses still form a closed set
+- Before Java 17 the two alternatives were:
+    - Make the class package-private — limits accessibility everywhere
+    - Make the class `public` with `private`/package-private constructors — poor control over subclasses
+- Because the compiler, IDE, and JVM all know the exhaustive subtype list, analysis is stronger (e.g. exhaustive `switch` without `default`)
 
 ---
 
-### Sealed класове
+### Sealed Classes
 
-- наследниците на `sealed` клас могат да бъдат `final`, `non-sealed` или `sealed`
-- `sealed` клас може да бъде и абстрактен
-- `sealed` класът и неговите permitted класове трябва да са в един пакет
-- ако `sealed` класовете са кратки и малък брой, те могат да се дефинират в същия сорс файл като родителския клас
-  - в този случай, `permits` клаузата може да се пропусне - компилаторът приема за имплицитно permitted класовете в дадения сорс файл
+- Permitted subclasses of a `sealed` class must be `final`, `non-sealed`, or `sealed`
+- A `sealed` class may itself be abstract
+- The `sealed` class and all its permitted classes must be in the same package
+- If the permitted classes are short, they can live in the same source file — in that case the `permits` clause can be omitted
 
 ---
 
-### Sealed класове
+### Sealed Classes
 
 ```java
 public sealed class Plant permits Herb, Shrub, Climber {}
-
 
 final class Herb extends Plant {}
 
 non-sealed class Shrub extends Plant {}
 
-sealed class Climber extends Plant permits Cucumber{}
+sealed class Climber extends Plant permits Cucumber {}
 
 final class Cucumber extends Climber {}
 ```
 
 ---
 
-### Sealed интерфейси
+### Sealed Interfaces
 
-- `sealed` интерфейсите могат да специфицират, кои интерфейси могат да ги наследяват и кои класове могат да ги имплементират
-  - интерфейс - наследник на `sealed` интерфейс може да е деклариран като `non-sealed` или `sealed`. Интерфейсите не могат да са `final`
-  - клас, имплементиращ `sealed` интерфейс, може да бъде `final`, `non-sealed` или `sealed`
-  - `record` също може да имплементира `sealed` интерфейс
-    - Тъй като всеки `record` е имплицитно `final`, той няма нужда от явен модификатор
+- A `sealed` interface may specify which interfaces may extend it and which classes may implement it
+  - An extending interface may be `non-sealed` or `sealed` (interfaces cannot be `final`)
+  - An implementing class may be `final`, `non-sealed`, or `sealed`
+  - A `record` may implement a `sealed` interface — because every `record` is implicitly `final`, no explicit modifier is needed
 
 ---
 
-### Sealed интерфейси
+### Sealed Interfaces
 
 ```java
 sealed public interface Move permits Athlete, Person, Jump, Kick {}
-
 
 final class Athlete implements Move {}
 
@@ -614,16 +589,16 @@ final class Karate implements Kick {}
 
 ---
 
-### Сорс файлове на абстрактни класове, интерфейси, enums и records
+### Source Files for Abstract Classes, Interfaces, Enums, and Records
 
-- Важат същите правила като при конкретните класове:
-  - абстрактните класове, интерфейсите, `enum`-ите и `record`-ите се записват във файл
-    - с име, съвпадащо с името на абстрактния клас/интерфейс/`enum`/`record`
-    - с разширение `.java`
+The same rules apply as for concrete classes:
+- Each type is stored in a file
+  - whose name matches the type name
+  - with the `.java` extension
 
 ---
 
-### Нововъведенията в Java в 2021
+### New Java Features Survey (2021)
 
 <p align="center">
   <img width="70%" src="images/03.1-favorite-new-java-features.png" />
@@ -631,28 +606,28 @@ final class Karate implements Kick {}
 
 ---
 
-## Изключения
+## Exceptions
 
 ---
 
-### Изключение (Exception)
+### What Is an Exception?
 
-- Събитие (проблем), което се случва по време на изпълнение на дадена програма и нарушава нормалната последователност на изпълнение на инструкциите ѝ
-- Още един начин за комуникация на метод с извикващите го: връщана стойност при нормално изпълнение и изключение при проблем
+- An event (problem) that occurs during program execution and disrupts the normal flow of instructions
+- Another channel of communication for methods: a return value on the happy path, an exception on the error path
 
 ---
 
-### Например...
+### Typical Causes
 
-- Подали сме невалидни входни данни
-- Опитваме се да отворим несъществуващ файл
-- Мрежата се е разкачила по време на комуникация
-- Свършила е паметта на виртуалната машина
+- Invalid input from the user
+- Attempt to open a file that does not exist
+- Network connection dropped during communication
+- JVM ran out of memory
 - ...
 
 ---
 
-### Как се генерира ("хвърля") изключение?
+### How to Throw an Exception
 
 ```java
 public Object pop() {
@@ -667,39 +642,37 @@ public Object pop() {
 
 ---
 
-### Как се обработва ("лови") изключение?
+### How to Catch an Exception
 
 ```java
 try {
 
-    // код, който може да хвърли изключение
+    // code that may throw an exception
 
 } catch (Exception e) {
 
-    // обработваме изключението ("exception handler")
-    // може да има повече от един catch блок
+    // handle the exception (exception handler)
+    // multiple catch blocks are allowed
 
 } finally {
 
-    // при нужда, някакви заключителни операции
-    // finally блокът е optional, но ако го има,
-    // се изпълнява задължително щом влезем в try-a
+    // optional cleanup code
+    // always executes once the try block is entered,
+    // regardless of whether an exception was thrown
 
 }
 ```
 
 ---
 
-### Catch block chain
+### Catch Block Chain
 
 ```java
-try { 
+try {
     // [...]
 } catch (MostSpecificException mse) {
     // [...]
 } catch (MoreGeneralException mge) {
-    // [...]
-} ... {
     // [...]
 } catch (LeastSpecificException lse) {
     // [...]
@@ -708,7 +681,7 @@ try {
 
 ---
 
-### Multi catch block
+### Multi-catch Block
 
 ```java
 try {
@@ -720,7 +693,7 @@ try {
 
 ---
 
-### Стек на извикванията (call stack)
+### Call Stack
 
 <p align="center">
   <img width="50%" src="images/03.2-call-stack.jpg" />
@@ -728,17 +701,17 @@ try {
 
 ---
 
-### Видове изключения
+### Types of Exceptions
 
-- Изключителните събития могат да се дължат на грешка на потребителя, бъг в кода или физически ресурс, който не е достъпен
-- Делят се на три вида:
-  - Checked (Compile-time) exceptions
-  - Unchecked (Runtime) exceptions
-  - Errors
+Exceptional events can be caused by user error, a bug in the code, or an unavailable physical resource. They fall into three categories:
+
+- Checked (compile-time) exceptions
+- Unchecked (runtime) exceptions
+- Errors
 
 ---
 
-### Видове изключения
+### Exception Hierarchy
 
 <p align="center">
   <img width="50%" src="images/03.3-exceptions.jpg" />
@@ -746,7 +719,7 @@ try {
 
 ---
 
-### Checked vs. unchecked exceptions
+### Checked vs. Unchecked Exceptions
 
 <p align="center">
   <img width="50%" src="images/03.4-exceptions.jpg" />
@@ -754,110 +727,103 @@ try {
 
 ---
 
-### Checked exceptions
+### Checked Exceptions
 
-- Наричат се още *compile-time* exceptions, защото компилаторът ни задължава да ги обработим
-- Едно добре написано приложение, би трябвало да ги очаква и да се възстановява от тях
-
----
-
-### Checked exceptions - примери
-
-- `FileNotFoundException` при опит да отворим файл по име, какъвто не съществува
-- `IOException` при проблем с четене или писане във файл
+- Also called *compile-time* exceptions because the compiler forces you to handle them
+- A well-written application should anticipate them and recover gracefully
 
 ---
 
-### Unchecked (Runtime) exceptions
+### Checked Exceptions — Examples
 
-- Възникват по време на изпълнение на приложението, затова се наричат още *runtime* exceptions
-- Приложението обикновено не може да ги очаква или да се възстанови от тях
-- Най-често, са резултат от бъгове (логически грешки) в кода, неправилно извикване на API-та и т.н.
+- `FileNotFoundException` when trying to open a file that does not exist
+- `IOException` when a read or write operation on a file fails
 
 ---
 
-###  Unchecked (Runtime) exceptions - примери
+### Unchecked (Runtime) Exceptions
 
-- `ArithmeticException` при опит за деление на нула
-- `ArrayIndexOutOfBoundsException` при опит да достъпим елемент на масив по индекс извън размера на масива
-- `NullPointerException` при опит за достъпване на член-данна или метод на обект по референция, която е `null`
-- `ClassCastException` при опит да се cast-не обект към клас, на който обектът не е инстанция
+- Occur at runtime — also called *runtime exceptions*
+- The application usually cannot anticipate or recover from them
+- Typically caused by bugs, incorrect API usage, etc.
+
+---
+
+### Unchecked Exceptions — Examples
+
+- `ArithmeticException` — division by zero
+- `ArrayIndexOutOfBoundsException` — array access with an out-of-bounds index
+- `NullPointerException` — accessing a field or method on a `null` reference
+- `ClassCastException` — casting an object to a type it is not an instance of
 
 ---
 
 ### Errors
 
-- Проблеми, които възникват извън приложението, и приложението обикновено не може да ги очаква или да се възстанови от тях
-- Обикновено се генерират от самата виртуална машина
+- Problems that originate outside the application; the application usually cannot anticipate or recover from them
+- Typically generated by the JVM itself
 
 ---
 
-### Errors - примери
+### Errors — Examples
 
-- `OutOfMemoryError` при опит да заделим heap памет, когато свободната памет не е достатъчна (и не може да освободи с garbage collection)
-- `StackOverflowError` когато метод извиква свое копие твърде много пъти (напр. при безкрайна рекурсия)
+- `OutOfMemoryError` — heap is exhausted and cannot be freed by GC
+- `StackOverflowError` — method calls itself too many times (e.g. infinite recursion)
 
 ---
 
-### Деклариране на хвърляни изключения
+### Declaring Thrown Exceptions
 
-Ако метод не прехваща/обработва даден checked exception, който може да се хвърли в тялото му, той трябва да го декларира в сигнатурата си, за да "предупреди" тези, които го викат:
-
-<br>
+If a method does not catch a checked exception that may be thrown in its body, it must declare it in its signature so callers know what to expect:
 
 ```java
-public void writeList() throws IOException, FileNotFoundException {
+public void writeList() throws IOException {
     // [...]
 }
 ```
 
+Note: `FileNotFoundException` extends `IOException`, so declaring `IOException` alone is sufficient.
+
 ---
 
-### Chained exceptions
+### Chained Exceptions
 
 ```java
 try {
     // [...]
 } catch (IOException e) {
-    // прехващаме изключение, обработваме го 
-    // и хвърляме ново, към което го "закачаме"
-    throw new SampleException("Oopss..", e); 
+    // catch an exception, handle it, then throw a new one chained to the original
+    throw new SampleException("Oops...", e);
 }
 ```
 
 ---
 
-### Finally – не само за обработка на изключения
+### `finally` — Not Just for Exceptions
 
 ```java
-try { 
-    // тук може да се хвърлят изключения
-    // или да има return/continue/break
+try {
+    // code that may throw exceptions, return, continue, or break
 } finally {
-    // някакъв важен cleanup code -
-    // ще се изпълни винаги*, независимо какво се случи в try блока
+    // important cleanup — always runs once the try block is entered
 }
 ```
 
 ---
 
-### Подобрен NullPointerException (от Java 14)
+### Improved NullPointerException (since Java 14)
 
 ```java
 public class HelpfulNPE {
-    class A {
-        public B b;
-    }
-    class B {
-        public C c;
-    }
-    class C {
-        public int number;
-    }
+    class A { public B b; }
+    class B { public C c; }
+    class C { public int number; }
+
     public void helpfulNPEDemo() {
         A a = new A();
-        a.b.c.number = 100; // Line 13: will throw NullPointerException at runtime
+        a.b.c.number = 100; // throws NullPointerException at runtime
     }
+
     public static void main(String[] args) {
         new HelpfulNPE().helpfulNPEDemo();
     }
@@ -866,29 +832,38 @@ public class HelpfulNPE {
 
 ---
 
-### Подобрен NullPointerException (от Java 14)
+### Improved NullPointerException (since Java 14)
 
-before:
-```bash
+Before Java 14:
+```text
 Exception in thread "main" java.lang.NullPointerException
     at HelpfulNPE.helpfulNPEDemo(HelpfulNPE.java:13)
     at HelpfulNPE.main(HelpfulNPE.java:16)
 ```
 
-<br>
-
-since Java 14:
-```bash
+Since Java 14:
+```text
 Exception in thread "main" java.lang.NullPointerException:
-                            Cannot read field "c" because "a.b" is null
+    Cannot read field "c" because "a.b" is null
     at HelpfulNPE.helpfulNPEDemo(HelpfulNPE.java:13)
     at HelpfulNPE.main(HelpfulNPE.java:16)
 ```
 
 ---
 
-### Защо да ползваме изключения?
+### Why Use Exceptions?
 
-- Отделяме кода за обработка на грешки от останалия ⇨ става по-четим
-- "Препредаване" на грешки по стека на извикванията
-- Групиране и диференциране на различните типове грешки
+- Separates error-handling code from normal logic → more readable code
+- Propagates errors up the call stack automatically
+- Groups and differentiates error types via the class hierarchy
+
+---
+
+### Best Practices for Exceptions
+
+- Throw exceptions only for truly exceptional situations, not for normal control flow
+- Prefer specific exception types over generic `Exception` or `RuntimeException`
+- Always include a meaningful message when constructing an exception
+- Never swallow exceptions silently with an empty `catch` block
+- Use `finally` (or try-with-resources) to release resources reliably
+- Document thrown checked exceptions with `@throws` in Javadoc

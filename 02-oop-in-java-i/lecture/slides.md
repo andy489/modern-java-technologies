@@ -1,55 +1,55 @@
-# Обектно-ориентирано програмиране с Java
+# Object-Oriented Programming with Java
 
 <p align="center">
   <img width="60%" src="images/02.1-oop.jpg" />
 </p>
 
-20.10.2021
+2021-10-20
 
 ---
 
-### Предната лекция говорихме за:
+### Last Lecture: Recap
 
-- Tиповете данни
-- Оператори, изрази, statements
-- Условия и разклонения
-- Итерация / Цикли
-- Низове и операции с тях
-- Масиви
-- Функции
-
----
-
-### Днес ще разгледаме:
-
-- Класове и обекти
-- Абстрактни класове и интерфейси
-- Фундаменталните ООП принципи
-  - Енкапсулация
-  - Наследяване
-  - Полиморфизъм
-  - Абстракция
+- Data types
+- Operators, expressions, statements
+- Conditions and branching
+- Iteration / Loops
+- Strings and string operations
+- Arrays
+- Functions
 
 ---
 
-### Обектно-ориентирано програмиране
+### Today's Topics
 
-- Родено е от необходимостта за по-добър контрол над конкурентната модификация на споделени данни
-- Основната идея е, да няма директен достъп до данните, а те да се достъпват през нарочен за целта слой код
-- Понеже данните трябва да се предават и модифицират, се ражда концепцията за обект
-
----
-
-### Обект
-
-- Обект в най-общ смисъл е множество данни, които могат да се предават и достъпват само чрез множество методи, които се подават заедно с данните
-- Данните съставляват *състоянието* на обекта, а методите съставляват *поведението* на обекта
-- Състоянието на обекта е скрито (*енкапсулирано*) от директен достъп
-- Обектът е инстанция (представител) на даден клас. Обекти се създават явно чрез оператора `new` или неявно, и живеят в heap паметта
+- Classes and objects
+- Abstract classes and interfaces
+- The four fundamental OOP principles
+  - Encapsulation
+  - Inheritance
+  - Polymorphism
+  - Abstraction
 
 ---
 
-### Създаване на обекти
+### Object-Oriented Programming
+
+- Born from the need for better control over concurrent modification of shared data
+- The core idea: no direct access to data — all access goes through a dedicated code layer
+- Because data must be passed and modified, the concept of an *object* emerged
+
+---
+
+### Object
+
+- An object is a set of data that can only be passed and accessed through a set of methods bundled with that data
+- The data constitutes the object's *state*; the methods constitute its *behavior*
+- The object's state is hidden (*encapsulated*) from direct outside access
+- An object is an instance of a class. Objects are created explicitly with the `new` operator (or implicitly) and live on the heap
+
+---
+
+### Creating Objects
 
 ```java
 String message = new String("Operation completed."); // explicit
@@ -61,31 +61,30 @@ stringArr = new String[]{"Changed", "my", "mind"}; // explicit
 
 ---
 
-### Клас
+### Class
 
-- Клас – дефиниция на (клас от) обекти
-  - описва състояние чрез член-данни (член-променливи)
-  - описва поведение чрез методи 
-- Конструктор(и)
-- Метод(и)
-- Възможно е даден клас да няма състояние или да няма поведение
-- Всеки клас има определен *интерфейс* - формално описание на начина, по който други обекти могат да взаимодействат с него
-
----
-
-### Метод на клас
-
-- Функция за манипулиране на състоянието на класа
-  - име и списък от параметри (*сигнатура*)
-      - броят на параметрите се нарича *арност*
-      - два метода имат еднаква сигнатура, ако имат еднакви имена, еднаква арност и еднаква последователност от типове в списъка от параметри
-  - модификатори, тип на връщаната стойност, сигнатура и тяло, оградено с {}
-  - тялото може да съдържа декларации на локални променливи и statements
-  - може да има странични ефекти
+- A class is a definition (blueprint) of objects
+  - describes state through fields (member variables)
+  - describes behavior through methods
+- Has constructor(s) and method(s)
+- A class can have no state, or no behavior
+- Every class has a well-defined *interface* — a formal description of how other objects can interact with it
 
 ---
 
-### Метод на клас
+### Class Method
+
+- A function for manipulating the state of the class
+  - has a name and a list of parameters (*signature*)
+      - the number of parameters is called *arity*
+      - two methods have the same signature if they share the same name, arity, and parameter type sequence
+  - has modifiers, return type, signature, and a body enclosed in `{}`
+  - the body may contain local variable declarations and statements
+  - may have side effects
+
+---
+
+### Class Method
 
 ```java
 public class AdmissionTestProblems {
@@ -106,28 +105,26 @@ public class AdmissionTestProblems {
 
 ---
 
-### Методи с променлив брой аргументи
+### Varargs — Methods with Variable Number of Arguments
 
-- специален вид параметър на метод: редица от нула или повече аргументи от един и същи тип
-- Нарича се *varargs*, от *variable arguments*
-- Синтаксис: име на тип, следван от три точки (многоточие)
-- Ако метод има varargs параметър, той трябва да е един и да е последен в списъка
-- При достигане до varargs параметър, компилаторът създава масив от останалите аргументи и ги подава на метода като масив
-- В тялото на метода се достъпва като масив
+- A special kind of method parameter: a sequence of zero or more arguments of the same type
+- Called *varargs*, short for *variable arguments*
+- Syntax: type name followed by three dots (ellipsis)
+- A method may have at most one varargs parameter, and it must be last in the parameter list
+- The compiler collects the remaining arguments into an array and passes it to the method
+- Inside the method body, it is accessed like a regular array
 
 ---
 
-### Методи с променлив брой аргументи
+### Varargs — Methods with Variable Number of Arguments
 
 ```java
-// A method that takes variable number of integer arguments
 static void funWithVarargs(int... a) {
-    System.out.println("Number of arguments: " + a.length); 
+    System.out.println("Number of arguments: " + a.length);
 
-    // using for-each loop to display contents of a
     for (int i : a) {
-        System.out.print(i + " "); 
-    } 
+        System.out.print(i + " ");
+    }
 }
 
 public static void main(String[] args) {
@@ -135,16 +132,16 @@ public static void main(String[] args) {
 }
 
 public static void main(String... args) {
-    // varargs syntax - equivalent to the above
+    // varargs syntax — equivalent to the above
 }
 ```
 
 ---
 
-### Статични член-променливи и статични методи
+### Static Fields and Static Methods
 
-- Те са част от класа, а не от конкретна негова инстанция (обект)
-- Могат да се достъпват, без да е създаден обект: само с името на класа, точка, името на статичната член-променлива или метод
+- They belong to the class, not to any specific instance (object)
+- Can be accessed without creating an object: `ClassName.memberName`
 
 <br>
 
@@ -155,35 +152,33 @@ System.out.println(Math.pow(3, 2)); // 9.0
 
 ---
 
-### Статични член-променливи
+### Static Fields
 
-- Статичните член-променливи имат едно-единствено копие, което се споделя от всички инстанции на класа
-  - ако са константи, пестим памет (няма смисъл да се мултиплицират във всяка инстанция)
-  - ако са променливи, всяка инстанция "вижда" и променя една и съща стойност, което е механизъм за комуникация между всички инстанции на дадения клас
-
----
-
-### Статични методи
-
-- Статичните методи имат достъп само до статичните член-променливи и други статични методи на класа
-- Нестатичните методи имат достъп както до статичните, така и до нестатичните членове на класа
+- A static field has exactly one copy, shared by all instances of the class
+  - if it is a constant, memory is saved (no need to duplicate it in every instance)
+  - if it is a mutable variable, all instances see and modify the same value — a communication mechanism across all instances
 
 ---
 
-### Статични методи
+### Static Methods
+
+- Static methods can only access static fields and other static methods of the class
+- Non-static methods can access both static and non-static members
+
+---
+
+### Static Methods
 
 ```java
 public class Utils {
     public static final double PI = 3.14; // constant
-    private static int radius = 10; // static member
-    private String fact5 = "5!"; // non-static member
+    private static int radius = 10; // static field
+    private String fact5 = "5!"; // non-static field
 
-    // static method
     public static long fact(int n) {
         if (n == 1) { return 1; } else { return n * fact(n - 1); }
     }
 
-    // non-static method
     public String getFact() {
         return fact5;
     }
@@ -191,25 +186,25 @@ public class Utils {
     public static void main(String[] args) {
         System.out.println("Perimeter is " + 2 * Utils.PI * radius);
         System.out.println(new Utils().getFact() + "=" + Utils.fact(5));
-        Utils.getFact(); // won't compile
+        Utils.getFact(); // won't compile — getFact() is non-static
     }
 }
 ```
 
 ---
 
-### Ключовата дума `this`
+### The `this` Keyword
 
-- Референция към конкретния обект
-- Неявно се подава като параметър на всеки конструктор и нестатичен метод на класа
-- Употребява се за:
-  - достъпване на член-променливи, "скрити" от едноименни параметри на метод или локални променливи
-  - извикване от конструктор на друг overloaded конструктор в същия клас
-  - извикване на произволен метод на класа
+- A reference to the current object
+- Implicitly passed as a parameter to every constructor and non-static method
+- Used to:
+  - access fields that are shadowed by a parameter or local variable with the same name
+  - call another overloaded constructor in the same class
+  - invoke any method of the current class
 
 ---
 
-### Ключовата дума `this`
+### The `this` Keyword
 
 ```java
 public class Human {
@@ -217,12 +212,12 @@ public class Human {
     private String name;
 
     public Human() {
-        // Извикване на overload-натия конструктор със String параметър
+        // Delegates to the overloaded constructor with a String parameter
         this("Unknown");
     }
 
     public Human(String name) {
-        // Достъпване на член-променлива, скрита от едноименен параметър
+        // Disambiguates the field from the parameter with the same name
         this.name = name;
     }
 
@@ -235,7 +230,7 @@ public class Human {
 
 ---
 
-### Обект - конкретна инстанция на даден клас
+### Object — A Concrete Instance of a Class
 
 ```java
 public class MainApp {
@@ -252,23 +247,23 @@ public class MainApp {
 
 ---
 
-### Пакети
+### Packages
 
-- Именувани групи от семантично свързани класове
-- Служат за йерархично организиране на кода
-- Съответстват на директорно дърво на файловата система
-- Конвенция за именуване:
-  - само малки букви, точка за разделител
-  - компаниите използват обърнат домейн адрес
+- Named groups of semantically related classes
+- Used to hierarchically organise code
+- Correspond to a directory tree on the file system
+- Naming convention:
+  - lowercase letters only, dot as separator
+  - companies use their reversed domain name
       - `mail.google.com` → `com.google.mail`
 
 ---
 
-### Пакети
+### Packages
 
-- всеки Java клас се намира в някакъв пакет
-- пакетът се указва в началото на сорс файла (преди дефиницията на класа) с ключовата дума `package`
-- ако липсва `package` декларация, класът е в пакета по подразбиране (който няма име) - което е лоша практика
+- Every Java class belongs to some package
+- The package is declared at the top of the source file (before the class definition) with the `package` keyword
+- If the `package` declaration is missing, the class belongs to the unnamed default package — which is bad practice
 
 <br>
 
@@ -282,17 +277,17 @@ public class Example {
 
 ---
 
-### Достъп до клас от друг пакет
+### Accessing a Class from Another Package
 
-- Всеки клас има достъп по подразбиране (имплицитно) до:
-  - класовете от собствения си пакет
-  - класовете в пакета `java.lang`
-- Ако искаме клас да има достъп до клас в някой друг пакет, трябва експлицитно да го заявим с `import` декларация, която поставяме над декларацията на класа
-- `import` декларацията може да е за конкретен клас с пълното му име: име на пакет + `.` + име на клас, или на всички класове в даден пакет (т.нар. *wildcard import*: име на пакет + `.*`)
+- Every class has implicit access to:
+  - classes in its own package
+  - classes in the `java.lang` package
+- To access a class from a different package, declare an explicit `import` statement above the class declaration
+- An `import` can name a specific class (fully qualified: `package.ClassName`) or all classes in a package (*wildcard import*: `package.*`)
 
 ---
 
-### Достъп до клас от друг пакет
+### Accessing a Class from Another Package
 
 ```java
 package bg.sofia.uni.fmi.mjt.example;
@@ -314,62 +309,62 @@ public class StringUtils {
 
 ---
 
-### Достъп до клас от друг пакет
+### Accessing a Class from Another Package
 
-- Прието е `import`-ите да се подреждат в сортиран лексикографски ред по `<package>.<class>`
-- По-чисто е да се изброят конкретните класове от пакета, вместо `import java.util.*;`
+- Convention: sort `import` statements lexicographically by `<package>.<class>`
+- Prefer listing specific classes over `import java.util.*;`
 
 ---
 
-### Модификатори за достъп
+### Access Modifiers — Top-Level Class
 
-за top-level клас, т.е. невложен в друг
+For a top-level class (not nested inside another class)
 
 <br>
 
-| Модификатор      | Видимост                                         |
+| Modifier         | Visibility                                       |
 | :--------------- |:------------------------------------------------ |
-| `public`         | Достъпен за всеки клас във всеки пакет           |
-| без модификатор* | Достъпен само за класовете в собствения си пакет |
+| `public`         | Accessible from any class in any package         |
+| no modifier*     | Accessible only within the same package          |
 
 <br>
 
 <small>
-\* казваме също "package-private", "default"
+\* also called "package-private" or "default"
 </small>
 
 ---
 
-### Модификатори за достъп
+### Access Modifiers — Class Members
 
-За член-променливи и методи на клас
+For fields and methods of a class
 
 <br>
 
-| Модификатор   | Клас | Пакет | Подклас | Всички други |
-| :------------ |:----:|:-----:|:-------:|:------------:|
-| `public`      | да   | да    | да      | да           |
-| `protected`   | да   | да    | да      | не           |
-| no modifier   | да   | да    | не      | не           |
-| `private`     | да   | не    | не      | не           |
+| Modifier      | Class | Package | Subclass | Everyone else |
+| :------------ |:-----:|:-------:|:--------:|:-------------:|
+| `public`      | yes   | yes     | yes      | yes           |
+| `protected`   | yes   | yes     | yes      | no            |
+| no modifier   | yes   | yes     | no       | no            |
+| `private`     | yes   | no      | no       | no            |
 
 ---
 
-### Енкапсулация
+### Encapsulation
 
-Енкапсулацията адресира основния проблем, мотивирал създаването на ООП: по-добро управление на конкурентния достъп до споделени данни
-
----
-
-### Енкапсулация
-
-- Множеството текущи стойности на член-данните на даден обект се наричат негово *състояние*
-- Само вътрешните методи на даден обект имат достъп до неговото състояние, като правят невъзможни неочакваните промени на състоянието от външния свят
-- В Java се постига чрез модификаторите за достъп
+Encapsulation addresses the core problem that motivated OOP: better management of concurrent access to shared data
 
 ---
 
-### Енкапсулация – пример за нарушаване
+### Encapsulation
+
+- The set of current values of an object's fields is called its *state*
+- Only the object's own methods have access to its state, making unexpected external mutations impossible
+- In Java, encapsulation is achieved through access modifiers
+
+---
+
+### Encapsulation — Violation Example
 
 ```java
 public class Human {
@@ -386,7 +381,7 @@ public class Main {
 
     public static void main(String[] args) {
         Human ivan = new Human("Ivan");
-        ivan.name = "Faked Ivan"; // Hm...
+        ivan.name = "Faked Ivan"; // anyone can overwrite it
     }
 
 }
@@ -394,12 +389,12 @@ public class Main {
 
 ---
 
-### Енкапсулация – пример за спазване
+### Encapsulation — Correct Example
 
 ```java
 public class Human {
 
-    private String name; // stays hidden
+    private String name; // hidden from outside
 
     public Human(String name) {
         this.name = name;
@@ -419,49 +414,38 @@ public class Main {
 
 ---
 
-### Наследяване
+### Inheritance
 
-- Позволява преизползване и разширяване на състояние и поведение на вече съществуващи класове
-- Когато клас наследява друг клас, за него казваме, че е *наследник*, или *дете*, или *подклас*, а втория клас наричаме *родител*, или *базов клас*, или *суперклас*
-- В Java се реализира с ключовата дума `extends`
-- Класът-наследник получава достъп до всички `public` и `protected` член-променливи и методи на родителския клас
-- Java не поддържа множествено наследяване
-
----
-
-### Наследяване и method overriding
-
-- Класът-наследник може да предостави собствена дефиниция на (т.е. да предефинира) методи на родителския клас (*method overriding*)
+- Enables reuse and extension of state and behavior from existing classes
+- When a class inherits another, it is called a *subclass* (or *child* or *derived class*); the other class is the *superclass* (or *parent* or *base class*)
+- In Java, implemented with the `extends` keyword
+- The subclass gains access to all `public` and `protected` fields and methods of the parent class
+- Java does not support multiple inheritance of classes
 
 ---
 
-### Наследяване и method overriding
+### Inheritance and Method Overriding
 
-  - Сигнатурата на метода в класа-родител и класа-наследник трябва да е идентична
-  - Модификаторът за достъп на метод в класа–наследник трябва да съвпада или да разширява модификатора за достъп на метода в родителския клас (но не може да го свива/ограничава)
-  - Типът на връщаната стойност трябва да е *съвместим* с този на override-вания метод. Съвместим означава идентичен или наследник (за референтните типове) - *return type covariance*
-  - Методът в класа-наследник е препоръчително да се анотира с опционалната анотация `@Override`. Така компилаторът ще ни помага да не нарушаваме горните правила
-
----
-
-### Ключовата дума `super`
-
-- Референция към прекия родител на обекта
-- Употребява се за:
-  - достъпване на член-променливи на родителя
-  - извикване от конструктор в текущия клас на конструктор в родителския клас
-  - извикване на произволен метод на родителския клас
+- The subclass can provide its own definition of a method from the parent class (*method overriding*)
+- The method signature in parent and subclass must be identical
+- The access modifier of the overriding method must match or widen the parent's modifier (it cannot be more restrictive)
+- The return type must be *compatible* with the overridden method's return type — identical, or a subtype for reference types (*return type covariance*)
+- Annotate the overriding method with `@Override` — the compiler will enforce the rules above
 
 ---
 
-### Ключовата дума `super`
+### The `super` Keyword
 
-- Неявно се подава като параметър на всеки конструктор и нестатичен метод на класа
-- Не нарушава енкапсулацията - през `super` може да достъпим само `public` и `protected` членове на родителския клас
+- A reference to the direct parent of the object
+- Used to:
+  - access a parent's field
+  - call a parent constructor from the current class's constructor
+  - invoke any method of the parent class
+- Does not break encapsulation — only `public` and `protected` members of the parent are accessible through `super`
 
 ---
 
-### Ключовата дума `super`
+### The `super` Keyword
 
 ```java
 public class Student extends Human {
@@ -469,13 +453,13 @@ public class Student extends Human {
     private int facultyNumber;
 
     public Student(String name, int facultyNumber) {
-        super(name); // извикване на родителския конструктор
+        super(name); // calls the parent constructor
         this.facultyNumber = facultyNumber;
     }
 
     public static void main(String[] args) {
         Student ivan = new Student("Ivan", 61786);
-        ivan.whoAmI(); // наследен от родителя метод
+        ivan.whoAmI(); // method inherited from Human
     }
 
 }
@@ -483,11 +467,11 @@ public class Student extends Human {
 
 ---
 
-### Йерархията от класове в Java
+### The Java Class Hierarchy
 
-- Всички класове в Java са (преки или косвени) наследници на класа `java.lang.Object`
-- Липсата на множествено наследяване означава, че всеки клас има точно един родител (с изключение на един-единствен клас,  `java.lang.Object`, който няма родител).
-- Следователно, йерархията от класове е дърво, с `java.lang.Object` в корена
+- All Java classes are (direct or indirect) subclasses of `java.lang.Object`
+- The absence of multiple inheritance means every class has exactly one parent (except `java.lang.Object` itself, which has none)
+- Therefore, the class hierarchy is a tree with `java.lang.Object` at the root
 
 ---
 
@@ -500,30 +484,32 @@ String toString()
 Object clone()
 ```
 
+Key methods every class inherits — override them to give your objects meaningful semantics.
+
 ---
 
 ### `equals()`
 
-- Трябва да го предефинираме, ако сравняваме два обекта за семантична (т.е. смислова) еднаквост, а не по референциите им (т.е. адреса им в паметта)
-- Например, две инстанции на клас `Student` смислово са еднакви (отговарят на един и същи студент), ако факултетните им номера са еднакви – без значение дали референциите са еднакви или не
+- Override it when you need to compare two objects for *semantic equality* (meaningful sameness), not reference equality (same memory address)
+- Example: two `Student` instances are semantically equal if their faculty numbers are equal — regardless of whether they are the same object in memory
 
 ---
 
 ### `hashCode()`
 
-- Трябва да го предефинираме, ако сме предефинирали `equals()`
-- При предефинирането на `hashCode()`, ако `equals()` връща `true`, `hashCode`-ът на съответните обекти трябва да е равен
-- Ако `hashCode`-ът на два обекта е равен, не е задължително `equals()` да връща `true`
+- Must be overridden whenever `equals()` is overridden
+- Contract: if `equals()` returns `true` for two objects, their `hashCode()` values must be equal
+- The converse is not required: equal hash codes do not imply `equals()` returns `true`
 
 ---
 
-### Операторът `instanceof`
+### The `instanceof` Operator
 
-- Използва се за type checking на референтните типове - дали даден обект е инстанция на даден клас
+- Used for type checking of reference types — tests whether a given object is an instance of a given class
 
 ---
 
-### Операторът `instanceof`
+### The `instanceof` Operator
 
 ```java
 Student ivan = new Student("Ivan", 61786);
@@ -538,19 +524,19 @@ System.out.println(petar instanceof Human);    // true
 int[] intArr = new int[2];
 System.out.println(intArr instanceof int[]);   // true
 
-// null is not an instance of anything: false for any class
-System.out.println(null instanceof AnyClass);
+// null is not an instance of anything
+System.out.println(null instanceof AnyClass);  // false for any class
 
-// true for any non-null ref, because any class extends java.lang.Object
+// true for any non-null reference, because every class extends java.lang.Object
 System.out.println(ref instanceof Object);
 ```
 
 ---
 
-### Pattern matching for `instanceof` (since Java 16)
+### Pattern Matching for `instanceof` (since Java 16)
 
 ```java
-// until now
+// before Java 16
 if (obj instanceof String) {
     int stringLength = ((String) obj).length();
 }
@@ -563,37 +549,65 @@ if (obj instanceof String s) {
 
 ---
 
-### Ключовата дума `final`
+### The `final` Keyword
 
-- в декларация на променлива → прави я константа
-- в декларация на метод → методът не може да се override-ва
-- в декларация на клас → класът не може да се наследява
-
----
-
-### Полиморфизъм
-
-- От гръцки: poly (много) + morphe (форма)
-- Дефиниция от биологията - съществуване на морфологично различни индивиди в границите на един вид
-- В контекста на ООП, *полиморфизъм* е способността на даден обект да се държи като инстанция на друг клас или като имплементация на друг интерфейс
+- on a variable declaration → makes it a constant (cannot be reassigned)
+- on a method declaration → the method cannot be overridden
+- on a class declaration → the class cannot be subclassed
 
 ---
 
-### Полиморфизъм
+### The `final` Keyword — Examples
 
-- ООП - наследниците на даден клас споделят поведение от родителския клас, но могат да дефинират и собствено поведение
-- Всички Java обекти са полиморфични, понеже всеки обект наследява `java.lang.Object` класа
+```java
+// final field: value set once (in constructor or at declaration)
+public class Circle {
+    private static final double PI = 3.14159265358979;
+    private final double radius;
+
+    public Circle(double radius) {
+        this.radius = radius; // set once; cannot be changed after
+    }
+}
+
+// final method: cannot be overridden by subclasses
+public class Parent {
+    public final void doSomething() { /* ... */ }
+}
+
+// final class: cannot be subclassed (e.g. java.lang.String)
+public final class ImmutablePoint {
+    private final int x;
+    private final int y;
+    // ...
+}
+```
 
 ---
 
-### Method overriding vs method overloading
+### Polymorphism
 
-- *Overriding* - класът-наследник предефинира поведението на класа-родител
-- *Overloading* - класът декларира методи с едно и също име и различен брой и/или тип параметри
+- From Greek: poly (many) + morphe (form)
+- Biological definition: the existence of morphologically distinct individuals within one species
+- In OOP, *polymorphism* is the ability of an object to behave as an instance of a different class or as an implementation of a different interface
 
 ---
 
-### Runtime полиморфизъм чрез method overriding
+### Polymorphism
+
+- In OOP, subclasses share behavior from the parent class but can also define their own behavior
+- All Java objects are polymorphic, because every object inherits `java.lang.Object`
+
+---
+
+### Method Overriding vs Method Overloading
+
+- *Overriding* — the subclass redefines the behavior of a method from the parent class
+- *Overloading* — the class declares multiple methods with the same name but different number and/or types of parameters
+
+---
+
+### Runtime Polymorphism via Method Overriding
 
 ```java
 public class Human {
@@ -613,7 +627,7 @@ public class Human {
 
 ---
 
-### Runtime полиморфизъм чрез method overriding
+### Runtime Polymorphism via Method Overriding
 
 ```java
 public class Student extends Human {
@@ -637,7 +651,7 @@ public class Student extends Human {
 
 ---
 
-### Compile-time полиморфизъм чрез method overloading
+### Compile-Time Polymorphism via Method Overloading
 
 ```java
 public class Human {
@@ -665,23 +679,23 @@ public class Main {
 
 ---
 
-### Method overriding vs method overloading
+### Method Overriding vs Method Overloading
 
 <br>
 
-|                                       | __Overloading__       | __Overriding__           |
-| :------------------------------------ | :-------------------- | :----------------------- |
-| Кога                                  | Compile-time          | Runtime                  |
-| Къде                                  | В същия клас          | В класовете - наследници |
-| Списък от аргументи                   | Различен              | Идентичен                |
-| Return type                           | Може да бъде различен | Съвместим                |
-| `static`, `private` и `final` методи  | Да                    | Не                       |
-| Свързване (binding)                   | Статично              | Динамично                |
-| Runtime performance                   | Better                |                          |
+|                                       | __Overloading__        | __Overriding__              |
+| :------------------------------------ | :--------------------- | :--------------------------- |
+| When                                  | Compile-time           | Runtime                      |
+| Where                                 | In the same class      | In subclasses                |
+| Parameter list                        | Different              | Identical                    |
+| Return type                           | Can differ             | Must be compatible           |
+| `static`, `private`, `final` methods  | Yes                    | No                           |
+| Binding                               | Static                 | Dynamic                      |
+| Runtime performance                   | Better                 |                              |
 
 ---
 
-### Non-polymorphic code
+### Non-Polymorphic Code
 
 ```java
 Student ivan = new Student("Ivan", 61786);
@@ -702,7 +716,7 @@ for (Object obj : objs) {
 
 ---
 
-### Non-polymorphic code
+### Non-Polymorphic Code
 
 ```java
 Student ivan = new Student("Ivan", 61786);
@@ -711,7 +725,7 @@ Human petar = new Student("Petar", 74451);
 Object[] objs = {ivan, petar};
 
 for (Object obj : objs) {
-    // instanceof and explicit casts are the "red lights"
+    // instanceof and explicit casts are "red flags" — prefer polymorphism
 *   if (obj instanceof Student) {
 *       ((Student) obj).whoAmI();
 *   } else if (obj instanceof Human) {
@@ -723,7 +737,23 @@ for (Object obj : objs) {
 
 ---
 
-### Polymorphic code
+### Non-Polymorphic Code — Modern Alternative
+
+With Java 16+ pattern matching you can at least avoid the explicit cast:
+
+```java
+for (Object obj : objs) {
+    if (obj instanceof Student s) {
+        s.whoAmI();
+    } else if (obj instanceof Human h) {
+        h.whoAmI();
+    }
+}
+```
+
+But this is still a code smell — prefer a common supertype and virtual dispatch.
+
+---
 
 ```java
 Human[] humans = {ivan, petar};
@@ -733,21 +763,21 @@ for (Human human : humans) {
 }
 ```
 <br>
-Полиморфният код е не само по-кратък и четим. Помислете как трябва да се променят двата фрагмента код, ако в бъдеще се появят нови класове – наследници на `Human`
+Polymorphic code is not only shorter and more readable. Think about how both code fragments would need to change if new subclasses of `Human` are introduced in the future.
 
 ---
 
-### Абстрактни класове
+### Abstract Classes
 
-- Дефинират се с модификатора `abstract`
-- Могат да имат методи без имплементация, които се декларират с модификатора `abstract`
-- Не са напълно дефинирани (оставят на наследниците си да ги конкретизират/допълнят) 
-    - не могат да се създават обекти от тях
-- Един клас не може да бъде едновременно `abstract` и `final` – защо?
+- Declared with the `abstract` modifier
+- Can contain methods without an implementation, declared with the `abstract` modifier
+- Are not fully defined — they leave completion to their subclasses
+    - therefore, abstract classes cannot be instantiated
+- A class cannot be both `abstract` and `final` — can you explain why?
 
 ---
 
-### Абстрактни класове - пример
+### Abstract Classes — Example
 
 ```java
 public abstract class Cat {
@@ -768,18 +798,18 @@ public class DomesticCat extends Cat {
 
 public class Leopard extends Cat {
     public void eat() {
-        System.out.println("I eat any prey.");   
+        System.out.println("I eat any prey.");
     }
 }
 ```
 
 ---
 
-### Интерфейси
+### Interfaces
 
-- Съвкупност от декларации на методи без имплементация
-- Описват формално поведение, без да го имплементират
-- Може да съдържат `static` `final` член-променливи == константи
+- A collection of method declarations without implementations
+- Formally describe behavior without implementing it
+- Can contain `static final` fields (constants)
 
 ---
 
@@ -812,61 +842,59 @@ public class Cat implements Animal {
 
 ---
 
-### Методи на интерфейсите
+### Interface Methods
 
-- Методите на интерфейсите са `public` и `abstract` по подразбиране
-- Модификаторите `public` и `abstract` (заедно или поотделно) могат да бъдат указани и експлицитно
-    - дали да бъдат експлицитно указани, е въпрос на стил - но е добре да сме консистентни
-- Тъй като методите са абстрактни, не могат да бъдат декларирани като `final`
-
----
-
-### Интерфейси и наследяване
-
-- Интерфейсите могат да се наследяват
-- Един интерфейс може да наследява множество интерфейси
+- Interface methods are `public` and `abstract` by default
+- The `public` and `abstract` modifiers may be stated explicitly — whether to do so is a style choice, but be consistent
+- Because they are abstract, interface methods cannot be declared `final`
 
 ---
 
-### Интерфейсите и имплементаците им
+### Interfaces and Inheritance
 
-- Интерфейсите не могат да се инстанцират
-- Можем да инстанцираме (конкретни) класове, които ги имплементират
-- Можем да присвояваме инстанция на клас на променлива от тип интерфейс, който класът имплементира
-- Можем да проверяваме с `instanceof` дали клас имплементира даден интерфейс
-- Един клас може да имплементира множество интерфейси
+- Interfaces can extend other interfaces
+- An interface can extend multiple interfaces
 
 ---
 
-### Интерфейси и имплементациите им
+### Interfaces and Their Implementations
 
-- Ако даден клас декларира, че имплементира интерфейс, той трябва или
-  - да даде дефиниции на *всичките* му методи, или
-  - да бъде деклариран като абстрактен
-- Като следствие, ако променим сигнатурата на метод(и) на интерфейса, или ако добавим нов(и) метод(и), трябва да променим и всички имплементиращи интерфейса класове
-- Това често е проблем, а понякога е и невъзможно (нямаме контрол върху всички имплементации)
-
----
-
-### Default методи в интерфейсите (от Java 8)
-
-- Default-ен метод в интерфейс е метод, който
-  - има имплементация
-  - има модификатора `default` в декларацията си
-- Имплементиращите класове имплицитно ползват default-ната имплементация на методите, но могат и да я предефинират
+- Interfaces cannot be instantiated
+- We can instantiate concrete classes that implement them
+- We can assign an instance of a class to a variable of an interface type that the class implements
+- We can use `instanceof` to check whether a class implements a given interface
+- A class can implement multiple interfaces
 
 ---
 
-### Default методи в интерфейсите (от Java 8)
+### Interfaces and Their Implementations
 
-- Клас може да имплементира произволен брой интерфейси
-- Ако два или повече от тях съдържат `default` метод с еднаква сигнатура, класът трябва задължително да предефинира този метод
-- В предефинирания метод може експлицитно да се укаже, default-ната имплементация от кой родителски интерфейс да се ползва. В този случай, синтаксисът е, `<имеНаИнтерфейс>.super.<имеНаDefaultМетод>()`
+- If a class declares that it implements an interface, it must either:
+  - provide implementations for *all* of its methods, or
+  - be declared abstract
+- Consequently, changing method signatures or adding new methods to an interface forces changes in all implementing classes
+- This is often a problem — sometimes even impossible when we have no control over all implementations
 
 ---
 
-### Default методи в интерфейсите (от Java 8)
+### Default Methods in Interfaces (since Java 8)
 
+- A default method in an interface:
+  - has an implementation
+  - is marked with the `default` modifier in its declaration
+- Implementing classes implicitly use the default implementation but may override it
+
+---
+
+### Default Methods in Interfaces (since Java 8)
+
+- A class may implement any number of interfaces
+- If two or more of them declare a `default` method with the same signature, the implementing class must override that method
+- The override may explicitly delegate to one of the parent interfaces using `<InterfaceName>.super.<methodName>()`
+
+---
+
+### Default Methods in Interfaces (since Java 8)
 
 ```java
 public interface OptimisticLockable {
@@ -881,9 +909,9 @@ public interface PessimisticLockable {
 }
 public class Door implements OptimisticLockable, PessimisticLockable {
 
-    // We will get a compile-time error, if we don't override the isLocked() method here:
-    // - "Door inherits unrelated defaults for isLocked() from types
-    //        OptimisticLockable and PessimisticOldLockable"
+    // Compile error without this override:
+    // "Door inherits unrelated defaults for isLocked() from types
+    //        OptimisticLockable and PessimisticLockable"
     @Override
     public boolean isLocked() {
         return OptimisticLockable.super.isLocked();
@@ -893,47 +921,74 @@ public class Door implements OptimisticLockable, PessimisticLockable {
 
 ---
 
-### Статични методи в интерфейсите (от Java 8)
+### Static Methods in Interfaces (since Java 8)
 
-- От Java 8, интерфейсите могат да съдържат и статични методи с имплементация
-- Една класическа употреба е, за *factory* методи (ще говорим за тях в лекцията за design patterns)
-
----
-
-### Private методи в интерфейсите (от Java 9)
-
-- От Java 9, интерфейсите могат да съдържат и `private` методи с имплементация
-- Изполват се, когато в интерфейса има два ли повече default-ни или статични метода, чиято имплементация частично се дублира
-    - тогава изнасяме повтарящия се код в `private` метод, за да предотвратим code duplication
+- From Java 8, interfaces can contain static methods with implementations
+- A classic use case is *factory* methods (covered in the Design Patterns lecture)
 
 ---
 
-### Интерфейсите - обобщение
+### Private Methods in Interfaces (since Java 9)
 
-- Интерфейсите могат да съдържат
-  - Публични, абстрактни методи без имплементация
-  - `static` `final` член-променливи == константи
-  - `default` и `static` методи с имплементация (от Java 8)
-  - `private` методи (от Java 9)
+- From Java 9, interfaces can contain `private` methods with implementations
+- Used when two or more default or static methods share duplicated logic
+    - the repeated code is extracted into a `private` method to avoid code duplication
 
 ---
 
-### Интересни частни случаи на интерфейси
+### Interfaces — Summary
 
-- Интерфейс, който
-    - не съдържа нито един метод, се нарича *маркерен*
-    - има точно един публичен абстрактен метод, се нарича *функционален*
-
----
-
-### Абстракция
-
-- Абстракция означава, моделирайки в обектно-ориентиран език за програмиране обекти от реалния или виртуалния свят, да се ограничим само до съществените им за конкретната задача характеристики и да се абстрахираме (пропуснем) в модела несъществените или нерелевантни за задачата
-    - Пример: моделирайки студент, да го характеризираме само с име и факултетен номер, абстрахирайки се от всички други характеристики на студента в реалния свят (напр. цвят на очите)
+Interfaces can contain:
+- Public abstract methods without implementations
+- `static final` fields (constants)
+- `default` and `static` methods with implementations (since Java 8)
+- `private` methods (since Java 9)
 
 ---
 
-### Абстракция
+### Special Interface Variants
 
-- Абстракция също означава да работим с нещо, което знаем как да използваме, без да знаем как работи вътрешно. Всяка конкретна имплементация на поведение е скрита в своя обект, за външния свят е видимо само поведението (т.е. интерфейсът)
-- Принципът за абстракция се постига в Java чрез интерфейси и абстрактни класове
+- An interface that:
+    - contains no methods is called a *marker interface*
+    - has exactly one public abstract method is called a *functional interface*
+
+---
+
+### Abstraction
+
+- Abstraction means: when modelling real-world or virtual objects in an OOP language, focus only on the characteristics that matter for the specific problem and ignore the rest
+    - Example: when modelling a student, represent them with just a name and faculty number, abstracting away all other real-world attributes (e.g. eye colour)
+
+---
+
+### Abstraction
+
+- Abstraction also means working with something we know *how to use* without knowing how it works internally. Each concrete implementation of behavior is hidden inside its object; only the behavior (i.e., the interface) is visible to the outside world
+- In Java, the abstraction principle is achieved through interfaces and abstract classes
+
+---
+
+### Records (since Java 16)
+
+- A `record` is a special, concise class for immutable data carriers
+- The compiler auto-generates: constructor, `getters`, `equals()`, `hashCode()`, `toString()`
+- Use when a class only holds data with no non-trivial behaviour
+
+```java
+public record Point(double x, double y) { }
+
+// Equivalent to a regular class with two final fields,
+// all-args constructor, accessors, equals, hashCode, and toString.
+
+Point p = new Point(3.0, 4.0);
+System.out.println(p.x());   // 3.0
+System.out.println(p);       // Point[x=3.0, y=4.0]
+```
+
+---
+
+### Where to Go Next
+
+- [Effective Java — Joshua Bloch](https://www.oreilly.com/library/view/effective-java-3rd/9780134686097/) — Chapter 4 (Classes and Interfaces)
+- [Head First Design Patterns](https://www.oreilly.com/library/view/head-first-design/0596007124/) — Introduction
+- [Java documentation: Interfaces and Inheritance](https://docs.oracle.com/javase/tutorial/java/IandI/index.html)

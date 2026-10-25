@@ -1,6 +1,6 @@
-# Качествен (Clean) Code
+# Clean Code
 
-03.11.2021
+2021-11-03
 
 <p align="center">
   <img width="80%" src="images/04.1-clean-code-zen.png" />
@@ -8,7 +8,7 @@
 
 ---
 
-### Как мерим качеството на кода?
+### How do we measure code quality?
 
 <p align="center">
   <img width="50%" src="images/04.2-wtfs-per-min.png" />
@@ -16,90 +16,90 @@
 
 ---
 
-### Принципи на чистия код - именуване, конвенции и добри практики
+### Clean Code Principles — Naming, Conventions & Best Practices
 
-- Имената на пакети, класове, интерфейси, член-променливи, методи, локални променливи трябва да са говорещи и да спазват установените конвенции
+- Package, class, interface, field, method, and local variable names must be meaningful and follow established conventions.
 
 ---
 
-### Принципи на чистия код - именуване, конвенции и добри практики
+### Clean Code Principles — Naming, Conventions & Best Practices
 
-- пакети
-    - само малки букви, със смислена йерархия
+- Packages
+    - lowercase only, with a meaningful hierarchy
     - `bg.sofia.uni.fmi.mjt`
-- класове, абстрактни класове, интерфейси, enums, records
-    - съществителни, започващи с главна буква (upper camel case)
+- Classes, abstract classes, interfaces, enums, records
+    - nouns starting with an uppercase letter (upper CamelCase)
         - `Student`, `GameBoard`
-        - имената на интерфейси често са отглаголни съществителни
+        - interface names are often gerunds or adjectives
             - `Cloneable`, `Comparable`, `Runnable`, `Serializable`
 
 ---
 
-### Принципи на чистия код - именуване, конвенции и добри практики
+### Clean Code Principles — Naming, Conventions & Best Practices
 
-- методи
-    - глаголи, започващи с малка буква (camel case), без подчертавки
+- Methods
+    - verbs starting with a lowercase letter (camelCase), no underscores
         - `reverseString()`, `calculateSalary()`
-- променливи
-    - започващи с малка буква (camel case), без подчертавки
+- Variables
+    - start with a lowercase letter (camelCase), no underscores
         - `itemsCount`
-- константи
-    - all-caps, с подчертавки между думите
+- Constants
+    - ALL_CAPS with underscores between words
         - `MAX_NAME_LENGTH`
 
 ---
 
-### Принципи на чистия код - Спазвай ООП принципите
+### Clean Code Principles — Follow OOP Principles
 
-- Енкапсулация
-    - Свеждай публичните части до минимум
-- Наследяване
-    - Не допускай code duplication
-
----
-
-### Принципи на чистия код - Спазвай ООП принципите
-
-- Полиморфизъм
-    - Ползвай полиморфизъм винаги, когато е възможно
-    - Използвай интерфейс за декларация, конкретна имплементация за инициализация
-    - Предпочитай интерфейс вместо имплементация в сигнатурите на публичните ти методи
+- Encapsulation
+    - Minimise the public surface area
+- Inheritance
+    - Do not allow code duplication
 
 ---
 
-### Стреми се към хубав ОО дизайн
+### Clean Code Principles — Follow OOP Principles
 
-- Използвай само по изключение пакета по подразбиране
-- Един клас трябва да прави едно нещо
-    - Ако имаш "and" в името на класа, вероятно не е така
-- Ако имаш "Helper", "Manager", "Utility" в името, *може би* има по-добър дизайн
-- Един метод трябва да прави едно нещо
-- Методът трябва да е кратък: < 20 реда код
+- Polymorphism
+    - Use polymorphism whenever possible
+    - Declare with an interface, initialise with a concrete implementation
+    - Prefer interfaces over implementations in public method signatures
 
 ---
 
-### Стреми се към хубав ОО дизайн
+### Strive for Good OO Design
 
-- Ако имаш "and" в името на метод, може би той прави повечко неща: раздели го на няколко
-- Ако имаш много параметри на метод:
-      - може би не му е мястото в този клас (а там, откъдето се взимат стойностите за тези параметри)
-      - или трябва да направиш *data object* / `record`, който да групира семантично свързаните от тях
-- Не злоупотребявай със `static`
-
----
-
-### Принципи на чистия код - форматирай
-
-- Форматирай си кода
-- Нямаш никакво оправдание да не го правиш: има IDE shortcuts
-      - Ctrl+Alt+L (IntelliJ)
-      - Ctrl+Shift+F (Eclipse)
+- Use the default package only as an exception
+- A class should do one thing
+    - If the class name contains "and", it probably does more
+- If a name contains "Helper", "Manager", or "Utility", there *might* be a better design
+- A method should do one thing
+- Methods should be short: < 20 lines of code
 
 ---
 
-### Не използвай "magic numbers"
+### Strive for Good OO Design
 
-Вместо "магически числа" в кода, ползвай подходящо именувани константи
+- If a method name contains "and", it probably does too much — split it
+- If a method has many parameters:
+    - it might belong in a different class (the one that provides those values), or
+    - group semantically related parameters into a *data object* / `record`
+- Do not overuse `static`
+
+---
+
+### Clean Code Principles — Format Your Code
+
+- Format your code consistently
+- There is no excuse not to — IDE shortcuts exist:
+    - Ctrl+Alt+L (IntelliJ)
+    - Ctrl+Shift+F (Eclipse)
+
+---
+
+### Do Not Use Magic Numbers
+
+Replace "magic numbers" in code with appropriately named constants.
 
 <br>
 
@@ -125,7 +125,7 @@ if (message.startsWith(ERROR_MESSAGE_PREFIX)) { /* do something */ }
 
 ---
 
-### Принципи на чистия код
+### Clean Code Principles
 
 ```java
 // Bad
@@ -136,8 +136,8 @@ if (x % 2 == 0)
 <br>
 
 ```java
-// Good: Винаги ограждай в блок телата на if-else и цикли,
-// дори да са с по един statement
+// Good: always wrap if-else and loop bodies in braces,
+// even when they contain a single statement
 if (x % 2 == 0) {
     return x / 2;
 }
@@ -145,7 +145,7 @@ if (x % 2 == 0) {
 
 ---
 
-### Принципи на чистия код
+### Clean Code Principles
 
 ```java
 // Bad
@@ -154,17 +154,16 @@ public int calculateSalary()
 
 }
 
-// Good: отварящата фигурна скоба на блок не стои на отделен ред
-// Изключение: initializer блоковете
+// Good: opening brace stays on the same line as the declaration
+// Exception: initializer blocks
 public int calculateSalary() {
 
 }
-
 ```
 
 ---
 
-### Принципи на чистия код
+### Clean Code Principles
 
 ```java
 // Bad
@@ -181,14 +180,15 @@ private static long calculateSum(int n){
 
 ---
 
-### Принципи на чистия код
+### Clean Code Principles
 
 ```java
-// Good: 1. Не "залепвай" if, for, do, while, switch с последващата (
-//       2. Не "залепвай" списъка с параметри на метод с последващата {
-//       3. Не "залепвай" операторите към операндите
-//       4. Оставяй интервал след ,
-//       5. Оставяй празни редове ("въздух")
+// Good:
+// 1. Space between keywords (if, for, while, do, switch) and the opening (
+// 2. Space between method name and the opening (
+// 3. Spaces around operators
+// 4. Space after ,
+// 5. Blank lines for breathing room
 private static long calculateSum(int n) {
     long sumOfOddSquares = 0;
 
@@ -200,12 +200,11 @@ private static long calculateSum(int n) {
 
     return sumOfOddSquares;
 }
-
 ```
 
 ---
 
-### Принципи на чистия код
+### Clean Code Principles
 
 ```java
 // Bad
@@ -218,37 +217,37 @@ if (x % 2 == 0) {
 <br>
 
 ```java
-// Good: Изразявай се кратко. Малко код == малко бъгове
+// Good: be concise. Less code == fewer bugs
 return x % 2 == 0;
 ```
 
 ---
 
-### Принципи на чистия код
+### Clean Code Principles
 
-- Слагай коментари, без да прекаляваш
-      - Хубавият код е self-explanatory, и все пак, на места си трябва коментар
+- Add comments, but do not overdo it
+    - Good code is self-explanatory; a comment is only needed where the **why** is non-obvious
 
 ---
 
-### Принципи на чистия код
+### Clean Code Principles
 
-- Разделяй нормалната логика от exception логиката
-- Ползвай изключения вместо error codes и печатане на съобщения в конзолата
-- Подавай точен и разбираем message, когато конструираш и хвърляш изключение
-- Когато създаваш твой (*custom*) клас за изключение, override-вай non-default конструкторите
+- Separate normal logic from exception-handling logic
+- Use exceptions instead of error codes and console error messages
+- Provide a precise, understandable message when constructing and throwing an exception
+- When creating a custom exception class, override the non-default constructors:
 
   ```java
   Exception(String message)
   Exception(String message, Throwable cause)
   ```
 
-- Не suppress-вай / swallow-вай exceptions
-      - Никога не оставяй празен `catch`, или `catch` само с `e.printStackTrace()`
+- Never suppress / swallow exceptions
+    - Never leave a `catch` block empty, or with only `e.printStackTrace()`
 
 ---
 
-### Принципи на чистия код
+### Clean Code Principles
 
 ```java
 // Bad
@@ -265,18 +264,18 @@ try {
 
 ---
 
-### Принципи на чистия код
+### Clean Code Principles
 
 ```java
 // Good
 try {
     // do something with the file system
 } catch (FileNotFoundException e) {
-    // catalog file is missing -
+    // catalog file is missing —
     // this is OK, first access should create an empty catalog
     createEmptyShoppingCatalog();
 } catch (IOException e) {
-    // catalog file is there but cannot be opened or read
+    // catalog file is there but cannot be opened or read;
     // calling method knows how to handle this
     throw new ShoppingException("Cannot load shopping catalog", e);
 }
@@ -284,15 +283,15 @@ try {
 
 ---
 
-### Разделяй I/O логиката от *бизнес* логиката
+### Separate I/O Logic from *Business* Logic
 
 ```java
-// Bad
-public static void factorial() { // swiss knife: all-in-one
+// Bad — swiss knife: all in one
+public static void factorial() {
     Scanner sc = new Scanner(System.in);
     int n = -1; long result = 1;
     do {
-        System.out.println("Въведи число:");
+        System.out.println("Enter a number:");
         try {
             n = Integer.parseInt(sc.nextLine());
         } catch (Exception e) {
@@ -311,14 +310,14 @@ public static void main(String... args) {
 
 ---
 
-### Разделяй I/O логиката от *бизнес* логиката
+### Separate I/O Logic from *Business* Logic
 
 ```java
 // Good
 private static int readAndValidate(Scanner sc) { // handle input
     int n = -1;
     do {
-        System.out.println("Въведи число:");
+        System.out.println("Enter a number:");
         try {
             n = Integer.parseInt(sc.nextLine());
         } catch (Exception e) {
@@ -335,7 +334,7 @@ private static void printOutput(long result) { // handle output
 
 ---
 
-### Разделяй I/O логиката от *бизнес* логиката
+### Separate I/O Logic from *Business* Logic
 
 ```java
 // Good
@@ -356,10 +355,10 @@ public static void main(String... args) {
 
 ---
 
-### Java код конвенции
+### Java Code Conventions
 
-Запознай се с цялостна Java код конвенция и се придържай към нея.
-Две от най-популярните:
+Get familiar with a comprehensive Java code convention and follow it.
+Two of the most popular:
 
 <br>
 
@@ -375,15 +374,15 @@ public static void main(String... args) {
 
 ---
 
-### Инструменти за статичен код анализ
+### Static Code Analysis Tools
 
-- Има инструменти за статичен код анализ, които
-      - автоматизират придържането към код конвенции
-      - намират и бъгове
+- There are tools for static code analysis that:
+    - automate adherence to code conventions
+    - also find bugs
 
 ---
 
-### Най-популярните open-source инструменти
+### Most Popular Open-Source Tools
 
 - [checkstyle](http://checkstyle.sourceforge.net/index.html)<br>
 - [PMD](https://pmd.github.io/)<br>
@@ -403,7 +402,7 @@ public static void main(String... args) {
 
 ---
 
-### Библията
+### The Bible
 
 ![Clean Code](images/04.5-clean-code.png)
 
@@ -418,9 +417,9 @@ public static void main(String... args) {
 
 ---
 
-## Структури от данни
+## Data Structures
 
-03.11.2021
+2021-11-03
 
 <p align="center">
   <img width="55%" src="images/04.6-collections.png" />
@@ -428,63 +427,63 @@ public static void main(String... args) {
 
 ---
 
-## Структури от данни
+## Data Structures
 
-- Хранилища за данни
-- Основни операции
-    - добавяне
-    - триене
-    - търсене
-    - обхождане
-
----
-
-### Масиви - предимства
-
-- пределно прост "интерфейс"
-- най-ефективни от гледна точка на използвана памет*
-- бърз достъп на елемент по индекс: O(1)
+- Containers for data
+- Core operations:
+    - add
+    - remove
+    - search
+    - traverse
 
 ---
 
-### Масиви - недостатъци
+### Arrays — Advantages
 
-- размерът им е фиксиран при инициализацията
-- добавянето или изтриването на елемент (с изключение на последна позиция) е скъпа операция
-- търсенето на елемент по стойност е бавно:
-      - О(N) за произволен масив
-      - O(logN) за сортиран масив
+- Extremely simple interface
+- Most memory-efficient of all data structures*
+- Fast element access by index: O(1)
 
 ---
 
-### Колекции
+### Arrays — Disadvantages
 
-- Java предоставя т.нар. collections framework, съдържащ интерфейси, имплементации и алгоритми върху най-използваните структури от данни
-- За разлика от масивите,
-      - размерът им е динамичен
-      - съдържат само референтни типове
-- Всички* интерфейси и класове се намират в пакета `java.util`
-
----
-
-### Колекции
-
-Някои ползи от наличието на collections framework:
-
-- Не се налага да преоткриваме топлата вода
-- Увеличават се скоростта и качеството на програмите ни
-- Стимулира се преизползването на код
+- Size is fixed at initialisation
+- Adding or removing an element (except at the last position) is expensive
+- Searching by value is slow:
+    - O(N) for an arbitrary array
+    - O(log N) for a sorted array
 
 ---
 
-### Итератори
+### Collections
 
-- Итераторите предоставят унифициран начин за обхождане на елементите на дадена колекция.
-- Колекциите (както и масивите) могат да се обхождат с for-each loop
+- Java provides a *collections framework* containing interfaces, implementations, and algorithms for the most commonly used data structures
+- Unlike arrays:
+    - their size is dynamic
+    - they hold only reference types
+- Almost all* interfaces and classes are in the `java.util` package
 
 ---
 
-### Интерфейси `Iterator` и `Iterable`
+### Collections
+
+Benefits of the collections framework:
+
+- No need to reinvent the wheel
+- Increased speed and quality of our programs
+- Encourages code reuse
+
+---
+
+### Iterators
+
+- Iterators provide a uniform way to traverse the elements of a collection.
+- Collections (and arrays) can be traversed with a for-each loop.
+
+---
+
+### `Iterator` and `Iterable` Interfaces
 
 ```java
 public interface Iterator<E> {
@@ -502,20 +501,20 @@ public interface Iterable<T> {
 
 ### `java.util.Iterator`
 
-- Методът `remove()` премахва от колекцията елемента, последно върнат от `next()`
-- Ако колекцията бъде модифицирана докато бъде итерирана, по какъвто и да е начин, различен от извикване на `remove()` на итератора, поведението на итератора е недефинирано
-    - В частност, може да се хвърли `ConcurrentModificationException` (дори в еднонишков код)
+- `remove()` removes from the collection the element last returned by `next()`
+- If the collection is modified while being iterated in any way other than calling `remove()` on the iterator, the iterator's behaviour is undefined
+    - In particular, `ConcurrentModificationException` may be thrown (even in single-threaded code)
 
 ---
 
-### Колекции
+### Collections
 
-Основните структури от данни, използвани в имплементациите на колекциите, са
+The fundamental data structures used by collection implementations are:
 
-- Масиви
-- Свързани списъци
-- Хеш таблици
-- Дървета
+- Arrays
+- Linked lists
+- Hash tables
+- Trees
 
 <p align="center">
   <img width="40%" src="images/04.7-basic-data-structures.png" />
@@ -524,7 +523,6 @@ public interface Iterable<T> {
 ---
 
 ### Big-O Complexity Chart
-
 
 [![Big-O Complexity Chart](images/04.7.1-big-o-chart.jpeg)](https://www.bigocheatsheet.com/)
 
@@ -535,28 +533,28 @@ public interface Iterable<T> {
 
 ---
 
-### Колекции
+### Collections
 
 ![Collection diagrams](images/04.8-collections-diagram.png)
 
 ---
 
-### Колекции
+### Collections
 
 ![Map hierarchy](images/04.9-java-map-hierarchy.png)
 
 ---
 
-### Обхождане на колекции
+### Traversing Collections
 
 ```java
-List<Float> nums = Arrays.asList(4.999f, 0.271f, 7.1f, -1f);
+List<Float> nums = List.of(4.999f, 0.271f, 7.1f, -1f);
 ```
 
 <br>
 
 ```java
-// чрез for-each loop
+// using a for-each loop
 for (float current : nums) {
     System.out.printf("%.2f%n", current);
 }
@@ -565,7 +563,7 @@ for (float current : nums) {
 <br>
 
 ```java
-// чрез итератор
+// using an iterator
 Iterator<Float> iterator = nums.iterator();
 while (iterator.hasNext()) {
     System.out.printf("%.2f%n", iterator.next());
@@ -574,25 +572,25 @@ while (iterator.hasNext()) {
 
 ---
 
-### Обхождане на `Map`
+### Traversing a `Map`
 
-Според това какво ни е нужно, може да вземем от `Map`-a:
+Depending on what we need, we can retrieve from a `Map`:
 
-- множеството от ключовете
+- the set of keys
 ```java
 Set<Integer> keys = map.keySet();
 ```
 
 <br>
 
-- колекция от стойностите
+- a collection of values
 ```java
 Collection<String> values = map.values();
 ```
 
 <br>
 
-- множество от двойките ключ-стойност
+- a set of key-value pairs
 ```java
 Set<Entry<Integer, String>> s = map.entrySet();
 ```
@@ -638,16 +636,16 @@ List<E> subList(int fromIndex, int toIndex)
 
 ---
 
-### Имплементации на `List`
+### `List` Implementations
 
-- `ArrayList` - resize-ващ се (динамичен) масив
-- `LinkedList` - двойно свързан списък
-- `Vector` - resize-ващ се (динамичен) масив. Synchronized. Legacy → замества се от `ArrayList`
-- `Stack` - наследява Vector. Legacy → замества се от `Dequeue`
+- `ArrayList` — resizable (dynamic) array
+- `LinkedList` — doubly linked list
+- `Vector` — resizable array, synchronized. Legacy → replaced by `ArrayList`
+- `Stack` — extends `Vector`. Legacy → replaced by `Deque`
 
 ---
 
-### Алгоритмична сложност на основните операции
+### Algorithmic Complexity of Core Operations
 
 ![ListComplexities](images/04.10-listperformance.png)
 
@@ -655,24 +653,23 @@ List<E> subList(int fromIndex, int toIndex)
 
 ### `java.util.Queue`
 
-
-| Операция | хвърля изключение   | връща специална стойност |
-|:---------|:--------------------|:-------------------------|
-| Insert   | `add(e)`            | `offer(e)`               |
-| Remove   | `remove()`          | `poll()`                 |
-| Examine  | `element()`         | `peek()`                 |
+| Operation | Throws exception | Returns special value |
+|:---------|:-----------------|:----------------------|
+| Insert   | `add(e)`         | `offer(e)`            |
+| Remove   | `remove()`       | `poll()`              |
+| Examine  | `element()`      | `peek()`              |
 
 ---
 
-### Имплементации на `Queue`
+### `Queue` Implementations
 
-- `PriorityQueue` - heap (пирамида)
+- `PriorityQueue` — heap
 - `LinkedList`
-- `ArrayDeque` - resize-ващ се (динамичен) масив
+- `ArrayDeque` — resizable (dynamic) array
 
 ---
 
-### Алгоритмична сложност на основните операции
+### Algorithmic Complexity of Core Operations
 
 ![QueueComplexities](images/04.11-queueperformance.png)
 
@@ -691,19 +688,19 @@ Object[] toArray()
 
 ---
 
-### Имплементации на `Set`
+### `Set` Implementations
 
-- `TreeSet` - `TreeMap`. Червено-черно дърво
-- `HashSet` - хеш таблица
-- `LinkedHashSet` - хеш таблица + двойно свързан списък
-- `EnumSet` - битов масив
+- `TreeSet` — backed by `TreeMap` (red-black tree)
+- `HashSet` — hash table
+- `LinkedHashSet` — hash table + doubly linked list
+- `EnumSet` — bit array
 
 ---
 
-### Конструктори на `HashSet`
+### `HashSet` Constructors
 
 ```java
-HashSet(); // default initial capacity (16) and load factor (0.75).
+HashSet(); // default initial capacity (16) and load factor (0.75)
 HashSet(Collection<? extends E> c);
 HashSet(int initialCapacity);
 HashSet(int initialCapacity, float loadFactor);
@@ -711,7 +708,7 @@ HashSet(int initialCapacity, float loadFactor);
 
 ---
 
-### Конструктори на `TreeSet`
+### `TreeSet` Constructors
 
 ```java
 TreeSet(); // natural ordering
@@ -724,27 +721,26 @@ TreeSet(SortedSet<E> s);
 
 ### `java.lang.Comparable` vs `java.util.Comparator`
 
-
 ```java
-// естествена подредба
+// natural ordering
 public interface Comparable<T> {
-    public int compareTo(T o);
+    int compareTo(T o);
 }
 
 public interface Comparator<T> {
-    public int compare(T o1, T o2);
+    int compare(T o1, T o2);
 }
 ```
 
 ---
 
-### Консистентност на естествената подредба с `equals()`
+### Consistency of Natural Ordering with `equals()`
 
-Естествената подредба на клас С се нарича *консистентна с `equals()`*, ако и само ако
-`e1.compareTo(e2) == 0` има същата булева стойност като `e1.equals(e2)`, за всеки два обекта e1 и е2 на С.
+The natural ordering of class C is called *consistent with `equals()`* if and only if
+`e1.compareTo(e2) == 0` has the same boolean value as `e1.equals(e2)` for every two objects e1 and e2 of C.
 
 <br>
-Силно препоръчително е (макар и не задължително) естествената подредба да бъде консистентна с `equals()`.
+It is strongly recommended (though not required) that natural orderings be consistent with `equals()`.
 
 ---
 
@@ -761,17 +757,17 @@ Collections.addAll(sc, 'a', 'b', 'j');
 
 ---
 
-### Алгоритмична сложност на основните операции
+### Algorithmic Complexity of Core Operations
 
 <p align="center">
   <img width="80%" src="images/04.12-setperformance.png" />
 </p>
 
-<small>*h* - капацитет на хеш таблицата</small>
+<small>*h* — capacity of the hash table</small>
 
 ---
 
-### Операции над множества със `Set`
+### Set Operations with `Set`
 
 ```java
 Set<String> one = new HashSet<>();
@@ -796,8 +792,8 @@ difference.removeAll(two); // difference = [bar]
 ### `java.util.Map`
 
 ```java
-V put(K key, V value) // Добавя двойка key-value. Ако има вече такъв ключ в Map-а,
-                      // променя само value-то, и връща старото value като резултат
+V put(K key, V value) // Adds a key-value pair. If the key already exists,
+                      // updates the value and returns the old value.
 V get(Object key)
 V remove(Object key)
 boolean containsKey(Object key)
@@ -809,29 +805,29 @@ Collection<V> values()
 
 ---
 
-### Имплементации на `Map`
+### `Map` Implementations
 
-- `HashMap` - хеш таблица
-- `LinkedHashMap` - хеш таблица + двойно свързан списък
-- `EnumMap` - битов масив
-- `TreeMap` - червено-черно дърво
+- `HashMap` — hash table
+- `LinkedHashMap` — hash table + doubly linked list
+- `EnumMap` — bit array
+- `TreeMap` — red-black tree
 
 ---
 
-### Алгоритмична сложност на основните операции
+### Algorithmic Complexity of Core Operations
 
 <p align="center">
   <img width="80%" src="images/04.13-mapperformance.png" />
 </p>
 
-<small>*h* - капацитет на хеш таблицата</small>
+<small>*h* — capacity of the hash table</small>
 
 ---
 
-### Колекции с наредба vs. Колекции без наредба
+### Ordered vs. Unordered Collections
 
-- `TreeMap`/`TreeSet` - червено-черни дървета. Запазват естествена наредба. Елементите трябва да имплементират интерфейса `Comparable` (или да се подава имплементация на `Comparator`). Логаритмична сложност за повечето операции
-- `HashMap`/`HashSet` - хеш таблици. Нямат естествена наредба. Елементите трябва да имплементират методите `hashCode()` и `equals()`. Константна сложност за повечето операции
+- `TreeMap`/`TreeSet` — red-black trees. Maintain natural ordering. Elements must implement `Comparable` (or a `Comparator` must be supplied). Logarithmic complexity for most operations.
+- `HashMap`/`HashSet` — hash tables. No natural ordering. Elements must implement `hashCode()` and `equals()`. Constant complexity for most operations.
 
 ---
 
@@ -843,7 +839,7 @@ Collection<V> values()
 
 ---
 
-### Принципи на чистия код - ползвай интерфейс за декларация и конкретен клас за инициализация
+### Clean Code Principles — Declare with Interface, Initialise with Concrete Class
 
 ```java
 // Bad
@@ -861,9 +857,9 @@ public Collection<Integer> filterPrimes(Collection<Integer>);
 
 ---
 
-### Колекции - операции
+### Collections — Operations
 
-Сортиране
+Sorting
 
 ```java
 List<Integer> nums = new ArrayList<>();
@@ -882,12 +878,12 @@ Collections.sort(nums, Collections.reverseOrder());
 
 ---
 
-### Колекции - операции
+### Collections — Operations
 
-Търсене: `indexOf()`, `binarySearch()`
+Searching: `indexOf()`, `binarySearch()`
 
 ```java
-List<Integer> nums = Arrays.asList(4, 9, 0, 7, -1);
+List<Integer> nums = new ArrayList<>(List.of(4, 9, 0, 7, -1));
 
 // nums = [4, 9, 0, 7, -1]
 int index = nums.indexOf(7);
@@ -900,12 +896,12 @@ index = Collections.binarySearch(nums, -1);
 
 ---
 
-### Колекции - операции
+### Collections — Operations
 
-Разбъркване: `shuffle()`
+Shuffling: `shuffle()`
 
 ```java
-List<Integer> nums = Arrays.asList(4, 9, 0, 7, -1);
+List<Integer> nums = new ArrayList<>(List.of(4, 9, 0, 7, -1));
 
 // nums = [4, 9, 0, 7, -1]
 Collections.shuffle(nums);
@@ -914,9 +910,9 @@ Collections.shuffle(nums);
 
 ---
 
-### Колекции - операции
+### Collections — Operations
 
-Манипулации: `copy()`, `fill()`, `reverse()`, `swap()`
+Manipulation: `copy()`, `fill()`, `reverse()`, `swap()`
 
 ```java
 List<String> from = new ArrayList<>();
@@ -944,9 +940,9 @@ Collections.fill(list, "a");
 
 ---
 
-### Колекции - операции
+### Collections — Operations
 
-Манипулация `copy()`, `fill()`, `reverse()`, `swap()`
+Manipulation: `copy()`, `fill()`, `reverse()`, `swap()`
 
 ```java
 List<String> list = new ArrayList<>();
@@ -963,9 +959,9 @@ Collections.swap(list, 0, 1);
 
 ---
 
-### Колекции - операции
+### Collections — Operations
 
-Статистики: `min()`, `max()`, `frequency()`
+Statistics: `min()`, `max()`, `frequency()`
 
 ```java
 Set<Integer> nums = Set.of(4, 9, 0, 7, -1);
@@ -977,7 +973,7 @@ int frequency = Collections.frequency(nums, 7); // 1
 
 ---
 
-### Намиране на всички уникални думи от дадено множество
+### Finding All Unique Words from a Given Set
 
 ```java
 public class FindDistinctWords {
@@ -1004,7 +1000,7 @@ $ javac FindDistinctWords.java && \
 
 ---
 
-### Премахване на елементи на колекция при итериране
+### Removing Elements from a Collection While Iterating
 
 ```java
 private static void filter(Collection<String> collection) {
@@ -1030,21 +1026,21 @@ filter(words);
 
 ---
 
-### Immutable vs. Unmodifiable колекции
+### Immutable vs. Unmodifiable Collections
 
-- Колекции, които не поддържат модифициращи операции (като `add`, `remove` и `clear`) се наричат *unmodifiable*. Колекциите, които не са *unmodifiable*, са *modifiable*.
+- Collections that do not support modifying operations (such as `add`, `remove`, and `clear`) are called *unmodifiable*. Collections that are not *unmodifiable* are *modifiable*.
 
-- Колекции, които в допълнение гарантират, че не са възможни никакви промени в съдържанието им, се наричат *immutable*. Колекциите, които не са *immutable*, са *mutable*.
+- Collections that additionally guarantee that no changes to their contents are possible are called *immutable*. Collections that are not *immutable* are *mutable*.
 
-- Една *unmodifiable* колекция не е непременно *immutable*. Ако съдържаните в нея елементи са *mutable*, цялата колекция е очевидно *mutable*, въпреки че е *unmodifiable*
-    - Ако обаче една *unmodifiable* колекция съдържа само *immutable* елементи, тя самата може да се счита за *ефективно immutable*.
+- An *unmodifiable* collection is not necessarily *immutable*. If the contained elements are *mutable*, the whole collection is obviously *mutable* even though it is *unmodifiable*.
+    - However, if an *unmodifiable* collection contains only *immutable* elements, it can be considered *effectively immutable*.
 
 ---
 
-### Unmodifiable колекции
+### Unmodifiable Collections
 
 ```java
-// static factory методи за създаване на unmodifiable колекции (от Java 9)
+// static factory methods for creating unmodifiable collections (since Java 9)
 
 List<String> list = List.of("Java", "rulez");
 
@@ -1063,34 +1059,34 @@ cities = Map.ofEntries(
 
 ---
 
-### Unmodifiable колекции
+### Unmodifiable Collections
 
 ```java
 Set<String> namesSet = new HashSet<>();
 namesSet.add("Paul");
 namesSet.add("Anna");
 
-// static factory методи за създаване на unmodifiable колекции като копие на колекции (от Java 10).
-// Последващи промени в оригиналната колекция не се отразяват на копията ѝ.
+// static factory methods for creating unmodifiable copies (since Java 10)
+// Subsequent changes to the original collection are not reflected in the copies.
 
 Set<String> moreNamesYet = Set.copyOf(namesSet);
 List<String> copiedNames = List.copyOf(namesSet);
 Map<String, Integer> map = Map.copyOf(cities);
 
-moreNamesYet.add("Nicky"); // will throw UnsupportedOperationException at runtime
+moreNamesYet.add("Nicky"); // throws UnsupportedOperationException at runtime
 ```
 
 ---
 
-### Unmodifiable колекции
+### Unmodifiable Collections
 
 ```java
 Set<String> namesSet = new HashSet<>();
 namesSet.add("Paul");
 namesSet.add("Anna");
 
-// static factory методи за създаване на unmodifiable view на колекция (от Java 9).
-// Последващи промени в оригиналната колекция се отразяват на / "виждат" през view-тата ѝ.
+// static factory methods for creating an unmodifiable view (since Java 9)
+// Subsequent changes to the original collection ARE reflected through the view.
 
 Set<String> namesAgain = Collections.unmodifiableSet(namesSet);
 
@@ -1098,13 +1094,21 @@ namesSet.add("Martin");
 
 System.out.println(namesAgain.contains("Martin")); // true
 
-namesAgain.add("Nicky"); // will throw UnsupportedOperationException at runtime
+namesAgain.add("Nicky"); // throws UnsupportedOperationException at runtime
 ```
 
 ---
 
-### Unmodifiable колекции
+### Unmodifiable Collections
 
-- Заемат по-малко памет от modifiable събратята си
-- Не могат да съдържат null елементи
-- При идентично съдържание, factory методите могат да връщат нови инстанции на дадената колекция или референции към вече съществуващи
+- Use less memory than their modifiable counterparts
+- Cannot contain `null` elements
+- For identical contents, factory methods may return a new instance or a reference to an existing one
+
+---
+
+### Where to Go Next
+
+- [Oracle Collections Tutorial](https://docs.oracle.com/javase/tutorial/collections/index.html)
+- [Google Guava](https://github.com/google/guava) — extended collections and utilities
+- *Effective Java* by Joshua Bloch — Items 17-20 on minimising mutability and programming to interfaces

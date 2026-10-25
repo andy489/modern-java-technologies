@@ -25,7 +25,7 @@ public class EscapeRoomPlatform implements EscapeRoomAdminAPI, EscapeRoomPortalA
     @Override
     public void addEscapeRoom(EscapeRoom room) throws RoomAlreadyExistsException {
         if (room == null) {
-            throw new NullPointerException("@param room must not be null");
+            throw new IllegalArgumentException("@param room must not be null");
         }
 
         if (escapeRoomsCount >= maxCapacity) {
@@ -50,7 +50,7 @@ public class EscapeRoomPlatform implements EscapeRoomAdminAPI, EscapeRoomPortalA
 
     @Override
     public void removeEscapeRoom(String roomName) throws RoomNotFoundException {
-        if (roomName == null || roomName.isBlank() || roomName.isBlank()) {
+        if (roomName == null || roomName.isBlank()) {
             throw new IllegalArgumentException("Room name should not be null, empty or blank");
         }
 
@@ -100,7 +100,7 @@ public class EscapeRoomPlatform implements EscapeRoomAdminAPI, EscapeRoomPortalA
     }
 
     public Team getTeamByName(String name) throws TeamNotFoundException {
-        if (name == null || name.isEmpty() || name.isBlank()) {
+        if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Team name cannot be null, empty or blank");
         }
 
@@ -115,7 +115,7 @@ public class EscapeRoomPlatform implements EscapeRoomAdminAPI, EscapeRoomPortalA
 
     @Override
     public EscapeRoom getEscapeRoomByName(String roomName) throws RoomNotFoundException {
-        if (roomName == null || roomName.isEmpty() || roomName.isBlank()) {
+        if (roomName == null || roomName.isBlank()) {
             throw new IllegalArgumentException("Room name cannot be null, empty or blank");
         }
 

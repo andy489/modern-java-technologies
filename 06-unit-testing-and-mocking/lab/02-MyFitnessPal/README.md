@@ -1,24 +1,24 @@
 # Unit Testing and Mocking
 
-Освен писане на code from scratch, в практиката много често се налага и да поддържаме, fix-ваме или пишем тестове за вече съществуващ код.
+In professional software development, it is very common to not only write code from scratch, but also to maintain, fix, or write tests for existing code.
 
-Целта на упражнението днес е, да създадете и изпълните JUnit тестове, спрямо налична имплементация.
+The goal of this exercise is to create and run JUnit tests against an existing implementation.
 
 ## MyFitnessPal :muscle:
 
-Ще разгледаме модул от опростена версия на [MyFitnessPal](https://www.myfitnesspal.com): приложение, в което следим калориите, които приемаме с храната всеки ден. В него отбелязваме какво хапваме на закуска, обяд, вечеря или междинна закуска - като храна и количество, а приложението се грижи да смята приетите калории вместо нас. Такъв тип приложения използват някаква база данни или уеб услуга, предоставяща информация за състава на дадена храна като макронутриенти (въглехидрати, мазнини и протеини), на база на която автоматично се пресмята и калорийната ѝ стойност.
+We will look at a module from a simplified version of [MyFitnessPal](https://www.myfitnesspal.com): an application that tracks the calories you consume each day. You log what you eat at breakfast, lunch, dinner, or as a snack — specifying the food and quantity — and the application calculates your calorie intake automatically. Such applications rely on a database or web service that provides nutritional information (macronutrients: carbohydrates, fats, and proteins) for a given food, from which the caloric value is computed automatically.
 
-### Готова имплементация
+### Existing implementation
 
-В [./resources](./resources) ще намерите имплементация на интерфейса `FoodDiary`, която реализира дневник на храненията през даден ден. Тя разчита на *някаква* имплементация на интерфейса `NutritionInfoAPI`, чрез която се сдобива с информация за състава като макронутриенти на дадената храна. В една реална система, такава имплементация би разчитала на база от данни или уеб услуга. Нашият фокус обаче е да тестваме автоматично имплементацията на хранителния дневник, в изолация и без да се интересуваме, как е имплементиранo въпросното API за хранителната информация, приемайки, че то работи коректно.
+In [./src](./src) you will find an implementation of the `FoodDiary` interface, which represents a daily food diary. It depends on *some* implementation of the `NutritionInfoAPI` interface to retrieve macronutrient information for a given food. In a real system, such an implementation would rely on a database or web service. Our focus, however, is to automatically test the food diary implementation in isolation, without caring about how the nutrition information API is implemented — we assume it works correctly.
 
-#### Важно
+#### Important
 
-:warning: Имайте предвид, че имплементацията съдържа някои бъгове, които трябва да откриете и отстраните в процеса на тестване. За да бъде той ефективен, първо напишете тест за някой сценарий, след това оправете бъга, който сте намерили с него.
+:warning: The implementation contains some bugs that you need to find and fix in the process of writing tests. To make the process effective, first write a test for a scenario, then fix the bug you discovered with it.
 
-:warning: Не сме предоставили имплементация на интерфейса `NutritionInfoAPI` - вместо такава, в Unit тестовете си трябва да използвате *Mockito* и да "мокнете" това API. Алтернативно, може да направите и свой прост stub за него.
+:warning: No implementation of the `NutritionInfoAPI` interface is provided — instead, use *Mockito* in your unit tests to mock this API. Alternatively, you may write a simple stub for it.
 
-Проектът ви трябва да има следната структура:
+Your project must have the following structure:
 
 ```
 src
@@ -40,6 +40,6 @@ test
     └─ (...)
 ```
 
-В грейдъра качете общ .zip архив на двете директории `src` и `test`.
+Submit a single `.zip` archive containing both the `src` and `test` directories.
 
-Успех и не се притеснявайте да задавате въпроси! :star: 
+Good luck, and don't hesitate to ask questions! :star:

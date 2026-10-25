@@ -1,17 +1,18 @@
-# Spotify :guitar:
+# Spotify
 
-*Spotify* e една от най-известните аудио стрийминг услуги в света.
+*Spotify* is one of the world's most popular audio streaming services.
 
-Ще създадем система, която моделира част от основните ѝ функционалности.
+We will build a system that models a subset of its core functionality.
 
 ### Spotify
 
-В пакета `bg.sofia.uni.fmi.mjt.spotify` създайте клас `Spotify`, който има конструктор
+In the package `bg.sofia.uni.fmi.mjt.spotify`, create a class `Spotify` with the constructor
 
 ```java
 public Spotify(Account[] accounts, Playable[] playableContent)
 ```
-и имплементира интерфейса `StreamingService`:
+
+that implements the `StreamingService` interface:
 
 ```java
 package bg.sofia.uni.fmi.mjt.spotify;
@@ -82,8 +83,9 @@ public interface StreamingService {
 
 ### Accounts
 
-Потребителите на платформата се представят чрез accounts. Всеки account се идентифицира еднозначно с email-a на потребителя.
-В пакета `bg.sofia.uni.fmi.mjt.spotify.account` създайте два класа - `FreeAccount` и `PremiumAccount`, които наследяват абстрактния клас `Account` и имат конструктори със списък параметри `(String email, Library library)`. `Account` съдържа следните методи (при нужда, може да добавяте допълнителни):
+Users of the platform are represented by accounts. Each account is uniquely identified by the user's email address.
+
+In the package `bg.sofia.uni.fmi.mjt.spotify.account`, create two classes — `FreeAccount` and `PremiumAccount` — that extend the abstract class `Account` and have constructors with the parameter list `(String email, Library library)`. `Account` contains the following methods (you may add additional ones as needed):
 
 ```java
     /**
@@ -100,9 +102,7 @@ public interface StreamingService {
 
     /**
      * Simulates listening of the specified content.
-     * This should increment the total number of content listened and the total listen time for this account.
-     *
-     * @param playable
+     * Increments the total number of content listened and the total listen time for this account.
      */
     public void listen(Playable playable) {
         // TODO: add implementation here
@@ -116,17 +116,16 @@ public interface StreamingService {
     }
 
     /**
-     * Returns the total listen time for this account. The time for any ads listened is not included.
+     * Returns the total listen time for this account. Ad listen time is not included.
      */
     public double getTotalListenTime() {
         return totalListenTime;
     }
 ```
 
-## Playable
+### Playable
 
-Идва ред и на съдържанието, предоставяно от платформата.
-Създайте два класа - `Audio` и `Video`\*, които имплементират интерфейса `Playable`:
+Create two classes — `Audio` and `Video`* — that implement the `Playable` interface:
 
 ```java
 package bg.sofia.uni.fmi.mjt.spotify.playable;
@@ -134,49 +133,39 @@ package bg.sofia.uni.fmi.mjt.spotify.playable;
 public interface Playable {
 
     /**
-     * Simulates playing of the content, which results in increment of the total plays count,
-     * and returns a message for the user. The message has the following format:
-     * "Currently playing <type> content: <content_title>", where <type> is the type (case-insensitive) of the playable content, and
-     * <content_title> is its title.
+     * Simulates playing the content. Increments the total play count and returns a message:
+     * "Currently playing <type> content: <content_title>"
+     * where <type> is the lowercase type of the content.
      */
     String play();
 
-    /**
-     * Returns the total number of times the content has been played.
-     */
+    /** Returns the total number of times the content has been played. */
     int getTotalPlays();
 
-    /**
-     * Returns the title of the playable.
-     */
+    /** Returns the title of the playable. */
     String getTitle();
 
-    /**
-     * Returns the artist of the playable.
-     */
+    /** Returns the artist of the playable. */
     String getArtist();
 
-    /**
-     * Returns the publishing year of the playable.
-     */
+    /** Returns the publishing year of the playable. */
     int getYear();
 
-    /**
-     * Returns the duration of the playable.
-     */
+    /** Returns the duration of the playable. */
     double getDuration();
 
 }
 ```
 
-И двата класа имат конструктори с параметри `(String title, String artist, int year, double duration)`.
+Both classes have constructors with parameters `(String title, String artist, int year, double duration)`.
 
-\*От около година, [Spotify поддържа и video streaming](https://support.spotify.com/us/article/videos/)
+\* Since around 2021, [Spotify also supports video streaming](https://support.spotify.com/us/article/videos/).
 
 ### Playlist
 
-Spotify предлага и функционалност за създаване и управление на плейлисти.
-Създайте клас `UserPlaylist`, който има конструктор `public UserPlaylist(String name)` и имплементира интерфейса `Playlist`:
+Spotify provides functionality for creating and managing playlists.
+
+Create a class `UserPlaylist` with constructor `public UserPlaylist(String name)` that implements the `Playlist` interface:
 
 ```java
 package bg.sofia.uni.fmi.mjt.spotify.playlist;
@@ -187,20 +176,18 @@ public interface Playlist {
 
     /**
      * Adds the given playable content to the playlist.
-     * 
-     * @throws PlaylistCapacityExceededException when the playlist has exceeded its predefined capacity of 20 items.
+     *
+     * @throws PlaylistCapacityExceededException when the playlist has exceeded its capacity of 20 items.
      */
     void add(Playable playable) throws PlaylistCapacityExceededException;
 
-    /**
-     * Returns the name of the playlist.
-     */
+    /** Returns the name of the playlist. */
     String getName();
 
 }
 ```
 
-За управление на плейлисти използваме т.нар. `Library`:
+Playlists are managed through a `Library`:
 
 ```java
 package bg.sofia.uni.fmi.mjt.spotify.library;
@@ -212,34 +199,29 @@ public interface Library {
 
     /**
      * Adds the provided playlist to the library.
-     * 
-     * @throws LibraryCapacityExceededException when the library capacity (fixed to 21) is exceeded.
+     *
+     * @throws LibraryCapacityExceededException when the library capacity (max 21) is exceeded.
      */
     void add(Playlist playlist) throws LibraryCapacityExceededException;
 
     /**
      * Removes the playlist with the given name from the library.
-     * 
-     * @throws IllegalArgumentException if the given playlist name matches the default "Liked Content" playlist name.
+     *
+     * @throws IllegalArgumentException if the name matches the default "Liked Content" playlist.
      * @throws EmptyLibraryException if the library is empty.
-     * @throws PlaylistNotFoundException if the playlist with the given name is not present in the library.
+     * @throws PlaylistNotFoundException if no playlist with the given name exists.
      */
     void remove(String name) throws EmptyLibraryException, PlaylistNotFoundException;
 
-    /**
-     * Returns the default "Liked Content" playlist from the library.
-     */
+    /** Returns the default "Liked Content" playlist. */
     Playlist getLiked();
 
 }
 ```
 
-Имплементация на `Library` е класът `UserLibrary`, който има конструктор по подразбиране.
-Важно уточнение за `UserLibrary`: всеки потребител задължително има плейлист, съдържащ всеки content, който някога е харесвал. Този playlist не може да бъде изтриван.
+The implementation of `Library` is the class `UserLibrary` with a no-argument constructor. Every user automatically has a "Liked Content" playlist that cannot be deleted.
 
-### Пакети
-
-Спазвайте имената на пакетите на всички по-горе описани типове, тъй като в противен случай, решението ви няма да може да бъде автоматично тествано.
+### Package Structure
 
 ```
 src
@@ -271,7 +253,7 @@ src
     └── StreamingService.java
 ```
 
-### :warning: Забележки
+### Notes
 
-- Не променяйте по никакъв начин интерфейсите, дадени в условието.
-- Използването на структури от данни, различни от масив, **не е позволено**. Задачата трябва да се реши с помощта на знанията от курса до момента.
+- Do not modify the interfaces provided in the problem statement.
+- Using data structures other than arrays is **not allowed**. Solve the task using only the knowledge covered in the course so far.

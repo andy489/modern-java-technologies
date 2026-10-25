@@ -1,43 +1,43 @@
 # Game Recommender :video_game:
 
-## Условие
+## Problem Statement
 
-Ще създадем програма, която анализира и предоставя статистики върху реален *dataset*, 
-съдържащ данни за най-известните видеоигри за периода 1995-2021г. *Dataset*-ът съдържа данни с над 17,000 записа, *scrape*-нати от платформата с рецензии за филми, телевизионни предавания, музикални албуми и видео игри [metacritic](https://www.metacritic.com/browse/games/score/metascore/all/all/filtered?page=0) и е взет от [kaggle](https://www.kaggle.com/deepcontractor/top-video-games-19952021-metacritic), онлайн платформата за machine learning и data science на Google.
-За да опростим парсването на данните, сме обработили предварително файла, като може да го свалите [от тук](./resources/video-games-data.zip).
+We will build a program that analyses and provides statistics over a real *dataset* containing data about the most popular video games for the period 1995–2021. The dataset holds over 17,000 records scraped from [Metacritic](https://www.metacritic.com/browse/games/score/metascore/all/all/filtered?page=0) and is sourced from [Kaggle](https://www.kaggle.com/deepcontractor/top-video-games-19952021-metacritic), Google's online platform for machine learning and data science.
 
-Всеки ред от файла съдържа информация за една игра, като полетата са разделени със запетая (стандартен формат, известен като [Comma-Separated Values, или CSV](https://en.wikipedia.org/wiki/Comma-separated_values)):
+To simplify parsing, we have pre-processed the file. Download it [here](./resources/video-games-data.zip).
+
+Each line of the file describes one game with comma-separated fields (standard CSV format):
 
 `name,platform,release_date,summary,meta_score,user_review`
 
-**Забележки:**
+**Notes:**
 
-- Първият ред на файла съдържа имената на полетата
-- Семантиката и възможните стойности на всички полета, може да разгледате в [kaggle](https://www.kaggle.com/deepcontractor/top-video-games-19952021-metacritic)
-- Разделител между полетата на всеки ред е запетая (`,`)
-- Някои от полетата в *dataset*-а може да съдържат символи от азбуки, различни от латинската. Ако искате тези имена да останат human-readable, погрижете се, създавайки входния поток за четене на *dataset*-а, да укажете като encoding charset `StandardCharsets.UTF_8` - има такъв опционален параметър в конструктора или static factory метода
+- The first line contains field names (header row)
+- Field semantics and possible values are described on [Kaggle](https://www.kaggle.com/deepcontractor/top-video-games-19952021-metacritic)
+- The field separator is a comma (`,`)
+- Some fields may contain characters from non-Latin scripts. To keep them human-readable, specify `StandardCharsets.UTF_8` as the encoding when creating the input stream for the dataset
 
-### 1. Зареждане и обработка на данните
+### 1. Loading and Parsing Data
 
-Преди да започнем със същинската част на анализа на *dataset*-a, ще заредим данните в паметта.
+Before the actual analysis, we need to load the data into memory.
 
-Една от първите стъпки в задачите за анализ на данни и machine learning, винаги е "изчистване/подготовка" на данните. В общия случай, допускаме, че може да има зле форматирани данни, може да липсват елементи, на които разчитаме, или да има такива, които не очакваме.
+A common first step in data analysis and machine learning is data cleaning and preparation — assuming that records may be malformed, missing expected fields, or containing unexpected values.
 
-Може да си имплементирате клас, чиято задача е да парсне един ред от `dataset`-a до Java обект.
+Implement a class responsible for parsing a single CSV line into a Java object.
 
-### 2. Статистики
+### 2. Statistics
 
-След като разполагаме с имплементация на този клас, можем да заредим данните в подходяща колекция, от която да вземем поток и (декларативно) да определим разнообразни статистики.
+Once parsing is in place, load the data into an appropriate collection, obtain a stream from it, and use the Stream API to compute various statistics declaratively.
 
-Класът, който ще предоставя API за статистиките, е `GameRecommender`, като частична негова имплементация може да намерите [тук](./resources/GameRecommender.java), а задачата ви ще бъде да я довършите.
+The class providing the statistics API is `GameRecommender`. A partial implementation is available [here](./resources/GameRecommender.java) — your task is to complete it.
 
-### 3. Тестване
+### 3. Testing
 
-Валидирайте решението си чрез unit тестове, като трябва да покриете минимален code coverage 80%.
+Validate your solution with unit tests covering at least **80% code coverage**.
 
-## Структура на проекта
+## Project Structure
 
-Спазвайте имената на пакетите на всички по-горе описани типове, тъй като в противен случай, решението ви няма да може да бъде автоматично тествано.
+Follow the package names exactly; otherwise the automated grader cannot test your solution.
 
 ```
 src
@@ -49,4 +49,4 @@ test
     └── (...)
 ```
 
-В грейдъра качете общ `zip` архив на папки `src` и `test`.
+Submit a zip archive of the `src` and `test` folders.

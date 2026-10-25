@@ -1,15 +1,16 @@
-# Investment Wallet :moneybag: :euro: ₿
+# Investment Wallet
 
-Всеки иска да умножи парите си. Днес с инвестиции се занимават далеч не само професионалните инвестиционни брокери. Наред с класическите активи като ценни книжа и метали, нараства популярността и на криптовалутите. Ще създадем приложение, с което ще управляваме свой *инвестиционен портфейл*.
+Everyone wants to grow their money. Today, investing is no longer exclusive to professional brokers. Alongside classic assets such as securities and metals, cryptocurrencies are rapidly growing in popularity. We will build an application to manage a personal *investment portfolio*.
 
-### Инвестиционен портфейл
+### Investment Wallet
 
-В пакета `bg.sofia.uni.fmi.mjt.investment.wallet` създайте клас `InvestmentWallet`, който има конструктор
+In the package `bg.sofia.uni.fmi.mjt.investment.wallet` create a class `InvestmentWallet` with constructor
 
 ```java
 public InvestmentWallet(QuoteService quoteService)
 ```
-и имплементира интерфейса `Wallet`:
+
+that implements the `Wallet` interface:
 
 ```java
 package bg.sofia.uni.fmi.mjt.investment.wallet;
@@ -27,80 +28,56 @@ import bg.sofia.uni.fmi.mjt.investment.wallet.exception.WalletException;
 public interface Wallet {
 
     /**
-     *
      * @param cash the cash to deposit in the investment wallet
      * @return the cash balance in the wallet after the transaction
-     * @throws IllegalArgumentException if the @cash is negative
+     * @throws IllegalArgumentException if cash is negative
      */
     double deposit(double cash);
 
     /**
-     *
      * @param cash the cash to withdraw from the investment wallet
      * @return the cash balance in the wallet after the transaction
-     * @throws IllegalArgumentException       if the @cash is negative
-     * @throws InsufficientResourcesException if the cash balance is insufficient to
-     *                                        proceed with the withdrawal
+     * @throws IllegalArgumentException       if cash is negative
+     * @throws InsufficientResourcesException if the balance is insufficient
      */
     double withdraw(double cash) throws InsufficientResourcesException;
 
     /**
-     *
      * @param asset    the asset to buy
      * @param quantity the quantity to buy
-     * @param maxPrice the maxPrice to pay for a unit of @asset
-     * @return the acquisition of the @asset
-     *
-     * @throws IllegalArgumentException when:
-     * @quantity is negative
-     * @maxPrice is negative
-     * @asset is null
-     *
-     * @throws UnknownAssetException          if there is no defined quote for
-     *                                        the @asset
-     * @throws OfferPriceException            if the ask price of the @asset is
-     *                                        higher than the @maxPrice
-     * @throws InsufficientResourcesException if there is not enough balance for the
-     *                                        transaction
+     * @param maxPrice the maximum price to pay per unit of asset
+     * @return the acquisition record
+     * @throws IllegalArgumentException       if quantity or maxPrice is negative, or asset is null
+     * @throws UnknownAssetException          if there is no defined quote for the asset
+     * @throws OfferPriceException            if the ask price is higher than maxPrice
+     * @throws InsufficientResourcesException if there is not enough balance
      */
     Acquisition buy(Asset asset, int quantity, double maxPrice) throws WalletException;
 
     /**
-     *
      * @param asset    the asset to sell
      * @param quantity the quantity to sell
-     * @param minPrice the minPrice to sell a unit of @asset for
-     * @return the cash added to the balance after the sell
-     * @throws IllegalArgumentException when:
-     * @asset is null
-     * @quantity is negative
-     * @minPrice is negative
-     * @throws InsufficientResourcesException if there is not enough quantity of
-     *                                        the @asset
-     * @throws UnknownAssetException          if there is no defined quote for
-     *                                        the @asset
-     * @OfferPriceException if the bid price of the @asset is lower than
-     *                      the @minPrice
+     * @param minPrice the minimum acceptable price per unit
+     * @return the cash added to the balance after the sale
+     * @throws IllegalArgumentException       if asset is null, or quantity or minPrice is negative
+     * @throws InsufficientResourcesException if there is not enough quantity of the asset
+     * @throws UnknownAssetException          if there is no defined quote for the asset
+     * @throws OfferPriceException            if the bid price is lower than minPrice
      */
     double sell(Asset asset, int quantity, double minPrice) throws WalletException;
 
     /**
-     *
-     * @return the valuations of all of the assets in the wallet combined
+     * @return the combined valuation of all assets in the wallet
      */
     double getValuation();
 
     /**
-     * Valuation is the current market price of an asset.
+     * Valuation is the current bid price of the asset multiplied by the quantity held.
      *
-     * Valuation of a specific @asset in the investment wallet is the current bid
-     * price of the @asset multiplied by the quantity of the @asset in the wallet
-     *
-     * @param asset
-     * @return the valuation of the @asset
-     * @throws IllegalArgumentException if @asset is null
-     * @throws UnknownAssetException    if @asset is not currently in the wallet
-     * @throws UnknownAssetException    if there is no defined quote for the @asset
+     * @param asset the asset to valuate
+     * @return the valuation of the asset
+     * @throws IllegalArgumentException if asset is null
+     * @throws UnknownAssetException    if asset is not currently in the wallet or has no quote
      */
     double getValuation(Asset asset) throws UnknownAssetException;
 
@@ -115,23 +92,19 @@ public interface Wallet {
     Collection<Acquisition> getAllAcquisitions();
 
     /**
-     *
      * @param n the maximum number of acquisitions to return
-     * @return an unmodifiable copy of the last @n acquisitions in the wallet. If
-     *         there are less than @n acquisitions in the wallet, return all of
-     *         them. The order of the acquisitions in the returned set is undefined
-     * @throws IllegalArgumentException when @n is negative
+     * @return an unmodifiable copy of the last n acquisitions; returns all if fewer than n exist
+     * @throws IllegalArgumentException if n is negative
      */
     Set<Acquisition> getLastNAcquisitions(int n);
 }
-
 ```
 
-> Забележкa: `WalletException` е базов клас за `InsufficientResourcesException`, `OfferPriceException` и `UnknownAssetException`.
+> Note: `WalletException` is the base class for `InsufficientResourcesException`, `OfferPriceException`, and `UnknownAssetException`.
 
-### Активи
+### Assets
 
-Активите биват четири вида: криптовалути (`Crypto`), обикновени валути (`Fiat`), злато (`Gold`) и акции (`Stock`), типът им се описва чрез `AssetType`:
+Assets come in four types: cryptocurrency (`Crypto`), regular currency (`Fiat`), gold (`Gold`), and stock (`Stock`), described by the `AssetType` enum:
 
 ```java
 public enum AssetType {
@@ -139,85 +112,51 @@ public enum AssetType {
 }
 ```
 
-имат публичен конструктор с параметри `(String id, String name)` и имплементират интерфейса `Asset`:
+Each asset has a public constructor with parameters `(String id, String name)` and implements the `Asset` interface:
 
 ```java
 public interface Asset {
-
-    /**
-     * @return the id of the asset
-     */
     String getId();
-
-    /**
-     * @return the name of the asset
-     */
     String getName();
-
-    /**
-     * @return the type of the asset
-     */
     AssetType getType();
 }
 ```
 
-### Придобивания на активи
+### Asset Acquisitions
 
-Придобиването на даден актив се моделира от клас, имплементиращ интерфейса `Acquisition`:
+The acquisition of an asset is modelled by a class implementing the `Acquisition` interface:
 
 ```java
 public interface Acquisition {
-
-    /**
-     * @return the price per unit paid for the asset
-     */
     double getPrice();
-
-    /**
-     * Timestamp is the time the acquisition has been created
-     * 
-     * @return the timestamp of acquisition
-     */
     LocalDateTime getTimestamp();
-
-    /**
-     * @return the number of asset units acquired
-     */
     int getQuantity();
-    
-    /**
-     * @return the asset which was acquired
-     */
     Asset getAsset();
 }
 ```
 
-### Котировки
+### Quotes
 
-Текущите "цена продава" (*ask price*) и "цена купува" (*bid price*) на всеки актив се моделират от `record`-a `Quote`:
+The current ask price and bid price of each asset are modelled by the `Quote` record:
 
 ```java
 public record Quote(double askPrice, double bidPrice) { }
 ```
 
- и се достъпват чрез интерфейса `QuoteService`:
+and accessed via the `QuoteService` interface:
 
 ```java
 public interface QuoteService {
-
     /**
-     * @param asset
-     * @return the quote for the given asset. If there is no quote, return null.
-     * @throws IllegalArgumentException if the asset is null
+     * @param asset the asset to quote
+     * @return the quote, or null if unavailable
+     * @throws IllegalArgumentException if asset is null
      */
     Quote getQuote(Asset asset);
 }
-
 ```
 
-### Пакети
-
-Спазвайте имената на пакетите на всички по-горе описани типове, тъй като в противен случай, решението ви няма да може да бъде автоматично тествано.
+### Package Structure
 
 ```
 src
@@ -246,6 +185,6 @@ src
     └── Wallet.java
 ```
 
-### :warning: Забележки
+### Notes
 
-- Не променяйте по никакъв начин интерфейсите, дадени в условието.
+- Do not modify the interfaces provided in the problem statement.

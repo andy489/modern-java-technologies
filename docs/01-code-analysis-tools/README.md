@@ -1,54 +1,54 @@
-# Static code analysis tools
+# Static Code Analysis Tools
 
-### checkstyle ([link](https://github.com/checkstyle/checkstyle))
+## Checkstyle ([GitHub](https://github.com/checkstyle/checkstyle))
 
-- From command line
+### From the Command Line
 
-Свалете си последния release на checkstyle от [тук](https://github.com/checkstyle/checkstyle/releases).
+Download the latest checkstyle release from [GitHub releases](https://github.com/checkstyle/checkstyle/releases).
 
 ```bash
-# point to our checkstyle rules
-$ export CHECKS=https://raw.githubusercontent.com/fmi/java-course/master/docs/01-code-analysis-tools/checkstyle/checkstyle.xml
+# point to the course checkstyle rules
+export CHECKS=https://raw.githubusercontent.com/fmi/java-course/master/docs/01-code-analysis-tools/checkstyle/checkstyle.xml
 
-# run for single .java file
-$ java -jar checkstyle-9.1-all.jar -c $CHECKS Main.java
+# run for a single .java file
+java -jar checkstyle-9.1-all.jar -c $CHECKS Main.java
 
 # run for the whole project
-$ java -jar checkstyle-9.1-all.jar -c $CHECKS my-fancy-project/
+java -jar checkstyle-9.1-all.jar -c $CHECKS my-fancy-project/
 ```
 
-- From IntelliJ
+### From IntelliJ IDEA
 
-1. _File_ → _Settings..._ → _Plugins_ → _Marketplace_
-2. Търсите "CheckStyle-IDEA" → _Install_
-3. Рестартирате IDE-то
+1. **File** → **Settings...** → **Plugins** → **Marketplace**
+2. Search for `CheckStyle-IDEA` → **Install**
+3. Restart the IDE
 
-За да конфигурирате правилата:
+To configure the rules:
 
-1. _File_ → _Settings..._ → _Plugins_ → _Tools_ → _Checkstyle_
-2. В секцията _Configuration File_ имате две предварително инсталирани конфигурации, _Sun Checks_ и _Google Checks_
-3. За да добавите custom конфигурация, натискате _+_, слагате в _Description_ описание тип "MJT" и избирате локален или remote Checkstyle конфигурационен файл ще ползвате:
-   - _Use a local Checkstyle file_ → _Browse_, като може да си свалите [този](https://github.com/andy489/Modern_Java_Technologies/blob/main/docs/01-code-analysis-tools/checkstyle/checkstyle.xml) от нашия грейдър
-   - _Use a Checkstyle file accessible via HTTP_ и в полето _URL_ задавате локация на remote файл, например [този](https://raw.githubusercontent.com/andy489/Modern_Java_Technologies/main/docs/01-code-analysis-tools/checkstyle/checkstyle.xml) от грейдърa на курса
+1. **File** → **Settings...** → **Tools** → **Checkstyle**
+2. The **Configuration File** section shows two pre-installed configurations: _Sun Checks_ and _Google Checks_.
+3. To add a custom configuration, click **+**, set a description such as `MJT`, and choose whether to use a local or remote file:
+   - **Use a local Checkstyle file** → **Browse** — download [this file](https://github.com/andy489/Modern_Java_Technologies/blob/main/docs/01-code-analysis-tools/checkstyle/checkstyle.xml) from the course repository.
+   - **Use a Checkstyle file accessible via HTTP** — enter the URL of the remote file, for example [this one](https://raw.githubusercontent.com/andy489/Modern_Java_Technologies/main/docs/01-code-analysis-tools/checkstyle/checkstyle.xml) from the course grader.
 
-За да настроите автоматичното форматиране в IDE-то (това, което задействате с Ctrl+Alt+L) да ползва същата custom конфигурация:
+To make the IDE's auto-formatter (`Ctrl+Alt+L`) use the same rules:
 
-1. _File_ → _Settings..._ → _Editor_ → _Code Style_ → _Java_
-2. В полето _Scheme_ до drop down-а цъкате бутончето със зъбното колело → _Import Scheme_ → _Chechstyle Configuration_ и избирате локацията на конфигурационния файл
+1. **File** → **Settings...** → **Editor** → **Code Style** → **Java**
+2. In the **Scheme** field, click the gear icon → **Import Scheme** → **Checkstyle Configuration** and select the configuration file.
 
-- From Eclipse
+### From Eclipse
 
-1. _Help_ > _Eclipse Marketplace..._
-2. Намирате и сваляте [Checkstyle Plug-in](https://marketplace.eclipse.org/content/checkstyle-plug).
+1. **Help** → **Eclipse Marketplace...**
+2. Find and install the [Checkstyle Plug-in](https://marketplace.eclipse.org/content/checkstyle-plug).
 
-За да активирате checkstyle за даден проект:
+To enable checkstyle for a project:
 
-1. _my-fancy-project_ > _Properties_ > _Checkstyle_
-2. Маркирате _Checkstyle active for this project_.
-3. _Local Check Configurations..._ > _New..._.
-4. Избирате _Remote Configuration_ за _Type_.
-5. Давате му име - например _mjt_.
-6. Поставяте [този линк](https://www.dropbox.com/s/l5tuq4qsisiymsu/checkstyle.xml?dl=0) за _Location_ и избирате _OK_.
-7. Връщате се в _Main_ и избирате вашия checkstyle, който току-що създадохте.
-8. Избирате _Apply and Close_.
-9. Вече би трябвало да виждате checkstyle съобщенията.
+1. **my-fancy-project** → **Properties** → **Checkstyle**
+2. Check **Checkstyle active for this project**.
+3. **Local Check Configurations...** → **New...**
+4. Set **Type** to **Remote Configuration**.
+5. Give it a name, e.g. `mjt`.
+6. Paste [this link](https://www.dropbox.com/s/l5tuq4qsisiymsu/checkstyle.xml?dl=0) as the **Location** and click **OK**.
+7. Go back to **Main** and select the checkstyle configuration you just created.
+8. Click **Apply and Close**.
+9. Checkstyle messages should now appear in the editor.

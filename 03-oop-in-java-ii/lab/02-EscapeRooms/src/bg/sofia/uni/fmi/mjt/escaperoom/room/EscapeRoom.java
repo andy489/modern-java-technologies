@@ -102,16 +102,9 @@ public class EscapeRoom implements Ratable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        EscapeRoom escapeRoom = (EscapeRoom) o;
-
-        return (escapeRoom.getName().equals(name));
+        if (this == o) return true;
+        if (!(o instanceof EscapeRoom escapeRoom)) return false;
+        return name.equals(escapeRoom.name);
     }
 
     @Override

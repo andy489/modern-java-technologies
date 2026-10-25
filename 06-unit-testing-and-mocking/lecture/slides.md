@@ -1,30 +1,30 @@
 # Unit Testing & Mocking
 
-17.11.2021
+2021-11-17
 
 <p align="center">
-  <img width="40%" src="images/06.0-unit-testing-and-mocking.png" alt="Relative cost of fixing defects" />
+  <img width="40%" src="images/06.0-unit-testing-and-mocking.png" alt="Unit Testing and Mocking" />
 </p>
 
 ---
 
-### Предната лекция говорихме за:
+### Last time we covered:
 
 - Generics
 
 ---
 
-### Днес ще разгледаме:
+### Today we will look at:
 
-- Как се тества софтуер, и кому е нужно
-- Какво е unit testing
+- How software is tested, and why it matters
+- What unit testing is
 - JUnit
 - Test-Driven Development (TDD)
-- Stubbing и mocking
+- Stubbing and mocking
 
 ---
 
-### Защо е нужно да си тестваме кода?
+### Why do we need to test our code?
 
 > Chuck Norris doesn't need unit tests because his code always works. ALWAYS.
 >
@@ -32,8 +32,7 @@
 
 ---
 
-### Кога да тестваме?
-
+### When to test?
 
 <p align="center">
   <img width="60%" src="images/06.1-relative-cost.png" alt="Relative cost of fixing defects" />
@@ -41,7 +40,7 @@
 
 ---
 
-### Тестването не е фаза, а е процес
+### Testing is a process, not a phase
 
 <p align="center">
   <img width="60%" src="images/06.2-testing-process.png" alt="Testing is a process" />
@@ -49,33 +48,33 @@
 
 ---
 
-### Основни видове тестове
+### Main types of tests
 
-- Ръчни
-    - В професионалната софтуерна разработка, липса на автоматични тестове == липса на тестове въобще
+- Manual
+    - In professional software development, the absence of automated tests is effectively the absence of tests altogether
 
-- Автоматични
-    - функционални
-    - нефункционални
-
----
-
-### Основни видове тестове
-
-- Функционални тестове
-    - unit тестове
-    - integration тестове
-
-- Нефункционални тестове
-    - performance тестове
-    - stress тестове
-    - crash тестове
-    - security тестове
-    - usability тестове
+- Automated
+    - functional
+    - non-functional
 
 ---
 
-### Още видове тестове
+### Main types of tests
+
+- Functional tests
+    - unit tests
+    - integration tests
+
+- Non-functional tests
+    - performance tests
+    - stress tests
+    - crash tests
+    - security tests
+    - usability tests
+
+---
+
+### More types of tests
 
 <p align="center">
   <img width="70%" src="images/06.3-more-tests.png" alt="More test types" />
@@ -85,37 +84,37 @@
 
 ### Unit Testing
 
-- Unit test е код, който изпълнява специфична, "атомарна" (т.е. която не може да се разбие по смислен начин на по-малки) функционалност на кода, която да бъде тествана
-- Един unit test цели да тества малък фрагмент код - обикновено един метод или най-много един клас
+- A unit test is code that executes a specific, "atomic" (indivisible in a meaningful way) piece of functionality
+- A unit test targets a small fragment of code — typically one method or at most one class
 
 ---
 
 ### Unit Testing
 
-- Unit тестовете гарантират, че кодът работи както очакваме
-- Подсигуряват, че кодът ще продължи да работи, както се очаква, в случай че го модифицираме, за да оправим бъг, рефакторираме или разширяваме функционалността
+- Unit tests verify that the code behaves as expected
+- They ensure the code continues to work as expected when we modify it to fix a bug, refactor, or extend functionality
 
 ---
 
-### Малко дефиниции
+### A few definitions
 
-- *Продуктивен код* (a.k.a. *code under test*) – това е кодът, който реализира потребителските изисквания и удовлетворява сценариите на клиентите
+- *Production code* (a.k.a. *code under test*) — the code that implements user requirements and satisfies client scenarios
 
-- Процентът на продуктивния код, който се тества от автоматични тестове, се нарича *test coverage* или *code coverage*. Високият test coverage на кода ни дава увереност да разработваме функционалности, без да се налага да правим много ръчни тестове
-
----
-
-### Малко дефиниции
-
-- *Test Driven Development* (TDD) е методология, при която кодът на тестовете се пише преди продуктивния код, така че щом даден тест бъде удовлетворен (т.е. минава успешно, стане "зелен"), съответният use-case е реализиран ("done")
-- *Test fixture* е фиксирано състояние на софтуера, който тестваме, което е началното условие (предусловието) за изпълняване на тестовете
+- The percentage of production code exercised by automated tests is called *test coverage* or *code coverage*. High test coverage gives us confidence to develop new features without heavy manual testing
 
 ---
 
-### Малко дефиниции
+### A few definitions
 
-- *Integration test* тества интеграцията на няколко класа (компонента)
-- *Performance test* измерва бързодействието (ефективността) на даден софтуер по възпроизводим (repeatable) начин
+- *Test-Driven Development* (TDD) is a methodology in which test code is written before production code, so that once a test passes ("goes green"), the corresponding use case is considered done
+- A *test fixture* is a fixed state of the software under test that serves as the precondition for running the tests
+
+---
+
+### A few definitions
+
+- An *integration test* tests the integration of several classes (components)
+- A *performance test* measures the performance (efficiency) of software in a reproducible way
 
 ---
 
@@ -125,9 +124,9 @@
 
 ### JUnit Framework
 
-- JUnit е най-популярният и *de facto* стандартният testing framework в Java
-- Open source проект в [GitHub](https://github.com/junit-team/junit5)
-- Актуалната версия е [JUnit 5](https://junit.org/junit5/)
+- JUnit is the most popular and *de facto* standard testing framework in Java
+- Open source project on [GitHub](https://github.com/junit-team/junit5)
+- Current version: [JUnit 5](https://junit.org/junit5/)
 
 <p align="center">
   <img width="40%" src="images/06.3.1-junit5.jpeg" alt="JUnit 5" />
@@ -135,22 +134,22 @@
 
 ---
 
-### Защо ни трябват testing frameworks?
+### Why do we need testing frameworks?
 
-- Улесняват ни да пишем и изпълняваме тестове
-- Стандартизират разработката и поддръжката на тестове
+- They make it easier to write and run tests
+- They standardise test development and maintenance
 
 ---
 
 ### JUnit
 
-- JUnit се базира на анотации
-- Всеки JUnit тест е метод, анотиран с `@Test`, съдържащ се в клас, който се използва само за тестване
-- Такъв клас се нарича *test case*
+- JUnit is annotation-based
+- Every JUnit test is a method annotated with `@Test`, contained in a class used exclusively for testing
+- Such a class is called a *test case*
 
 ---
 
-### Пример за JUnit тест
+### A JUnit test example
 
 ```java
 public class Calc {
@@ -170,7 +169,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class CalcTest {
     @Test
     void testMultiplyByZeroShouldReturnZero() {
-        Calc calc = new Calc(); // Calc is tested
+        var calc = new Calc();
         assertEquals(0, calc.multiply(10, 0), "10 x 0 must be 0");
         assertEquals(0, calc.multiply(0, 10), "0 x 10 must be 0");
         assertEquals(0, calc.multiply(0, 0), "0 x 0 must be 0");
@@ -180,54 +179,53 @@ public class CalcTest {
 
 ---
 
-### Конвенции за именуване
+### Naming conventions
 
-- Прието е името на тестовия клас да се получава от името на класа, който тества, с добавяне на суфикса `Test`
-- Популярна конвенция за имената на тестовите методи е, да започват с `test`, следвано от името на метода, който се тества, и кратко описание на тестовия сценарий, например `testLoginWithInvalidUserPassword`. Към нея се придържаме в нашите тестове за курса
-- Името на теста трябва достатъчно ясно да описва сценария
-
----
-
-### Статични методи на `Assertions` класа
-
-- JUnit предоставя статични методи в класа `org.junit.jupiter.api.Assertions` за тестване на определени условия
-- Ще се запознаем с най-използваните от тях, а може да разгледате всички в [документацията](https://junit.org/junit5/docs/current/api/org.junit.jupiter.api/org/junit/jupiter/api/Assertions.html) му
+- The test class name is conventionally derived from the class under test by adding the suffix `Test`
+- A popular convention for test method names is to start with `test`, followed by the method name and a short description of the scenario, e.g. `testLoginWithInvalidUserPassword` — we follow this convention in the course
+- The test name should clearly describe the scenario
 
 ---
 
-### Статични методи на `Assertions` класа
+### Static methods of the `Assertions` class
 
-- `fail(String message)` – фейлва теста
-    - Може да се използва за проверка, че определена част от кода не се достига или като временна dummy имплементация, която да се замести от реален тест
-- `assertTrue(boolean condition, String message)` – проверява, че булевото условие е истина
-- `assertFalse(boolean condition, String message)` – проверява, че булевото условие е лъжа
-- `assertNull(Object o, String message)` – проверява, че обектът е null
-- `assertNotNull(Object о, String message)` – проверява, че обектът не е null
-- `assertSame(expected, actual, String message)` – проверява, че двете референции съвпадат
-- `assertNotSame(expected, actual, String message)` – проверява, че двете референции са различни
+- JUnit provides static assertion methods in `org.junit.jupiter.api.Assertions`
+- We will cover the most commonly used ones; all are available in the [documentation](https://junit.org/junit5/docs/current/api/org.junit.jupiter.api/org/junit/jupiter/api/Assertions.html)
 
 ---
 
-### Статични методи на `Assertions` класа
+### Static methods of the `Assertions` class
 
-- `assertEquals(expected, actual, String message)` – проверява за равенство на два обекта
-    - масивите се сравняват по референции, не по съдържание
-- `assertEquals(expected, actual, delta, String message)` – проверява за равенство на числа с плаваща точка
-    - делтата (`delta`) определя точността на сравнението
-- `assertArrayEquals(expected, actual, String message)` - проверява за равенство на два масива по дължина и съдържание. Ако и двата са null, се приемат за равни
-- `assertIterableEquals(Iterable<?> expected, Iterable<?> actual, String message)` - (нов в JUnit 5) проверява дали двата `Iterable` връщат едни и същи (по съдържание) елементи, в един и същи ред. Не е нужно да са от един и същи вид, например може да сравним `LinkedList` с `ArrayList`
-
----
-
-### Статични методи на `Assertions` класа
-
-- Във всички assert методи, `String` параметърът (message) е опционален
-- Добра практика да го подавате винаги и съобщението да е конкретно, подробно и смислено
-- Особено важно е в случаите, в които различни програмисти пишат продуктивния код и тестовете
+- `fail(String message)` — fails the test unconditionally
+    - Useful to verify that certain code is unreachable, or as a placeholder for a test not yet written
+- `assertTrue(boolean condition, String message)` — asserts the boolean condition is true
+- `assertFalse(boolean condition, String message)` — asserts the boolean condition is false
+- `assertNull(Object o, String message)` — asserts the object is null
+- `assertNotNull(Object o, String message)` — asserts the object is not null
+- `assertSame(expected, actual, String message)` — asserts both references point to the same object
+- `assertNotSame(expected, actual, String message)` — asserts both references point to different objects
 
 ---
 
-### JUnit анотации: `@Test`
+### Static methods of the `Assertions` class
+
+- `assertEquals(expected, actual, String message)` — asserts two objects are equal
+    - arrays are compared by reference, not by content
+- `assertEquals(expected, actual, delta, String message)` — asserts equality of floating-point numbers within a delta tolerance
+- `assertArrayEquals(expected, actual, String message)` — asserts two arrays are equal by length and content; both null is considered equal
+- `assertIterableEquals(Iterable<?> expected, Iterable<?> actual, String message)` — (new in JUnit 5) asserts both `Iterable`s return the same elements in the same order; they do not need to be the same type (e.g. `LinkedList` vs `ArrayList`)
+
+---
+
+### Static methods of the `Assertions` class
+
+- In all assert methods, the `String message` parameter is optional
+- Best practice: always provide it with a specific, detailed, and meaningful message
+- This is especially important when different developers write the production code and the tests
+
+---
+
+### JUnit annotations: `@Test`
 
 ```java
 import static java.time.Duration.ofMillis;
@@ -235,7 +233,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class InvestmentWalletTest {
     @Test
-    void testDepositSuccessful() { // a test method could be public, protected or package-private
+    void testDepositSuccessful() {
         assertEquals(5.0, wallet.deposit(5.0), 0.001, "If balance is 0, return the amount deposited");
     }
 
@@ -255,61 +253,61 @@ public class InvestmentWalletTest {
 
 ---
 
-### JUnit анотации за жизнен цикъл: `@BeforeEach` и `@AfterEach`
+### JUnit lifecycle annotations: `@BeforeEach` and `@AfterEach`
 
 ```java
 public class InvestmentWalletTest {
 
     @BeforeEach
     void setUp() {
-        // този метод се изпълнява преди всеки тестов метод
-        // използва се за подготовка на тестовата среда
+        // runs before each test method
+        // used to prepare the test environment
     }
 
     @AfterEach
     void tearDown() {
-        // този метод се изпълнява след всеки тестов метод
-        // използва се да зачисти тестовата среда
+        // runs after each test method
+        // used to clean up the test environment
     }
 }
 ```
 
 ---
 
-### JUnit анотации за жизнен цикъл: `@BeforeAll` и `@AfterAll`
+### JUnit lifecycle annotations: `@BeforeAll` and `@AfterAll`
 
 ```java
 public class InvestmentWalletTest {
 
     @BeforeAll
     static void setUpTestCase() {
-        // този метод се изпълнява еднократно преди стартиране на всички тестове
-        // използва се за операции (особено, "скъпи") по инициализация на тестовата среда
-        // методите с тази анотация трябва да са статични
+        // runs once before all tests start
+        // used for (potentially expensive) environment initialisation
+        // methods with this annotation must be static
     }
 
     @AfterAll
     static void tearDownTestCase() {
-        // този метод се изпълнява еднократно след завършване на изпълнението на всички тестове
-        // използва се за зачистване на ресурсите, създадени в @BeforeAll метода
-        // методите с тази анотация трябва да са статични
+        // runs once after all tests finish
+        // used to release resources created in @BeforeAll
+        // methods with this annotation must be static
     }
 }
 ```
 
 ---
 
-### Ред на изпълнение
+### Test execution order
 
-- JUnit предполага, че всички тестови методи могат да се изпълняват в произволен ред
-- Добре написаните тестове не трябва да разчитат на конкретен ред на изпълнение
-    - т.е. тестовете не трябва да зависят от други тестове
+- JUnit assumes all test methods can run in any order
+- Well-written tests must not depend on a specific execution order
+    - i.e. tests must not depend on other tests
 
 ---
 
-### Ред на изпълнение
+### Test execution order
 
-- Може явно, с анотацията `@TestMethodOrder` на ниво клас, да определите реда на изпълнение на тестовите му методи. Например, чрез параметризираната анотацията `@Order` на всеки тест:
+- You can explicitly define the execution order using `@TestMethodOrder` at class level, for example via the `@Order` annotation on each test:
 
   ```java
   @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -331,9 +329,9 @@ public class InvestmentWalletTest {
 
 ---
 
-### Ред на изпълнение
+### Test execution order
 
-- Може явно, с анотацията `@TestMethodOrder` на ниво клас, да определите реда на изпълнение да е лексикографският по имената на тестовите методи (`MethodOrderer.MethodName.class`):
+- You can also order tests lexicographically by method name using `MethodOrderer.MethodName.class`:
 
   ```java
   @TestMethodOrder(MethodOrderer.MethodName.class)
@@ -352,27 +350,27 @@ public class InvestmentWalletTest {
 
 ---
 
-### JUnit: advanced възможности
+### JUnit: advanced features
 
-- Тестови класове и методи могат смислово да се обединяват в *test suites*
-- Може временно да изключваме/игнорираме даден тест с анотацията `@Disabled`
-- Може да изпълняваме дадени тестове, само ако са налице някакви условия (например за тестовата среда), чрез т.нар. *assumptions*
-- Може да даваме *human-friendly* имена на тестовите класове и/или методи с анотацията `@DisplayName`
-- Поддържа се многократно изпълнение на даден тест с параметризираната анотация `@RepeatedTest`
-- Поддържат се *параметризирани* и *динамични* тестове
-
----
-
-### Къде "живеят" unit тестовете?
-
-- Обикновено unit тестовете се разполагат в отделен проект или в отделна source директория, за да са отделени от продуктивния код
-- Няма единен стандарт - зависи с какви други tools (например за build) искате интеграция
+- Test classes and methods can be grouped semantically into *test suites*
+- Tests can be temporarily disabled with the `@Disabled` annotation
+- Tests can be conditionally executed based on environmental conditions using *assumptions*
+- Human-friendly names can be given to test classes and/or methods with `@DisplayName`
+- A test can be run repeatedly using `@RepeatedTest`
+- *Parameterised* and *dynamic* tests are supported
 
 ---
 
-### Къде "живеят" unit тестовете?
+### Where do unit tests live?
 
-- Един вариант (maven)
+- Unit tests are usually placed in a separate project or a separate source directory to keep them apart from production code
+- There is no single universal standard — it depends on which other tools (e.g. build tools) you want to integrate with
+
+---
+
+### Where do unit tests live?
+
+- Maven layout
 
   ```bash
   fancy-project
@@ -382,7 +380,7 @@ public class InvestmentWalletTest {
           └─ (...)
   ```
 
-- Друг вариант
+- Alternative layout
 
   ```bash
   fancy-project
@@ -394,54 +392,54 @@ public class InvestmentWalletTest {
 
 ---
 
-### Как се изпълняват?
+### How are tests run?
 
-- През IDE
-- През конзола
-- През build системи (maven, gradle)
-- През Continuous Integration (CI) системи (Jenkins, Travis)
-- Засега ще се ограничим да ги изпълняваме през IDE-то
+- Via IDE
+- Via the command line
+- Via build systems (Maven, Gradle)
+- Via Continuous Integration (CI) systems (Jenkins, GitHub Actions)
+- For now, we will run them from the IDE
 
 ---
 
 ### Code coverage plug-ins
 
-- [Code coverage runner](https://www.jetbrains.com/help/idea/code-coverage.html) for IntelliJ
+- [Code coverage runner](https://www.jetbrains.com/help/idea/code-coverage.html) for IntelliJ IDEA
 - [EclEmma](https://www.eclemma.org/) for Eclipse
-    - базирана е на open source проекта [JaCoCo](https://www.jacoco.org/jacoco/)
+    - based on the open source [JaCoCo](https://www.jacoco.org/jacoco/) project
 
 ---
 
 ### Best practices
 
-- Не тествайте тривиален код като getters/setters
-- Тествайте `private` методи само косвено
-- Стремете се към 70-80% code coverage
-- Пишете кратки, ясни и бързи unit тестове
+- Do not test trivial code such as getters/setters
+- Test `private` methods only indirectly
+- Aim for 70–80% code coverage
+- Write short, clear, and fast unit tests
 
 ---
 
 # JUnit 4 vs. JUnit 5
 
-Основните разлики, стъпките за миграция и някои предимства на новата версия може да разгледате [тук](https://blogs.oracle.com/javamagazine/post/migrating-from-junit-4-to-junit-5-important-differences-and-benefits)
+The main differences, migration steps, and advantages of the new version can be found [here](https://blogs.oracle.com/javamagazine/post/migrating-from-junit-4-to-junit-5-important-differences-and-benefits)
 
 ---
 
-# Stubbing and mocking
+# Stubbing and Mocking
 
 ---
 
-### Unit тестване на класове със зависимости
+### Unit testing classes with dependencies
 
-- Често клас използва в себе си други класове: има член-данни - референции към обект на друг клас
-- Това се нарича *композиция* на класове
-- Това е съвсем очаквано и нормално :)
-- Как unit тестваме такива класове?
-- Да разгледаме един такъв пример
+- A class often uses other classes: it has member fields that are references to objects of another class
+- This is called *class composition*
+- It is completely expected and normal :)
+- How do we unit test such classes?
+- Let's look at an example
 
 ---
 
-### Unit тестване на класове със зависимости
+### Unit testing classes with dependencies
 
 ```java
 public class UserService {
@@ -463,49 +461,49 @@ public class UserService {
 
 ---
 
-### Unit тестване на класове със зависимости
+### Unit testing classes with dependencies
 
-- Нека `UserRepository` е интерфейс, чиято задача е да съхранява `User`-и (in-memory, file system, database, etc.)
-- Нека `UserService` е клас, който борави с `User`-и и съдържа бизнес логиката на нашето приложение
+- Let `UserRepository` be an interface responsible for storing `User` objects (in-memory, file system, database, etc.)
+- Let `UserService` be a class that manages `User` objects and contains the business logic of our application
 
 ---
 
 ### Test cases for `register()`
 
-- Методът `register()` има 2 exit point-a - следователно имаме 2 сценария за покриване
-- [TC1] `register()` хвърля подходящо изключение, когато мейл адресът вече съществува в хранилището
-- [TC2] `register()` запазва подходящия user в хранилището, когато мейл адресът не съществува в хранилището
-- Как unit тестваме `UserService` класа?
+- The `register()` method has 2 exit points — so we have 2 scenarios to cover
+- [TC1] `register()` throws an appropriate exception when the email address already exists in the repository
+- [TC2] `register()` saves the appropriate user in the repository when the email address does not exist
+- How do we unit test the `UserService` class?
 
 ---
 
-### Unit тестване на класове със зависимости
+### Unit testing classes with dependencies
 
-- При unit тестване се интересуваме от функционалната коректност само на класа, който се тества
-- Трябват ни инструменти, чрез които да "изолираме" композираните класове
-- Композираните класове могат да бъдат трудни за инстанциране
-- Например, `UserRepository` изисква connectivity към база от данни
-
----
-
-### Unit тестване на класове със зависимости
-
-- Доброто unit тестване се базира на изолация
-- Изолацията се постига чрез т.нар *stub* или *mock* обекти
+- In unit testing we are only interested in the functional correctness of the class under test
+- We need tools to "isolate" the composed classes
+- Composed classes can be hard to instantiate
+- For example, `UserRepository` requires connectivity to a database
 
 ---
 
-### Stubbing
+### Unit testing classes with dependencies
 
-- *Stub* наричаме клас, който отговаря на дадени извиквания на методи с предварително зададени отговори
-- В unit тестването ни служат за справяне с проблема с композираните класове
+- Good unit testing is based on isolation
+- Isolation is achieved through so-called *stub* or *mock* objects
 
 ---
 
 ### Stubbing
 
-- Обикновено имплементират по минимален начин даден интерфейс и се подават на класа, който се тества
-- Извън unit тестването, могат да бъдат използвани и като заместител на код, който още не е разработен
+- A *stub* is a class that responds to given method calls with pre-defined answers
+- In unit testing they help us deal with the composed-class problem
+
+---
+
+### Stubbing
+
+- Stubs usually implement an interface in a minimal way and are passed to the class under test
+- Outside unit testing, they can also serve as placeholders for code not yet developed
 
 ---
 
@@ -555,8 +553,7 @@ public class InMemoryUserRepositoryStubImpl implements UserRepository {
 ```java
 @Test
 public void testRegisterThrowsAppropriateException() {
-    UserService service =
-            new UserService(new PositiveUserRepositoryStubImpl());
+    var service = new UserService(new PositiveUserRepositoryStubImpl());
 
     assertThrows(UserAlreadyExistsException.class, () -> service.register("test@test.com", "weak"),
             "UserAlreadyExistsException expected");
@@ -565,28 +562,28 @@ public void testRegisterThrowsAppropriateException() {
 
 ---
 
-### Жизнен цикъл на тестване със stub
+### Stub testing lifecycle
 
-1. Setup data - подготвяме обекта, който ще се тества, както и stub събратята му
-2. Exercise - извикваме метода, който искаме да тестваме
-3. Verify state - използваме assertions, за да проверим състоянието на обекта
-4. Teardown - освобождаваме използваните ресурси
+1. **Setup data** — prepare the object under test and its stub collaborators
+2. **Exercise** — invoke the method we want to test
+3. **Verify state** — use assertions to verify the object's state
+4. **Teardown** — release any used resources
 
 ---
 
-### Характеристики на stub-овете
+### Characteristics of stubs
 
-- Могат да съдържат логика, която не е тривиална (напр. `InMemoryUserRepositoryStubImpl`) (+)
-- Броят на stub-овете расте експоненциално (-)
-- Не може да проверим дали даден метод на stub-a е извикан определен брой пъти (-)
+- Can contain non-trivial logic (e.g. `InMemoryUserRepositoryStubImpl`) (+)
+- The number of stubs grows exponentially (-)
+- Cannot verify whether a given method on the stub was called a certain number of times (-)
 
 ---
 
 ### Mocking
 
-- *Mock* наричаме конфигуриран обект с предварително зададени отговори на дадени извиквания на методи
-- Динамични wrapper-и за композираните класове
-- По подобие на stub-овете, ни служат за справяне с проблема с композираните класове
+- A *mock* is a configured object with pre-defined answers to given method calls
+- Mocks are dynamic wrappers for composed classes
+- Like stubs, they help us deal with the composed-class problem
 
 ---
 
@@ -598,7 +595,7 @@ public void testRegisterThrowsAppropriateException() {
     UserRepository mock = mock(UserRepository.class);
     when(mock.exists("test@test.com")).thenReturn(true);
 
-    UserService service = new UserService(mock);
+    var service = new UserService(mock);
 
     assertThrows(UserAlreadyExistsException.class, () -> service.register("test@test.com", "weak"),
         "UserAlreadyExistsException expected");
@@ -607,14 +604,14 @@ public void testRegisterThrowsAppropriateException() {
 
 ---
 
-### Жизнен цикъл на тестване с mock
+### Mock testing lifecycle
 
-1. Setup data - подготвяме обекта, който ще се тества, както и mock събратята му
-2. Setup expectations - задаваме желаните отговори
-3. Exercise - извикваме метода, който искаме да тестваме
-4. Verify expectations - уверяваме се, че правилният метод на mock-a се е извикал
-5. Verify state - използваме assertions, за да проверим състоянието на обекта
-6. Teardown - освобождаваме използваните ресурси
+1. **Setup data** — prepare the object under test and its mock collaborators
+2. **Setup expectations** — configure the desired responses
+3. **Exercise** — invoke the method we want to test
+4. **Verify expectations** — assert that the correct methods on the mock were called
+5. **Verify state** — use assertions to verify the object's state
+6. **Teardown** — release any used resources
 
 ---
 
@@ -646,9 +643,8 @@ public class Cinema {
 ```java
 @Test
 public void testBuyTicket() {
-    Map<String, Projection> projections =
-            Map.of("foo", new Projection("foo"));
-    Cinema cinema = new Cinema(projections);
+    var projections = Map.of("foo", new Projection("foo"));
+    var cinema = new Cinema(projections);
 
     boolean actual = cinema.buyTicket("bar", 3);
     assertFalse(actual);
@@ -687,7 +683,7 @@ public void testBuyTicket() {
     ProjectionService mock = mock(ProjectionService.class);
     when(mock.contains("bar")).thenReturn(false);
 
-    Cinema cinema = new Cinema(mock);
+    var cinema = new Cinema(mock);
 
     boolean actual = cinema.buyTicket("bar", 3);
     assertFalse(actual);
@@ -696,22 +692,22 @@ public void testBuyTicket() {
 
 ---
 
-### Използвайте mock-ове, когато:
+### Use mocks when:
 
-- Композираният клас се обръща към външен ресурс (мрежа, база данни, файлова система и т.н.)
-- Логиката в композирания клас не е тривиална
-- Не може да настроите test environment-a по тривиален начин
-
----
-
-### Не използвайте mock-ове, когато:
-
-- Композираният клас представлява value object, който може да подадете отвън
-- Може тривиално да настроите test environment-a
+- The composed class accesses an external resource (network, database, file system, etc.)
+- The logic in the composed class is non-trivial
+- Setting up the test environment is not trivial
 
 ---
 
-### Mocking библиотеки
+### Do not use mocks when:
+
+- The composed class is a value object that can be passed in directly
+- The test environment can be set up trivially
+
+---
+
+### Mocking libraries
 
 - [Mockito](https://github.com/mockito/mockito)
 - [EasyMock](https://github.com/easymock/easymock)
@@ -722,9 +718,9 @@ public void testBuyTicket() {
 
 ### Mockito
 
-- Ще разглеждаме mockito (4.0.0) като mocking библиотека
-- Възниква като разширение на функционалността на EasyMock
-- Една от 10-те най-популярни Java библиотеки изобщо
+- We will use Mockito (4.x) as our mocking library
+- It originated as an extension of EasyMock's functionality
+- One of the 10 most popular Java libraries overall
 - Open-source
 
 <p align="center">
@@ -735,11 +731,11 @@ public void testBuyTicket() {
 
 ### Setup
 
-- Mockito е външна библиотека
-- Може да я изтеглите от [тук](https://mvnrepository.com/artifact/org.mockito/mockito-core/4.0.0)
-- Изтеглете mockito-core jar-a и 3-те му dependency-та, както и [mockito-junit-jupiter](https://mvnrepository.com/artifact/org.mockito/mockito-junit-jupiter/4.0.0)
-- Ако ползвате IDE, добавете въпросните jar-ки в class path-a на проекта си
-- Алтернативно, ако сте запознати с maven/gradle, ползвайте тях :)
+- Mockito is an external library
+- Download it from [Maven Central](https://mvnrepository.com/artifact/org.mockito/mockito-core/4.0.0)
+- Download the `mockito-core` jar and its 3 dependencies, as well as [mockito-junit-jupiter](https://mvnrepository.com/artifact/org.mockito/mockito-junit-jupiter/4.0.0)
+- If using an IDE, add these jars to your project's classpath
+- Alternatively, use Maven or Gradle (recommended)
 
 ---
 
@@ -761,12 +757,12 @@ fancy-project
 
 ---
 
-### `mock()` и `verify()`
+### `mock()` and `verify()`
 
 ```java
 import static org.mockito.Mockito.*;
 
-List mockedList = mock(List.class);
+List<String> mockedList = mock(List.class);
 
 mockedList.add("one");
 mockedList.clear();
@@ -782,7 +778,7 @@ verify(mockedList, never()).add("two");
 ### `when()`
 
 ```java
-LinkedList mockedList = mock(LinkedList.class);
+LinkedList<String> mockedList = mock(LinkedList.class);
 
 when(mockedList.get(0)).thenReturn("first");
 when(mockedList.get(1)).thenThrow(new RuntimeException());
@@ -803,7 +799,7 @@ mockedList.get(999);
 
 ---
 
-### `@Mock` анотацията
+### The `@Mock` annotation
 
 ```java
 @ExtendWith(MockitoExtension.class)
@@ -815,7 +811,7 @@ public class UserServiceTest {
     public void testRegisterThrowsAppropriateException() {
         when(repositoryMock.exists("test@test.com")).thenReturn(true);
 
-        UserService service = new UserService(repositoryMock);
+        var service = new UserService(repositoryMock);
 
         assertThrows(UserAlreadyExistsException.class, () -> service.register("test@test.com", "weak"),
             "UserAlreadyExistsException expected");
@@ -825,27 +821,27 @@ public class UserServiceTest {
 
 ---
 
-### Добри практики
+### Best practices
 
-- Не правете йерархии от тестови класове
-- Mock-вайте само толкова колкото ви трябва за конкретния тест
-- Не mock-вайте value обекти
+- Do not create test class hierarchies
+- Mock only what is needed for the specific test
+- Do not mock value objects
 - Keep it short and simple (KISS)
 - Redesign when you cannot test it
 
 ---
 
-### Полезни четива
+### Further reading
 
 - [JUnit 5 User Guide](https://junit.org/junit5/docs/current/user-guide/index.html)
-- [JUnit 5 javadoc](https://junit.org/junit5/docs/current/user-guide/index.html)
+- [JUnit 5 Javadoc](https://junit.org/junit5/docs/current/api/)
 - [Unit Testing with JUnit](http://www.vogella.com/tutorials/JUnit/article.html)
 - [Mocks aren't stubs](https://martinfowler.com/articles/mocksArentStubs.html) by Martin Fowler
 - [Writing good tests](https://github.com/mockito/mockito/wiki/How-to-write-good-tests) by Mockito team
 
 ---
 
-### Полезни четива
+### Further reading
 
 <p align="center">
   <img width="45%" src="images/06.5-practical-unit-testing.png" alt="Practical unit testing" />

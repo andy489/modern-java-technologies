@@ -7,7 +7,7 @@ public enum Difficulty {
     HARD(3),
     EXTREME(4);
 
-    private int rank;
+    private final int rank;
 
     Difficulty(int rank) {
         this.rank = rank;

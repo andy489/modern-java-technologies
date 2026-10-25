@@ -1,10 +1,10 @@
-# Flight Scanner :airplane:
+# Flight Scanner
 
-Ще създадем проста търсачка за самолетни полети, подобна на [Skyscanner](https://www.skyscanner.net), с помощта на която ще разбираме, как да се придвижим между две локации с минимален брой прекачвания.
+We will build a simple flight search engine, similar to [Skyscanner](https://www.skyscanner.net), that finds how to travel between two locations with the minimum number of transfers.
 
 ### Flight Scanner
 
-В пакета `bg.sofia.uni.fmi.mjt.flightscanner` създайте клас `FlightScanner`, който има публичен конструктор по подразбиране и имплементира интерфейса `FlightScannerAPI`:
+In the package `bg.sofia.uni.fmi.mjt.flightscanner` create a class `FlightScanner` with a public default constructor that implements the `FlightScannerAPI` interface:
 
 ```java
 package bg.sofia.uni.fmi.mjt.flightscanner;
@@ -18,7 +18,7 @@ import java.util.List;
 public interface FlightScannerAPI {
 
     /**
-     * Adds a flight. If the same flight has already been added, call does nothing.
+     * Adds a flight. If the same flight has already been added, does nothing.
      *
      * @param flight the flight to add.
      * @throws IllegalArgumentException if flight is null.
@@ -26,28 +26,27 @@ public interface FlightScannerAPI {
     void add(Flight flight);
 
     /**
-     * Adds all flights specified. If any of the flights have already been added, those are ignored.
+     * Adds all flights. Already-added flights are ignored.
      *
-     * @param flights the flights to be added.
+     * @param flights the flights to add.
      * @throws IllegalArgumentException if flights is null.
      */
     void addAll(Collection<Flight> flights);
 
     /**
-     * Returns a list of flights from start to destination airports with minimum number of transfers.
-     * If there are several such flights with equal minimum number of transfers, returns any of them.
-     * If the destination is not reachable with any sequence of flights from the start airport,
-     * returns an empty list.
+     * Returns the flight path from start to destination with the minimum number of transfers.
+     * If multiple such paths exist, returns any one of them.
+     * Returns an empty list if the destination is unreachable.
      *
      * @param from the start airport.
      * @param to   the destination airport.
-     * @throws IllegalArgumentException if from or to is null, or if from and to are one and the same airport.
+     * @throws IllegalArgumentException if from or to is null, or they are the same airport.
      */
     List<Flight> searchFlights(Airport from, Airport to);
 
     /**
-     * Gets an unmodifiable copy of all outbound flights from the specified airport,
-     * sorted by number of free seats, in descending order.
+     * Returns an unmodifiable copy of all outbound flights from the airport,
+     * sorted by free seats descending.
      *
      * @param from the airport.
      * @throws IllegalArgumentException if from is null.
@@ -55,101 +54,58 @@ public interface FlightScannerAPI {
     List<Flight> getFlightsSortedByFreeSeats(Airport from);
 
     /**
-     * Gets an unmodifiable copy of all outbound flights from the specified airport,
-     * sorted by destination airport ID, in lexicographic order.
+     * Returns an unmodifiable copy of all outbound flights from the airport,
+     * sorted by destination airport ID lexicographically.
      *
      * @param from the airport.
      * @throws IllegalArgumentException if from is null.
      */
     List<Flight> getFlightsSortedByDestination(Airport from);
-
 }
 ```
 
-### Летища
+### Airports
 
-Всяко летище има уникално ID (тип `String`) и се моделира чрез `record`-a `Airport` с единствен компонент това ID, в пакета `bg.sofia.uni.fmi.mjt.flightscanner.airport`.  `Airport` трябва да има компактен конструктор, който да валидира, че  ID-то не е `null`, *empty* или *blank*. При неуспешна валидация, конструкторът трябва да хвърля `IllegalArgumentException`.
+Every airport has a unique ID (`String`) modelled by the `Airport` record in package `bg.sofia.uni.fmi.mjt.flightscanner.airport`. The compact constructor must validate that the ID is not null, empty, or blank; on failure throw `IllegalArgumentException`.
 
-### Полети
+### Flights
 
-Полетът се моделира от класа `RegularFlight` в пакета `bg.sofia.uni.fmi.mjt.flightscanner.flight` и имплементира интерфейса `Flight`:
+A flight is modelled by the class `RegularFlight` in `bg.sofia.uni.fmi.mjt.flightscanner.flight`, implementing the `Flight` interface:
 
 ```java
-package bg.sofia.uni.fmi.mjt.flightscanner.flight;
-
-import bg.sofia.uni.fmi.mjt.flightscanner.airport.Airport;
-import bg.sofia.uni.fmi.mjt.flightscanner.exception.FlightCapacityExceededException;
-import bg.sofia.uni.fmi.mjt.flightscanner.passenger.Passenger;
-
-import java.util.Collection;
-
 public interface Flight {
-
-    /**
-     * Gets the start airport of this flight.
-     */
     Airport getFrom();
-
-    /**
-     * Gets the destination airport of this flight.
-     */
     Airport getTo();
-
-    /**
-     * Adds a passenger to this flight.
-     *
-     * @param passenger the passenger to add.
-     * @throws FlightCapacityExceededException, if the flight is already fully booked (there are no free seats).
-     */
     void addPassenger(Passenger passenger) throws FlightCapacityExceededException;
-
-    /**
-     * Adds a collection of passengers to this flight.
-     *
-     * @param passengers the passengers to add.
-     * @throws FlightCapacityExceededException, in case the flight cannot accommodate that many passengers
-     * (the available free seats are not enough).
-     */
     void addPassengers(Collection<Passenger> passengers) throws FlightCapacityExceededException;
-
-    /**
-     * Gets all passengers on this flight. If there are no passengers, returns an empty list.
-     *
-     * @return a collection of all passengers on this flight, as an unmodifiable copy.
-     */
     Collection<Passenger> getAllPassengers();
-
-    /**
-     * Gets the number of free seats on this flight.
-     */
     int getFreeSeatsCount();
-
 }
 ```
 
-Инстанции на `RegularFlight` не могат да се създават директно, а се получават чрез публичен статичен метод със сигнатура `of(String flightId, Airport from, Airport to, int totalCapacity)`. Методът валидира аргументите си: ако `flightId` е `null`, *empty* или *blank*, или `from` или `to` летищата са `null`, или капацитетът на полета е отрицателно число, се хвърля `IllegalArgumentException`. Ако `from` и `to` са едно и също летище, се хвърля `runtime` изключението `InvalidFlightException`.
+`RegularFlight` instances are created via the static factory `of(String flightId, Airport from, Airport to, int totalCapacity)`. Validation rules:
+- `flightId` must not be null, empty, or blank → `IllegalArgumentException`
+- `from` and `to` must not be null → `IllegalArgumentException`
+- `totalCapacity` must not be negative → `IllegalArgumentException`
+- `from` and `to` must not be the same airport → `InvalidFlightException` (runtime)
 
-### Пътници
+### Passengers
 
-Пътник се моделира чрез `record`-a `Passenger` в пакета `bg.sofia.uni.fmi.mjt.flightscanner.passenger` с компоненти `(String id, String name, Gender gender)` (евентуалната им валидация оставяме на вас), а `Gender` е следният `enum`:
+A passenger is modelled by the `Passenger` record in `bg.sofia.uni.fmi.mjt.flightscanner.passenger` with components `(String id, String name, Gender gender)`, and `Gender` is:
 
 ```java
-package bg.sofia.uni.fmi.mjt.flightscanner.passenger;
-
 public enum Gender {
     MALE, FEMALE, OTHER
 }
 ```
 
-## Подсказки
+## Hints
 
-:point_right: Ако си представим летищата като върхове на граф, а полетите - като дъгите в графа, задачата ни се свежда до класическата задача за търсене на най-кратък път в безтегловен граф. За щастие, тази задача има просто решение чрез т.нар. [Breadth-First Search (BFS)](https://en.wikipedia.org/wiki/Breadth-first_search) алгоритъм. Какво представлява той и как се прилага към задачата за намиране на най-кратък път, може да видите например в това [видео](https://www.youtube.com/watch?v=oDqjPvD54Ss).
+> If we model airports as graph vertices and flights as directed edges, the problem reduces to the classic shortest-path search in an unweighted graph, solved with [Breadth-First Search (BFS)](https://en.wikipedia.org/wiki/Breadth-first_search).
 
-:point_right: В програмирането, граф може да се представи по няколко класически начина, използвайки по-прости структури от данни. За ефективна имплементация на BFS, е подходящо представяне, позволяващо лесно да намираме всички съседи на даден връх. Може да използваме представяне тип *adjacency list*: за всеки връх (летище) може да съхраняваме списък (или множество) от изходящите от този връх дъги (които представляват изходящите полети от това летище).
+> Use an *adjacency list* representation: for each airport, store the set of outbound flights. This makes BFS neighbourhood lookups efficient.
 
-### Пакети
-
-Спазвайте имената на пакетите на всички по-горе описани типове, тъй като в противен случай, решението ви няма да може да бъде автоматично тествано.
+### Package Structure
 
 ```
 src
@@ -169,6 +125,6 @@ src
     └── FlightScannerAPI.java
 ```
 
-### :warning: Забележки
+### Notes
 
-- Не променяйте по никакъв начин интерфейсите, дадени в условието.
+- Do not modify the interfaces provided in the problem statement.

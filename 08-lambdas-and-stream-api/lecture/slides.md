@@ -1,6 +1,6 @@
-# Ламбда изрази и Stream API
+# Lambda Expressions and Stream API
 
-01.12.2021
+2021-12-01
 
 <p align="center">
   <img width="50%" src="images/08.1-lambda.jpg" alt="Lambda" />
@@ -8,35 +8,35 @@
 
 ---
 
-### Предната лекция говорихме за:
+### Last Lecture: I/O Streams and Files
 
-- Входно-изходни потоци
-- Работа с файловата система
+- Input/output streams
+- Working with the file system
 
 ---
 
-### Днес ще разгледаме:
+### Today's Topics
 
-- Lambda изрази
+- Lambda expressions
 - Stream API
 
 ---
 
-### Функционални интерфейси
+### Functional Interfaces
 
-- *Функционалните интерфейси* са интерфейси с точно един абстрактен метод
-- Понякога се наричат още *SAM интерфейси* (Single Abstract Method)
-- Няма проблем, освен абстрактния си метод, да имат произволен брой статични или `default` методи
-- Могат да се анотират с незадължителната анотация `@FunctionalInterface`
+- A *functional interface* is an interface with exactly one abstract method
+- Also known as *SAM interfaces* (Single Abstract Method)
+- Can have any number of static or `default` methods in addition to the single abstract one
+- May be annotated with the optional `@FunctionalInterface` annotation
 
 ---
 
-### Един пример
+### Motivation: Named Comparator Class
 
 ```java
 public class NamesSorter {
     public static void main(String[] args) {
-        List<String> names = Arrays.asList("Peter", "Anna", "Mike", "Xenia");
+        List<String> names = List.of("Peter", "Anna", "Mike", "Xenia");
         Collections.sort(names, new NamesComparator());
         System.out.println(names);
     }
@@ -49,19 +49,19 @@ class NamesComparator implements Comparator<String> {
     }
 }
 
-// Налага се да създадем отделен клас, имплементиращ SAM интерфейс
+// A separate class is required just to implement the SAM interface
 ```
 
 ---
 
-### Един пример
+### Motivation: Anonymous Inner Class
 
 ```java
-// Може да го направим и с анонимен вътрешен клас,
-// но пак има доста boilerplate код
+// An anonymous inner class reduces the boilerplate,
+// but is still verbose
 public class NamesSorter {
     public static void main(String[] args) {
-        List<String> names = Arrays.asList("Peter", "Anna", "Mike", "Xenia");
+        List<String> names = List.of("Peter", "Anna", "Mike", "Xenia");
         Collections.sort(names, new Comparator<String>() {
             @Override
             public int compare(String a, String b) {
@@ -71,12 +71,12 @@ public class NamesSorter {
         System.out.println(names);
     }
 }
-// Има ли начин да подадем само дефиниция на функция като аргумент?
+// Can we pass just a function definition as an argument?
 ```
 
 ---
 
-### Един пример
+### Motivation: Lambda Expression
 
 ```java
 Collections.sort(names, new Comparator<String>() {
@@ -100,38 +100,38 @@ Collections.sort(names, (a, b) -> a.compareTo(b));
 
 ---
 
-### Ламбда израз
+### Lambda Expression
 
-- Функция, която няма име и не е метод на клас, се нарича *ламбда функция* или *ламбда израз*.
-- Терминът идва от ламбда смятането - универсален модел за описание на изчисления (алгоритъм), който може да се използва за описание на произволна машина на Тюринг. Въведено е от Алонзо Чърч през 30-те години на 20-ти век.
-
----
-
-### Ламбда изрази - синтаксис
-
-`параметри -> тяло`
-
-- Списъкът с параметри се огражда с кръгли скоби, а параметрите се разделят със запетаи. Може да е празен ()
-- Типът на параметрите може да бъде
-    - експлицитно зададен
-    - inferred: с `var` или въобще пропуснат
-- Когато има един-единствен параметър и неговият тип може да бъде пропуснат, може да се пропуснат и скобите
-- Тялото на ламбда израз се огражда с фигурни скоби {} и може да съдържа нула, един или повече изрази, разделени с ;
-    - Когато има единствен израз в тялото, return клаузата може да се изпусне
-    - Когато имаме повече от един израз, трябва експлицитно да предоставим return клауза
+- A function that has no name and is not a method of a class is called a *lambda function* or *lambda expression*
+- The term comes from the lambda calculus — a universal model of computation introduced by Alonzo Church in the 1930s
 
 ---
 
-### Ламбда изрази - примери
+### Lambda Expressions: Syntax
+
+`parameters -> body`
+
+- The parameter list is enclosed in parentheses; parameters are comma-separated; it may be empty `()`
+- Parameter types can be:
+    - explicitly stated
+    - inferred: via `var` or omitted entirely
+- When there is a single parameter whose type can be omitted, the parentheses may also be omitted
+- The body is enclosed in `{}` and may contain zero, one, or more statements separated by `;`
+    - When the body is a single expression, the `return` keyword may be omitted
+    - When the body contains more than one statement, an explicit `return` is required
+
+---
+
+### Lambda Expressions: Examples
 
 ```java
-// one parameter
+// one parameter, explicit type
 (String name) -> System.out.println("Hello " + name);
 
 // type inference
 (name) -> System.out.println("Hello " + name);
 
-// omit ()
+// omit parentheses for single parameter
 name -> System.out.println("Hello " + name);
 
 // three parameters
@@ -146,16 +146,16 @@ name -> System.out.println("Hello " + name);
 
 ---
 
-### Ламбда изрази - примери
+### Lambda Expressions: More Examples
 
 ```java
-// omit {} and the return as there is single expression in the body
+// omit {} and return — single expression body
 (a, b) -> a + b;
 
-// multiple expressions in the body
-(a, b) -> {a = 5; b = 2; return a + b;}; 
+// multiple statements in the body
+(a, b) -> { a = 5; b = 2; return a + b; };
 
-// body on multiple lines
+// multi-line body
 (a, b) -> {
     a = 5;
     b = 2;
@@ -165,18 +165,18 @@ name -> System.out.println("Hello " + name);
 
 ---
 
-### Функции със странични ефекти
+### Functions with Side Effects
 
-- Страничен ефект е всяко действие във функция, което променя външно за нея състояние:
-    - промяна на данни (външни за функцията)
-    - I/O операция
-    - хвърляне на изключение
-    - извикване на друга функция, която предизвиква страничен ефект
-- Всеки метод в Java, който е от тип `void`, извършва страничен ефект.
+- A side effect is any action inside a function that changes state external to it:
+    - modifying data outside the function
+    - performing I/O
+    - throwing an exception
+    - calling another function that has a side effect
+- Every `void` method in Java produces a side effect
 
 ---
 
-### Функции със странични ефекти - пример
+### Functions with Side Effects: Example
 
 ```java
 public class BankAccount {
@@ -201,24 +201,24 @@ account.transfer(10); // 120
 
 ---
 
-### Чисти функции
+### Pure Functions
 
-- Чистите функции не извършват странични ефекти
-- Винаги когато извикаме функцията с дадени параметри, е гарантиран един и същ резултат
-
----
-
-### Чисти функции
-
-- Резултатът им може да се запази и преизползва
-- Извикването на функцията може да бъде заменено с резултата (referential transparency)
-- Чистите функции са лесно композируеми
-- Чистите функции са лесни за анализ на проблеми
-- Позволяват изчислението да се паралелизира
+- Pure functions produce no side effects
+- Given the same arguments they always return the same result
 
 ---
 
-### Чисти функции - пример
+### Pure Functions: Benefits
+
+- Their result can be cached and reused
+- A function call can be replaced by its result (*referential transparency*)
+- Pure functions compose easily
+- Pure functions are straightforward to reason about
+- Their computation can be parallelised safely
+
+---
+
+### Pure Functions: Example
 
 ```java
 public static int add(int a, int b) {
@@ -235,43 +235,42 @@ add(3, 5) // 8
 
 ---
 
-### Функции от по-висок ред
+### Higher-Order Functions
 
-- Функции, които приемат като аргумент функция или връщат функция като резултат, се наричат *функции от по-висок ред*
-- Функциите от по-висок ред ни предоставят средство, с което да композираме логика, комбинирайки функции
-
----
-
-### Ламбда изразите като тип
-
-- Java e статично типизиран език ⇨ ламбда изразите също си имат тип
-- Типът на ламбда израз е някакъв функционален интерфейс
-- По време на компилация, ламбда изразът трябва да съответства на абстрактния метод на функционалния интерфейс
-    - следователно, се знае типът и на параметрите на функцията, и на връщания резултат
-- Може да декларираме променливи от тип функционален интерфейс и да им присвояваме ламбда изрази, или да декларираме методи с формални параметри - функционален интерфейс и да подаваме ламбда израз като аргумент
+- Functions that accept a function as an argument or return a function as a result are called *higher-order functions*
+- They provide a mechanism for composing logic by combining functions
 
 ---
 
-### Стандартни функционални интерфейси
+### Lambda Expressions as Types
 
-JDK-то съдържа множество стандартни функционални интерфейси. Намират се в пакета `java.util.function`.
-Четирите най-използвани от тях са
+- Java is statically typed — lambda expressions have a type too
+- The type of a lambda expression is a functional interface
+- At compile time the lambda must match the single abstract method of that interface (parameter types and return type)
+- Variables of a functional interface type can be assigned lambda expressions; method parameters of a functional interface type accept lambda arguments
+
+---
+
+### Standard Functional Interfaces
+
+The JDK provides many standard functional interfaces in `java.util.function`.
+The four most commonly used are:
 
 <br>
 
-| Интерфейс               | Ламбда нотация |
-| ----------------------- |--------------- |
-| Supplier<T>             | () -> T        |
-| Consumer<T>             | (T) -> void    |
-| Predicate<T>            | (T) -> boolean |
-| Function<T, R>          | (T) -> R       |
+| Interface               | Lambda notation |
+| ----------------------- |---------------- |
+| `Supplier<T>`           | `() -> T`       |
+| `Consumer<T>`           | `(T) -> void`   |
+| `Predicate<T>`          | `(T) -> boolean`|
+| `Function<T, R>`        | `(T) -> R`      |
 
 ---
 
 ### `Supplier<T>: () -> T`
 
-Представлява операция без аргументи, която връща резултат.
-Съдържа един абстрактен метод, `T get()`.
+Represents an operation with no arguments that returns a result.
+Contains one abstract method: `T get()`.
 
 <br>
 
@@ -284,57 +283,51 @@ System.out.println(supplyYear.get()); // 2021
 
 ### `Consumer<T>: (T) -> void`
 
-```java
-// Представлява операция, която приема единствен аргумент като вход
-// и не връща резултат. За разлика от повечето функционални интерфейси,
-// Consumer<T> работи чрез странични ефекти.
-// Съдържа един абстрактен метод, `void accept(T t)`.
-// Съдържа и метод `default Consumer<T> andThen(Consumer<T> after)`,
-// чрез който може да се chain-ва с други `Consumer<T>` операции.
+Represents an operation that accepts a single argument and returns no result.
+Unlike most functional interfaces, `Consumer<T>` operates via side effects.
+Contains one abstract method: `void accept(T t)`.
+Also provides `default Consumer<T> andThen(Consumer<T> after)` for chaining.
 
+```java
 Consumer<Double> inEUR = s -> System.out.println("EUR: " + s);
 Consumer<Double> inUSD = s -> System.out.println("USD: " + s);
 
-inEUR.accept(10.0); // EUR: 10.0
-inEUR.andThen(inUSD).accept(10.0); // EUR: 10.0
-                                   // USD: 10.0
+inEUR.accept(10.0);                  // EUR: 10.0
+inEUR.andThen(inUSD).accept(10.0);   // EUR: 10.0
+                                     // USD: 10.0
 ```
 
 ---
 
 ### `Predicate<T>: (T) -> boolean`
 
-```java
-// Представлява предикат: булева функция с един аргумент.
+Represents a predicate (boolean-valued function) of one argument.
 
-// abstract method: evaluates this predicate on the given argument
+```java
+// evaluates this predicate on the given argument
 boolean test(T t);
 
-// Returns a predicate that represents the logical negation
-// of this predicate
+// returns a predicate that is the logical negation of this predicate
 default Predicate<T> negate();
 
-// Returns a composed predicate that represents a short-circuiting
-// logical AND of this predicate and another
-default Predicate<T> and(Predicate<? super T> other); 
+// returns a composed predicate representing short-circuit AND
+default Predicate<T> and(Predicate<? super T> other);
 
-// Returns a composed predicate that represents a short-circuiting
-// logical OR of this predicate and another
+// returns a composed predicate representing short-circuit OR
 default Predicate<T> or(Predicate<? super T> other);
 
-// Returns a predicate that tests if two arguments are equal
-// according to Objects.equals(Object, Object)
+// returns a predicate that tests equality via Objects.equals
 static <T> Predicate<T> isEqual(Object targetRef);
 ```
 
 ---
 
-### `Predicate<T>: (T) -> boolean`
+### `Predicate<T>`: Example
 
 ```java
-Predicate<Integer> isLessThan10 = i -> i < 10;
+Predicate<Integer> isLessThan10  = i -> i < 10;
 Predicate<Integer> isGreaterThan0 = i -> i > 0;
-System.out.println(isLessThan10.and(isGreaterThan0).test(5)); // true
+System.out.println(isLessThan10.and(isGreaterThan0).test(5));  // true
 System.out.println(isLessThan10.and(isGreaterThan0).test(10)); // false
 ```
 
@@ -342,124 +335,122 @@ System.out.println(isLessThan10.and(isGreaterThan0).test(10)); // false
 
 ### `Function<T, R>: (T) -> R`
 
-```java
-// Представлява функция, която приема един аргумент и връща резултат
+Represents a function that accepts one argument and produces a result.
 
-// abstract method: applies this function to the given argument
+```java
+// applies this function to the given argument
 R apply(T t);
 
-// Returns a composed function that first applies this function to its
-// input, and then applies the after function to the result
+// returns a composed function: first this, then after
 default <V> Function<T,V> andThen(Function<? super R,? extends V> after);
 
-// Returns a composed function that first applies the before function
-// to its input, and then applies this function to the result
+// returns a composed function: first before, then this
 default <V> Function<V,R> compose(Function<? super V,? extends T> before);
 
-// Returns a function that always returns its input argument
+// returns a function that always returns its input argument
 static <T> Function<T,T> identity();
 ```
 
 ---
 
-### `Function<T, R>: (T) -> R`
+### `Function<T, R>`: Example
 
 ```java
-Function<Integer, Integer> square = i -> i * i;
+Function<Integer, Integer> square      = i -> i * i;
 Function<Integer, Integer> subtractOne = i -> i - 1;
 System.out.println(square.andThen(subtractOne).apply(3)); // 8
 System.out.println(square.compose(subtractOne).apply(3)); // 4
 
-// z1(x) = f(g(x))
-Function<Integer, Integer> z1 = f.compose(g);
+// z1(x) = square(subtractOne(x))  — subtractOne applied first
+Function<Integer, Integer> z1 = square.compose(subtractOne);
 
-// z2(x) = g(f(x))
-Function<Integer, Integer> z2 = f.andThen(g);
+// z2(x) = subtractOne(square(x))  — square applied first
+Function<Integer, Integer> z2 = square.andThen(subtractOne);
 ```
 
 ---
 
-### Други стандартни функционални интерфейси
+### Other Standard Functional Interfaces
 
-Останалите 39 функционални интерфейси в `java.util.function` са вариации на четирите разгледани.
-Създадени са, за да се постигне едно или няколко от следните:
-- по-добро бързодействие чрез избягване на autoboxing чрез използване на примитивните типове `int`, `long` и `double`
-- позволяване на два аргумента и/или по-кратка нотация
+The remaining 39 interfaces in `java.util.function` are variations of the four above,
+designed to achieve one or more of:
+- better performance by avoiding autoboxing through primitive specialisations (`int`, `long`, `double`)
+- support for two input arguments and/or shorter notation
 
-  ```java
-  // shorter notation without generics and avoiding autoboxing
-  IntFunction<R>
+```java
+// shorter notation without generics, avoids autoboxing
+IntFunction<R>
 
-  // function of two arguments
-  BiFunction<T, U, R>
+// function of two arguments
+BiFunction<T, U, R>
 
-  // allows two input parameters of type T and returns a value of type T
-  BinaryOperator<T>
-  ```
-
----
-
-### Контекст на ламбда израз
-
-- Компилаторът определя типа на ламбда израз в зависимост от контекста на употребата му:
-    - инициализация или присвояване на променлива
-    - параметър на метод или конструктор
-    - връщане на резултат от метод
-    - сast операция
-- Един и същ ламбда израз може да има различен тип в зависимост от контекста:
-
-  ```java
-  Function<String, Integer> func = x -> 1;
-  Comparable<Double>        comp = x -> 1;
-  ```
+// two parameters of type T, returns T
+BinaryOperator<T>
+```
 
 ---
 
-### Variable capture
+### Lambda Expression Context
 
-- Ламбда изразите могат да достъпват променливи, декларирани извън самия ламбда израз. Това може да са
-    - локални променливи
-    - член-променливи на обхващащия клас
-    - статични член-променливи на обхващащия клас
+The compiler infers the type of a lambda expression from its usage context:
+- variable initialisation or assignment
+- method or constructor parameter
+- method return value
+- cast expression
+
+The same lambda can have different types in different contexts:
+
+```java
+Function<String, Integer> func = x -> 1;
+Comparable<Double>        comp = x -> 1;
+```
 
 ---
 
-### Variable capture
+### Variable Capture
 
-- Ако ламбда израз използва локална променлива, декларирана извън него, тази променлива трябва да е `final` или *ефективно final* (т.е. да не си променя стойността в този контекст)
-- Причината за това ограничение е, че ламбда функцията може да се предава като аргумент и изпълнява в различни контексти (например, различни нишки) и резултатът от изпълнението ѝ не трябва да зависи от контекста
-    - Също, възможно е ламбда изразът да се изпълни след като локалната променлива е унищожена (например, ако метод връща такъв ламбда израз като резултат)
+Lambda expressions can access variables declared outside them:
+- local variables
+- instance fields of the enclosing class
+- static fields of the enclosing class
 
 ---
 
-### Variable capture
+### Variable Capture: Effectively Final
+
+- If a lambda uses a local variable from the enclosing scope, that variable must be `final` or *effectively final* (never reassigned after initialisation)
+- This restriction exists because a lambda may be passed as an argument and executed in a different context (e.g. a different thread), so its result must not depend on mutable external state
+- The lambda may also outlive the local variable (e.g. when a method returns a lambda)
+
+---
+
+### Variable Capture: Example
 
 ```java
 int x = 7;
 Function<Integer, Integer> multiply = i -> i * x;
-// x++; would cause compilation error on the line above
+// x++; // would cause a compilation error on the line above
 ```
 
 ---
 
-### Ключовата дума `this`
+### The `this` Keyword in Lambdas
 
-- Ключовата дума `this` в ламбда израз реферира инстанцията на обхващащия клас, която се нарича още *обхващаща инстанция (enclosing instance)*, *обхващащ контекст* или *обхващащ scope*.
-
----
-
-### Ламбда изрази: добри практики
-
-- Препоръчва се ламбда изразите да не модифицират:
-    - данните на източника (*non-interference*)
-    - външни променливи (*stateless*)
-- Препоръчва се ламбда изразите да са one-liners
+The keyword `this` inside a lambda refers to the instance of the *enclosing class* (also called the *enclosing instance* or *enclosing scope*), not to the lambda itself.
 
 ---
 
-### Референции към методи
+### Lambda Expressions: Best Practices
 
-Много често в ламбда изразите просто делегираме параметрите на някой съществуващ метод:
+- Lambdas should not modify the source data (*non-interference*)
+- Lambdas should avoid relying on mutable external state (*stateless*)
+- Keep lambdas as short as possible — prefer one-liners
+
+---
+
+### Method References
+
+When a lambda simply delegates its parameters to an existing method, a method reference is a more concise alternative:
 
 ```java
 Comparator<String> comp1 = (s1, s2) -> s1.compareTo(s2);
@@ -467,18 +458,18 @@ Comparator<String> comp1 = (s1, s2) -> s1.compareTo(s2);
 
 <br>
 
-Референциите към методи са удобен синтаксис, с който може да се реферира съществуващ метод на клас:
+Method references use the `::` syntax:
 
 ```java
 Comparator<String> comp2 = String::compareTo;
-Predicate<String> filter = "Ivan"::equalsIgnoreCase;
+Predicate<String>  filter = "Ivan"::equalsIgnoreCase;
 ```
 
 ---
 
-### Референции към методи - видове
+### Method References: Kinds
 
-Референция към статичен метод (ClassName::methName)
+Reference to a static method (`ClassName::methodName`)
 
 ```java
 String::valueOf
@@ -486,7 +477,7 @@ String::valueOf
 
 <br>
 
-Референция към метод на конкретна инстанция от даден клас (instanceRef::methName)
+Reference to a method on a specific instance (`instance::methodName`)
 
 ```java
 "FPRocks!"::equals
@@ -494,7 +485,7 @@ String::valueOf
 
 <br>
 
-Референция към метод на произволна инстанция на даден клас (ClassName::methName)
+Reference to a method on an arbitrary instance of a class (`ClassName::methodName`)
 
 ```java
 String::toLowerCase
@@ -502,17 +493,18 @@ String::toLowerCase
 
 ---
 
-### Референции към методи - видове
+### Method References: Kinds (continued)
 
-Конструктор (ClassName::new)
+Constructor reference (`ClassName::new`)
 
 ```java
-String::new, String[]::new
+String::new
+String[]::new
 ```
 
 <br>
 
-Метод на суперкласа (super::methName)
+Superclass method reference (`super::methodName`)
 
 ```java
 super::equals
@@ -522,68 +514,64 @@ super::equals
 
 ### Java Stream API
 
-- Ламбда изразите, заедно с функционалните интерфейси, разширяват възможностите на Java с елементи на функционалното програмиране
-- Те позволяват предаването на поведение (функции) като параметри на библиотеки, оптимизирани за бързодействие при обработката на данни
-    - По този начин, един app developer може да се фокусира върху бизнес логиката на приложението си, оставяйки аспекти като бързодействието на авторите на въпросните библиотеки.
-- Една такава основна библиотека е `java.util.stream`
+- Lambda expressions and functional interfaces extend Java with elements of functional programming
+- They enable passing behaviour (functions) as parameters to data-processing libraries optimised for performance
+    - An application developer can focus on business logic while leaving performance concerns to library authors
+- The primary such library is `java.util.stream`
 
 ---
 
 ### `java.util.stream`
 
-- Интерфейсите и класовете от пакета `java.util.stream`, които съвкупно наричаме Java Stream API, са предназначени за ефективната последователна или паралелна обработка на крайни или безкрайни потоци от данни
-- Алгоритмите, работещи с данни във вид на потоци, се реализират като последователност (pipeline) от операции върху елементите на потока
+- The types in `java.util.stream` — collectively the Java Stream API — are designed for efficient sequential or parallel processing of finite or infinite data streams
+- Algorithms that operate on streams are expressed as a *pipeline* of operations on stream elements
 
 ---
 
-### Инициализация на поток от колекции, масиви и низове
-
-Има множество начини да се инициализира поток:
+### Creating Streams from Collections, Arrays, and Strings
 
 ```java
-Stream.empty() // създава празен поток (без елементи)
-Stream.of(T... values) // създава поток от елементи от тип T
+Stream.empty()           // creates an empty stream
+Stream.of(T... values)   // creates a stream from the given elements
 
-// връща поток от елементите на дадената колекция
-Collection.stream()
+Collection.stream()          // stream from a collection
+Collection.parallelStream()  // parallel stream from a collection
 
-// връща паралелен поток от елементите на дадената колекция
-Collection.parallelStream() 
+Arrays.stream(T[] array)     // stream from an array
 
-Arrays.stream((T[] array)) // връща поток от елементите на масив
+IntStream streamOfChars = "abc".chars(); // stream of characters
 
-IntStream streamOfChars = "abc".chars(); // поток от символите на низ
-
-Stream<String> streamOfString = // split-ва низ като поток по шаблон
+// splits a string into a stream by a regex delimiter
+Stream<String> streamOfString =
         Pattern.compile(", ").splitAsStream("a, b, c");
 ```
 
 ---
 
-### Потоци от елементи от примитивен тип
+### Primitive Streams
 
-`Stream<T>` е generic интерфейс и няма как да се използва за примитивни типове като параметър.
-Затова съществуват три специализирани интерфейса за `int`, `long` и `double` потоци:
+`Stream<T>` is generic and cannot be used with primitive types.
+Three specialised interfaces cover the most common cases:
 
   - `IntStream`
   - `LongStream`
   - `DoubleStream`
 
-Инстанции на примитивните потоци се създават със статичните `of`, `range()` и `rangeClosed()` методи на интерфейсите или индиректно, от API-та, които връщат примитивен поток.
+Instances are created via the static `of()`, `range()`, and `rangeClosed()` methods:
 
 ```java
 IntStream intStream = IntStream.of(1, 2, 3);
 int[] intArray = {1, 2, 3};
 IntStream intStreamFromArray = IntStream.of(intArray);
-LongStream longsRange = LongStream.range(1, 3); // [1, 3)
+LongStream longsRange       = LongStream.range(1, 3);       // [1, 3)
 LongStream longsRangeClosed = LongStream.rangeClosed(1, 3); // [1, 3]
 ```
 
 ---
 
-### Потоци от елементи от примитивен тип
+### Primitive Streams: Statistical Methods
 
-`IntStream`, `LongStream` и `DoubleStream` имат допълнителни статистически методи:
+`IntStream`, `LongStream`, and `DoubleStream` add statistical terminal operations:
 
 - `average()`
 - `max()`
@@ -592,100 +580,94 @@ LongStream longsRangeClosed = LongStream.rangeClosed(1, 3); // [1, 3]
 
 ---
 
-### Инициализация на поток от съдържание на файл или директория
+### Creating Streams from Files and Directories
 
 ```java
 // java.nio.file.Files
 
-// създава поток от низове, представляващи редовете на даден текстов файл
+// stream of lines from a text file
 Stream<String> lines(Path path)
 
-// връща съдържанието на директория като поток от файлове и директории
+// stream of entries in a directory (one level deep)
 Stream<Path> list(Path dir)
 
-// връща съдържанието на директорно поддърво
+// stream of all paths in a directory tree
 Stream<Path> walk(Path start, FileVisitOption... options)
 
-// връща съдържанието на директорно поддърво, което отговаря на зададения
-// предикат, обхождайки до зададена дълбочина
-find(Path start, int maxDepth,
+// stream of paths matching a predicate, up to a given depth
+Stream<Path> find(Path start, int maxDepth,
         BiPredicate<Path, BasicFileAttributes> matcher,
         FileVisitOption... options)
 ```
 
 ---
 
-### Инициализация на поток от съдържание на файл или директория
+### Creating Streams from a `BufferedReader`
 
 ```java
-// java.io.BufferredReader
+// java.io.BufferedReader
 
-// създава поток от низове, представляващи редовете, прочитани от даден
-// BufferredReader (най-често, от файл)
+// stream of lines read from this reader (typically a file)
 Stream<String> lines()
 ```
 
 ---
 
-### Инициализация на поток от псевдослучайни числа
+### Creating Streams of Random Numbers
 
 ```java
 // java.util.Random
 
-// създава безкраен поток от псевдослучайни double числа в интервала [0, 1)
+// infinite stream of random doubles in [0, 1)
 DoubleStream doubles()
 
-// създава безкраен поток от псевдослучайни int числа
+// infinite stream of random ints
 IntStream ints()
 
-// създава безкраен поток от псевдослучайни long числа
+// infinite stream of random longs
 LongStream longs()
 ```
 
 ---
 
-### Инициализация на поток чрез итерация
+### Creating Streams via Iteration
 
 ```java
 // java.util.Stream
 
-// Създава безкраен последователен поток чрез итеративното прилагане
-// на втория аргумент към първия аргумент.
-// Елементите на потока са seed, f(seed), f(f(seed)), ...
-Stream<T> iterate(T seed, UnaryOperator<T> f)
+// infinite sequential stream: seed, f(seed), f(f(seed)), ...
+static <T> Stream<T> iterate(T seed, UnaryOperator<T> f)
 
-// Създава краен последователен поток чрез итеративното прилагане
-// на третия аргумент към първия: // seed, f(seed), f(f(seed))
-// докато вторият параметър връща true
-Stream<T> iterate(T seed, Predicate<T> hasNext, UnaryOperator<T> f) 
+// finite sequential stream: seed, f(seed), ... while hasNext returns true
+static <T> Stream<T> iterate(T seed,
+                              Predicate<T> hasNext,
+                              UnaryOperator<T> f)
 
-Stream.iterate(1, i -> ++i) // 1, 2, 3, 4, 5, ...
+Stream.iterate(1, i -> ++i)              // 1, 2, 3, 4, 5, ...
 Stream.iterate(1, i -> i < 4, i -> ++i) // 1, 2, 3
 ```
 
 ---
 
-### Инициализация на поток чрез `Supplier`
+### Creating Streams via `Supplier`
 
 ```java
 // java.util.Stream
 
-// създава безкраен поток, всеки елемент на който се генерира
-// от подадената Supplier функция
-Stream<T> generate(Supplier<T> supplier)
+// infinite stream; each element is produced by the Supplier
+static <T> Stream<T> generate(Supplier<T> supplier)
 
-Stream.generate(() -> 1) // безкраен поток 1, 1, 1, 1, ...
+Stream.generate(() -> 1) // infinite stream: 1, 1, 1, 1, ...
 ```
 
 ---
 
-### Конкатенация на потоци
+### Concatenating Streams
 
 ```java
 // java.util.Stream
 
-// създава поток, който представлява конкатенацията
-// на подадените два потока
+// creates a stream that is the concatenation of two streams
 static <T> Stream<T> concat(Stream<? extends T> a, Stream<? extends T> b)
 
 Stream<Integer> stream1 = List.of(1, 2).stream();
@@ -695,36 +677,33 @@ Stream.concat(stream1, stream2) // 1, 2, 2, 3, 4
 
 ---
 
-### Операции върху потоци
+### Stream Operations
 
-- Много от методите на `Stream` интерфейса, онези, които имат параметър функционален интерфейсен тип, се наричат *операции*
-- Stream API-то предоставя набор от функции от по-висок ред, чрез които декларативно можем да обработим данните
-
----
-
-### Операции върху потоци
-
-- Операциите с потоци биват два вида:
-    - *Междинни* – връщат `Stream` обект като резултат
-    - *Терминални* – връщат обект, различен от `Stream`, или не връщат резултат
-
-- Обработката на потоци типично се организира като pipeline
-    - потокът се създава с инициализираща операция,
-    - поредица от междинни операции обработват потока, като резултатът от всяка става вход за следващата във веригата
-    - накрая терминална операция продуцира резултат или страничен ефект и приключва потока
+- Methods on `Stream` that accept a functional interface parameter are called *operations*
+- Stream API provides a set of higher-order functions for declarative data processing
 
 ---
 
-### Операции върху потоци
+### Two Kinds of Stream Operations
+
+- *Intermediate* operations — return a `Stream`
+- *Terminal* operations — return a non-`Stream` result or produce a side effect
+
+Processing is typically organised as a **pipeline**:
+1. A stream is created from a source
+2. A chain of intermediate operations transforms the stream
+3. A terminal operation produces the final result and closes the stream
+
+---
+
+### Stream Pipeline
 
 <p align="center">
-  <img width="80%" src="images/08.2-stream-operations-pipeline.png" alt="Lambda" />
+  <img width="80%" src="images/08.2-stream-operations-pipeline.png" alt="Stream operations pipeline" />
 </p>
 
 ```java
-// Stream API pipeline
-List<Person> people;
-// [...]
+List<Person> people = // ...
 List<Person> result = people.stream()
         .filter(p -> p.getFirstName().equals("Nikolay"))
         .filter(p -> p.getAge() < 25)
@@ -734,284 +713,252 @@ List<Person> result = people.stream()
 
 ---
 
-### Междинни операции върху потоци
+### Intermediate Operations: Overview
 
-- Междинните операции връщат `Stream` обект
-- който съдържа същите или модифицирани елементи,
-- като типът на елементите може да е същият или различен от типа на елементите във входния поток.
-- Според функционалността си, се разделят на *филтриращи*, *map-ващи* и *сортиращи*
+Intermediate operations return a `Stream` whose elements may be the same or transformed.
+The element type may also change.
+They fall into three categories: *filtering*, *mapping*, and *sorting*.
 
 ---
 
-### Филтриращи междинни операции: `filter`
+### Filtering: `filter`
 
 ```java
-// Междинна операция, приема функция (T -> boolean), т.е. предикат
-// и връща поток само с елементите, за които предикатът е true.
+// Accepts a predicate (T -> boolean) and returns a stream
+// containing only the elements for which the predicate is true.
 
 employees.filter(e -> e.getAge() < 25);
 ```
 
 ---
 
-### Филтриращи междинни операции: `limit`
+### Filtering: `limit`
 
 ```java
-// Междинна операция, приема цяло число N и връща краен поток
-// само с първите N елементa на входния поток. Особено често се използва,
-// за да се обработи крайна част от безкраен поток.
+// Accepts an integer N and returns a stream containing only
+// the first N elements. Especially useful for capping infinite streams.
 
 employees.limit(100);
 ```
 
 ---
 
-### Филтриращи междинни операции: `distinct`
+### Filtering: `distinct`
 
 ```java
-// Междинна операция без аргументи, връща елементите на входния поток
-// като премахва повтарящите се. Критерият за еднаквост е equals().
+// Returns a stream with duplicate elements removed.
+// Equality is determined by equals().
 
 employees.distinct();
 ```
 
 ---
 
-### Филтриращи междинни операции: `skip`, `dropWhile`, `takeWhile`
+### Filtering: `skip`, `dropWhile`, `takeWhile`
 
 ```java
-// Междинна операция, приема цяло число N и връща краен поток,
-// игнорирайки (пропускайки) първите N елементa на входния поток.
-
+// skip: discards the first N elements
 employees.skip(10);
 
-// пропуска първите елементи на потока, докато предикатът връща true
+// dropWhile: discards elements while the predicate is true,
+// then passes all remaining elements
+employees.dropWhile(e -> e.getAge() < 18);
 
-employees.dropWhile(e -> e.getAge < 18);
-
-// допуска само първите елементи на потока, докато предикатът връща true
-
+// takeWhile: passes elements while the predicate is true,
+// then discards the rest
 employees.takeWhile(e -> e.getName().startsWith("A"));
 ```
 
 ---
 
-### Map-ващи междинни операции: `map`
+### Mapping: `map`
 
-- Map-ващите операции за единствени междинни операции, които променят елементите на входния поток
-- Те map-ват, (трансформират) всеки елемент на входния поток към нов елемент
-- Map е междинна операция, приема функция (T -> V) и връща поток със същия брой елементи, но oт новия тип (V)
+Mapping operations are the only intermediate operations that transform elements.
+`map` accepts a function `(T -> V)` and returns a stream of the same size with elements of the new type.
 
-  ```java
-  employees.map(e -> e.getName());
+```java
+employees.map(e -> e.getName());
 
-  // map операции, специализирани за примитивни потоци -
-  // mapToInt, mapToLong, mapToDouble
-
-  employees.mapToInt(e -> e.getAge());
-  employees.mapToDouble(e -> e.getSalary());
-
-  // the same as the above but with method reference
-  employees.mapToDouble(Employee::getSalary());
-  ```
+// primitive-specialised variants: mapToInt, mapToLong, mapToDouble
+employees.mapToInt(e -> e.getAge());
+employees.mapToDouble(Employee::getSalary);
+```
 
 ---
 
-### Map-ващи междинни операции: `flatMap`
+### Mapping: `flatMap`
 
-Междинна операция, приема функция (T -> Stream[V]) и връща поток с линейна структура (flat), вместо поток от потоци.
+Accepts a function `(T -> Stream<V>)` and returns a flat stream instead of a stream of streams.
 
 ```java
-// Returns 1-dimensional stream with all employee bonuses
-// Stream<T> -> flatMap -> Stream<V>
+// Returns a 1-dimensional stream with all employee salaries and bonuses
 employees.flatMap(e -> Stream.of(e.getSalary(), e.getBonus()));
 ```
 
 <br>
 
-Има и `flatMap` операции, специализирани за примитивни потоци - `flatMapToInt`, `flatMapToLong`, `flatMapToDouble`
+Primitive-specialised variants: `flatMapToInt`, `flatMapToLong`, `flatMapToDouble`
 
 ---
 
-### Сортиращи междинни операции: `sorted`
+### Sorting: `sorted`
 
 ```java
-// according to their natural order
+// natural order (elements must implement Comparable)
 employees.sorted();
 
-// according to the specified Comparator
-employees.sorted((e1, e2) -> e1.getSalary() < e2.getSalary());
+// custom Comparator
+employees.sorted(Comparator.comparingDouble(Employee::getSalary));
 ```
 
 <br>
 
-Обърнете внимание, че тези операции не могат да приключат докато не се обработят всички елементи на потока.
-Te са скъпи откъм ресурси и бавни откъм performance, така че трябва да се ползват само за малки потоци.
+Note: sorting operations must process **all** elements before emitting any output.
+They are expensive in both time and memory — use them only for small streams.
 
 ---
 
-### Терминални операции: обработка елемент по елемент с `forEach`
+### Terminal Operations: `forEach`
 
-Терминална операция, приема функция (T -> void) и не връща резултат (т.е. няма функционална природа)
-
-<br>
+Accepts a `Consumer<T>` and produces no return value (operates via side effects).
 
 ```java
-// Prints the name and age of each employee
-// Stream<T> -> forЕach -> void
-
+// prints the name and age of each employee
 employees.forEach(e -> System.out.println(e.getName() + " " + e.getAge()));
 ```
 
 ---
 
-### Терминални операции: `reduce`
+### Terminal Operations: `reduce`
 
-Терминална операция, приема функция ((T, T) -> T) и връща единичен резултат
-
-<br>
+Accepts a `BinaryOperator<T>` and folds the stream into a single result.
 
 ```java
-// Returns the sum of employee salaries
-// Stream<T> -> reduce -> T
+// sum of all employee salaries
 employees.mapToDouble(Employee::getSalary)
-     .reduce((res, el) -> res + el);
+         .reduce((res, el) -> res + el);
 ```
 
 <br>
 
-- Специализирани reduce операции: `min()`, `max()`
-- Допълнителни reduce операции за `Int`/`Long`/`DoubleStream`: `sum()`, `average()`
+- Specialised reduce operations: `min()`, `max()`
+- Additional reduce operations on `IntStream`/`LongStream`/`DoubleStream`: `sum()`, `average()`
 
 ---
 
-### `reduce` - обща форма
+### `reduce`: General Form
 
-Reduce има и по-обща форма, която дава възможност да се върне резултат, различен от типа на потока ((V, T) -> V)
-
-<br>
+The general form allows the result to differ from the element type `(V, T) -> V`:
 
 ```java
-// Stream<T> -> reduce -> V
 double result = employees.reduce(
-    0.0,                               // initial value
+    0.0,                               // identity / initial value
     (res, el) -> res + el.getSalary(), // accumulator
-    (left, right) -> left + right);    // combiner
+    (left, right) -> left + right);    // combiner (for parallel streams)
 ```
 
 ---
 
 ### `collect`
 
-- Възможно е reduce операция да върне резултат, който не е единичен обект, а колекция
-- collect предоставя възможност за акумулиране на резултата в колекция
-
-  ```java
-  List<Integer> list = Stream.of(1, 2, 3, 4, 5)
-                             .collect(ArrayList::new, // supplier
-                                      ArrayList::add, // accumulator
-                                      ArrayList::addAll); // combiner
-  System.out.println(list); // [1, 2, 3, 4, 5]
-  ```
-
----
-
-### `collect` с колектори
-
-Тъй като `collect` в общия си вид изисква три функции, за улеснение в Stream API-то има клас `Collectors` със статични методи, създаващи "готови" специализирани `Collector` обекти за най-често срещаните случаи: `Collectors.toCollection()`, `Collectors.toList()`, `Collectors.toSet()`, `Collectors.toMap()`
-
-<br>
+A reduce operation whose result is a mutable container such as a collection:
 
 ```java
 List<Integer> list = Stream.of(1, 2, 3, 4, 5)
-                           .collect(Collectors.toList()); // [1, 2, 3, 4, 5]
+                           .collect(ArrayList::new,   // supplier
+                                    ArrayList::add,   // accumulator
+                                    ArrayList::addAll); // combiner
+System.out.println(list); // [1, 2, 3, 4, 5]
+```
 
-// since Java 16
+---
+
+### `collect` with Collectors
+
+The `Collectors` utility class provides ready-made `Collector` objects for common scenarios:
+
+```java
+// Collectors.toList() — mutable list (legacy style)
+List<Integer> list = Stream.of(1, 2, 3, 4, 5)
+                           .collect(Collectors.toList());
+
+// toList() — unmodifiable list (Java 16+, preferred)
 List<Integer> list = Stream.of(1, 2, 3, 4, 5)
                            .toList();
-
 ```
 
 ---
 
-### Още колектори
+### More Collectors
 
-Класът `Collectors` също така предоставя полезни помощни функции за `reduce` oперации. Най-използваните са:
-  - `groupingBy` – групира (агрегира) елементите по дадена класифицираща функция
-  - `joining` – конкатенира елементите на потока в низ
-
-<br>
+`Collectors` also provides useful aggregation helpers:
+- `groupingBy` — groups elements by a classifier function
+- `joining` — concatenates stream elements into a `String`
 
 ```java
-// The result is from type Map<Department, List<Employee>>
+// result type: Map<Department, List<Employee>>
 employees.collect(Collectors.groupingBy(Employee::getDepartment));
 
-// The result is a String containing all employee names
-// separated by the specified separator string
-employees.map(Employee::getName).collect(Collectors.joining(", "));
+// result: all employee names separated by ", "
+employees.map(Employee::getName)
+         .collect(Collectors.joining(", "));
 ```
 
 ---
 
-### Short-Circuiting операции
+### Short-Circuiting Operations
 
-Операции, които прекратяват обхождането на потока преждевременно. Полезни са при безкрайни потоци.
+Operations that stop traversing the stream early. Particularly useful with infinite streams.
 
----
-
-### Short-Circuiting операции
-
-- `findFirst()` – връща първия елемент на потока
-- `findAny()` – връща произволен елемент от потока
-- `allMatch(T -> boolean)` – дали всички елементи отговарят на дадено условие
-- `anyMatch(T -> boolean)` – дали някой елемент отговаря на дадено условие
-- `noneMatch(T -> boolean)` - дали никой от елементите не отговаря на дадено условие
-- `limit(int n)` – връща `n` елементи (междинна операция)
+- `findFirst()` — returns the first element
+- `findAny()` — returns any element (may differ in parallel streams)
+- `allMatch(T -> boolean)` — true if all elements satisfy the predicate
+- `anyMatch(T -> boolean)` — true if at least one element satisfies the predicate
+- `noneMatch(T -> boolean)` — true if no element satisfies the predicate
+- `limit(int n)` — intermediate operation that caps the stream at `n` elements
 
 ---
 
-### Други терминални операции: `count`
+### Terminal Operation: `count`
 
 ```java
 long count = Stream.of(1, 2, 3, 4, 5).count();
 System.out.println(count); // 5
 
-// another way
-long count = Stream.of(1, 2, 3, 4, 5).collect(Collectors.counting());
-System.out.println(count); // 5
+// equivalent via collector
+long count2 = Stream.of(1, 2, 3, 4, 5)
+                    .collect(Collectors.counting());
+System.out.println(count2); // 5
 ```
 
 ---
 
 ### `java.util.Optional`
 
-- Generic клас, контейнер за обект, който може да съдържа или не дадена стойност
-- Някои от методите на Stream API-то връщат като резултат `Optional<Т>`
-- Начин за избягване на проверки за `null` или `NullPointerException`
-
-<br>
+- A generic container that may or may not hold a value
+- Several Stream API methods return `Optional<T>` instead of `T`
+- Avoids explicit `null` checks and `NullPointerException`
 
 ```java
-// Check if value is present
+// check whether a value is present
 boolean isPresent = optionalEmployee.isPresent();
 
-// Executes the action only if the value is present
+// execute an action only when the value is present
 optionalEmployee.ifPresent(System.out::println);
 ```
 
 ---
 
-### `java.util.Optional`
+### `java.util.Optional`: Retrieving the Value
 
 ```java
-// Returns the container value
-// or throws NoSuchElementException
+// returns the value, or throws NoSuchElementException if absent
 Employee e = optionalEmployee.get();
 
-// Returns default value if the value is not present
+// returns the value, or a default if absent
 optionalEmployee.orElse(Employee.UNKNOWN);
 
-// Throws given exception if the value is not present
+// throws a given exception if absent
 optionalEmployee.orElseThrow(NoSuchElementException::new);
 
 int result = Stream.of(1, 2, 3, 4, 5)
@@ -1023,64 +970,63 @@ System.out.println(result); // -1
 
 ---
 
-### Изпълнение на stream pipeline
+### Stream Pipeline Execution
 
-- Изпълнението може да бъде последователно или паралелно
-- Може да превръщате
-    - последователен поток в паралелен: чрез методa `parallel()`
-    - паралелен поток в последователен: чрез методa `sequential()`
-- Междинните операции се изпъляват *lazily*
-- Терминалните операции се изпъляват *eagerly*
+- Execution can be sequential or parallel
+- Convert between modes:
+    - sequential → parallel: `parallel()`
+    - parallel → sequential: `sequential()`
+- Intermediate operations execute *lazily* — only when a terminal operation is reached
+- Terminal operations execute *eagerly* — they trigger the entire pipeline
 
 ---
 
 ### Stream vs. Collection
 
-- Потоците не са алтернатива на колекциите
-- Колекциите са отговорни за съхранение и достъп до данни
+- Streams are **not** a replacement for collections
+- Collections are responsible for storing and providing access to data
+- Streams are a tool for describing computations over data
 
 ---
 
-### Особености на Stream
+### Stream Characteristics
 
-- нямат собствено хранилище, а използват източник на данни (колекция, файл и т.н.)
-- функционална същност – не модифицират вътрешните данни
-- колекциите винаги имат краен брой елементи, докато Stream може да бъде безкраен
-- елементите могат да се "консумират" само веднъж, подобно на итератор
-- позволяват lazy операции
-- позволяват паралелно изпълнение на операциите
-
----
-
-### Stateless и stateful операции върху потоци
-
-- Stream операциите могат да се разделят на *stateless* и *stateful*.
-- Stateless операциите не съхраняват данни между обработката на отделните елементи на потока
-    - `filter()`, `map()`, `flatMap()`
-- Stateful операциите могат да предават състояние от вече обработените елементи към обработката на следващия
-    - `distinct()`, `limit()`, `sorted()`, `reduce()`, `collect()`
+- Have no storage of their own; they draw from a source (collection, file, etc.)
+- Functional in nature — they do not modify the source data
+- Collections always have a finite size; streams can be infinite
+- Elements are consumed once, similar to an iterator
+- Support lazy evaluation
+- Support parallel execution
 
 ---
 
-### Паралелно изпълнение на stream операциите
+### Stateless vs. Stateful Stream Operations
 
-- Stateless операциите не представляват проблем при паралелно изпълнение
-- Stateful операциите
-    - (без `limit()`), приложени към безкраен поток, не завършват никога
-    - могат да дадат различен резултат според това дали се изпълняват последователно или паралелно
-    - имат performance impact, защото често изискват обработка на всички елементи на няколко паса
+Stream operations fall into two categories:
+- **Stateless** — do not retain state between elements: `filter()`, `map()`, `flatMap()`
+- **Stateful** — may carry state across elements: `distinct()`, `limit()`, `sorted()`, `reduce()`, `collect()`
 
 ---
 
-### Паралелно изпълнение на stream операциите
+### Parallel Execution Considerations
 
-- Малките потоци обикновено се обработват по-бързо последователно
-- Ако stateful операциите не могат да се заменят със stateless, кодът трябва внимателно да се проектира за паралелно изпълнение, или да се избегне паралелизма
+- Stateless operations are safe for parallel execution
+- Stateful operations:
+    - Applied to an infinite stream (except `limit()`), they never terminate
+    - May produce different results depending on whether execution is sequential or parallel
+    - Have a performance cost because they often require multiple passes over all elements
 
 ---
 
-### Полезни четива
+### Parallel Execution: Recommendations
 
-- [The Java 8 Stream API Tutorial](https://www.baeldung.com/java-8-streams)
-- [Package java.util.stream](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/stream/package-summary.html)
-- [Package java.util.function](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/package-summary.html)
+- Small streams are typically faster to process sequentially
+- If stateful operations cannot be replaced with stateless ones, design the code carefully for parallel execution — or avoid parallelism altogether
+
+---
+
+### Where to Go Next
+
+- [The Java 8 Stream API Tutorial — Baeldung](https://www.baeldung.com/java-8-streams)
+- [Package java.util.stream — Java 17 API](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/stream/package-summary.html)
+- [Package java.util.function — Java 17 API](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/package-summary.html)
